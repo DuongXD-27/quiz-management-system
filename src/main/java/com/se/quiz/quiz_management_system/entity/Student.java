@@ -1,6 +1,7 @@
 package com.se.quiz.quiz_management_system.entity;
 
 import jakarta.persistence.*;
+import java.util.List;
 
 // temporary
 
@@ -27,6 +28,9 @@ public class Student {
     
     @Column(name = "student_code", length = 20)
     private String studentCode;
+    
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<StudentQuiz> studentQuizzes;
     
     public Student() {
     }
@@ -78,6 +82,14 @@ public class Student {
     
     public void setStudentCode(String studentCode) {
         this.studentCode = studentCode;
+    }
+    
+    public List<StudentQuiz> getStudentQuizzes() {
+        return studentQuizzes;
+    }
+    
+    public void setStudentQuizzes(List<StudentQuiz> studentQuizzes) {
+        this.studentQuizzes = studentQuizzes;
     }
     
     @Override

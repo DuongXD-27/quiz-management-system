@@ -19,6 +19,10 @@ Hệ thống quản lý quiz với tính năng xác thực, phân quyền và qu
 - `Student.java` - Bảng student  
 - `ClassEntity.java` - Bảng classes
 - `ClassStudent.java` - Bảng class_students (junction table)
+- `Question.java` - Bảng question 
+- `Quiz.java` - Bảng quiz 
+- `QuizQuestion.java` - Bảng quiz_question (junction table) 
+- `StudentQuiz.java` - Bảng student_quiz (junction table) 
 
 ### 2. Repositories (Spring Data JPA)
 - `TeacherRepository.java` - CRUD cho teacher
@@ -310,7 +314,5 @@ File `sample_students.csv` đã được tạo sẵn để test import.
 4. **CSV Format**: Đảm bảo file CSV đúng format, UTF-8 encoding
 5. **Transaction**: Các operation quan trọng đều được wrap trong transaction
 
-## Liên hệ & Hỗ trợ
-
-Nếu có vấn đề khi tích hợp, liên hệ team để được hỗ trợ.
+    
 
