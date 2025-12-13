@@ -1,10 +1,9 @@
 spring.application.name=quiz-management-system
 
-# Database Configuration
+# Database Configuration (CHANGE THESE VALUES!)
 spring.datasource.url=jdbc:postgresql://localhost:5432/quiz_db
-spring.datasource.username=postgres
-spring.datasource.password=postgres 
-# TODO: Change to the actual password
+spring.datasource.username=YOUR_USERNAME_HERE
+spring.datasource.password=YOUR_PASSWORD_HERE
 spring.datasource.driver-class-name=org.postgresql.Driver
 
 # JPA/Hibernate Configuration
