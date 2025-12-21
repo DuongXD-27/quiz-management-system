@@ -69,6 +69,13 @@
 			<version>21.0.1</version>
 		</dependency>
 
+		<!-- JavaFX FXML -->
+		<dependency>
+			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-fxml</artifactId>
+			<version>21.0.1</version>
+		</dependency>
+
 		<!-- OpenCSV for CSV parsing -->
 		<dependency>
 			<groupId>com.opencsv</groupId>
@@ -83,6 +90,15 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+
+			<plugin>
+            	<groupId>org.openjfx</groupId>
+            	<artifactId>javafx-maven-plugin</artifactId>
+            	<version>0.0.8</version> 
+				<configuration>
+                	<mainClass>com.se.quiz.quiz_management_system.controller.AppLauncher</mainClass>
+            	</configuration>
+        	</plugin>
 		</plugins>
 	</build>
 
