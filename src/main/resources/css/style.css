@@ -1,0 +1,638 @@
+/* ============================================
+   Modern Material Design Login Screen
+   Dark Left, White Right Layout
+   ============================================ */
+
+/* ============================================
+   Global Font Family - Modern System Font
+   ============================================ */
+.root {
+    -fx-font-family: 'Segoe UI', sans-serif;
+    -fx-background-color: #ffffff;
+}
+
+* {
+    -fx-font-family: 'Segoe UI', sans-serif;
+}
+
+/* ============================================
+   Root Container - Split Screen Layout
+   ============================================ */
+.root-container {
+    -fx-background-color: #ffffff;
+    -fx-pref-width: 100%;
+    -fx-pref-height: 100%;
+}
+
+StackPane {
+    -fx-alignment: center;
+}
+
+/* ============================================
+   Left Section - Brand Area (Modern Bright & Premium)
+   ============================================ */
+.left-pane {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #FFFFFF 0%, #E3F2FD 100%);
+    -fx-alignment: center;
+    -fx-pref-width: 40%;
+    -fx-min-width: 450px;
+    -fx-spacing: 15;
+}
+
+.logo-image {
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.15), 8, 0, 0, 3);
+}
+
+.app-name-label {
+    -fx-font-size: 18px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #1A237E;
+    -fx-text-alignment: center;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 5, 0, 0, 2);
+}
+
+/* ============================================
+   Right Section - Form Area (White)
+   ============================================ */
+.right-pane {
+    -fx-background-color: #FFFFFF;
+    -fx-alignment: center;
+    -fx-pref-width: 60%;
+    -fx-min-width: 550px;
+}
+
+.form-container {
+    -fx-pref-width: 420px;
+    -fx-max-width: 420px;
+    -fx-spacing: 30;
+}
+
+.welcome-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #000000;
+    -fx-text-alignment: left;
+}
+
+/* ============================================
+   Input Form Container
+   ============================================ */
+.input-form {
+    -fx-pref-width: 420px;
+    -fx-max-width: 420px;
+    -fx-spacing: 20;
+}
+
+.input-wrapper {
+    -fx-pref-width: 420px;
+    -fx-max-width: 420px;
+    -fx-spacing: 8;
+}
+
+.input-label {
+    -fx-font-size: 12px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #5f6368;
+    -fx-letter-spacing: 0.5px;
+}
+
+/* ============================================
+   Material Design TextField & PasswordField
+   ============================================ */
+.material-input {
+    -fx-background-color: transparent;
+    -fx-border-color: #a0a2ab;
+    -fx-border-width: 0px 0px 2px 0px;
+    -fx-padding: 12px 0px;
+    -fx-font-size: 14px;
+    -fx-text-fill: #1a1a1a;
+    -fx-prompt-text-fill: #9aa0a6;
+    -fx-cursor: text;
+}
+
+.material-input:focused {
+    -fx-border-color: #151928;
+    -fx-border-width: 0px 0px 2px 0px;
+    -fx-background-color: transparent;
+}
+
+.material-input:hover {
+    -fx-border-color: #6c757d;
+}
+
+/* Remove default focus ring */
+.material-input:focused {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+/* ============================================
+   Modern Login Button - Gradient Style
+   ============================================ */
+.login-button {
+    -fx-pref-height: 48px;
+    -fx-pref-width: 420px;
+    -fx-max-width: 420px;
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #2196F3 0%, #21CBF3 100%);
+    -fx-background-radius: 30px;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 14px;
+    -fx-font-weight: 700;
+    -fx-letter-spacing: 0.5px;
+    -fx-cursor: hand;
+    -fx-border-width: 0;
+    -fx-effect: dropshadow(gaussian, rgba(33, 150, 243, 0.3), 8, 0, 0, 2);
+}
+
+.login-button:hover {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #1976D2 0%, #1BB8E8 100%);
+    -fx-effect: dropshadow(gaussian, rgba(33, 150, 243, 0.5), 12, 0, 0, 4);
+}
+
+.login-button:pressed {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #1565C0 0%, #17A8D8 100%);
+    -fx-effect: dropshadow(gaussian, rgba(33, 150, 243, 0.2), 4, 0, 0, 1);
+    -fx-translate-y: 1px;
+}
+
+.login-button:disabled {
+    -fx-background-color: #e0e0e0;
+    -fx-text-fill: #9e9e9e;
+    -fx-cursor: default;
+    -fx-effect: none;
+}
+
+/* ============================================
+   Forgot Password Link
+   ============================================ */
+.forgot-password-wrapper {
+    -fx-padding: 8px 0px 0px 0px;
+}
+
+.forgot-password-link {
+    -fx-font-size: 14px;
+    -fx-text-fill: #2196F3;
+    -fx-font-weight: 500;
+    -fx-underline: false;
+    -fx-cursor: hand;
+    -fx-border-color: transparent;
+    -fx-background-color: transparent;
+}
+
+.forgot-password-link:hover {
+    -fx-text-fill: #1976D2;
+    -fx-underline: true;
+}
+
+.forgot-password-link:pressed {
+    -fx-text-fill: #1565C0;
+}
+
+/* ============================================
+   Register Link (Bottom of Form)
+   ============================================ */
+.register-wrapper {
+    -fx-padding: 20px 0px 0px 0px;
+}
+
+.register-prompt {
+    -fx-font-size: 14px;
+    -fx-text-fill: #6c757d;
+    -fx-font-weight: 400;
+}
+
+.register-link {
+    -fx-font-size: 14px;
+    -fx-text-fill: #2196F3;
+    -fx-font-weight: 500;
+    -fx-underline: false;
+    -fx-cursor: hand;
+    -fx-border-color: transparent;
+    -fx-background-color: transparent;
+}
+
+.register-link:hover {
+    -fx-text-fill: #1976D2;
+    -fx-underline: true;
+}
+
+.register-link:pressed {
+    -fx-text-fill: #1565C0;
+}
+
+/* ============================================
+   Material Design ComboBox - Flat Style
+   ============================================ */
+.material-combo {
+    -fx-background-color: transparent;
+    -fx-border-color: #a0a2ab;
+    -fx-border-width: 0px 0px 2px 0px;
+    -fx-padding: 12px 0px;
+    -fx-font-size: 14px;
+    -fx-text-fill: #1a1a1a;
+    -fx-cursor: hand;
+    -fx-pref-width: 420px;
+    -fx-max-width: 420px;
+}
+
+.material-combo:focused {
+    -fx-border-color: #151928;
+    -fx-border-width: 0px 0px 2px 0px;
+    -fx-background-color: transparent;
+}
+
+.material-combo:hover {
+    -fx-border-color: #6c757d;
+}
+
+/* ComboBox arrow button styling */
+.material-combo .arrow-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0px 8px 0px 0px;
+}
+
+.material-combo .arrow {
+    -fx-background-color: #5f6368;
+}
+
+.material-combo:focused .arrow {
+    -fx-background-color: #151928;
+}
+
+/* ComboBox list view styling */
+.material-combo .list-view {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 1px;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 8, 0, 0, 2);
+}
+
+.material-combo .list-cell {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #1a1a1a;
+    -fx-padding: 12px 16px;
+    -fx-font-size: 14px;
+}
+
+.material-combo .list-cell:hover {
+    -fx-background-color: #f5f5f5;
+}
+
+.material-combo .list-cell:selected {
+    -fx-background-color: #E3F2FD;
+    -fx-text-fill: #151928;
+}
+
+/* Remove default focus ring */
+.material-combo:focused {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+/* ============================================
+   Login Link (For Register Screen)
+   ============================================ */
+.login-wrapper {
+    -fx-padding: 20px 0px 0px 0px;
+}
+
+.login-prompt {
+    -fx-font-size: 14px;
+    -fx-text-fill: #6c757d;
+    -fx-font-weight: 400;
+}
+
+.login-link {
+    -fx-font-size: 14px;
+    -fx-text-fill: #2196F3;
+    -fx-font-weight: 500;
+    -fx-underline: false;
+    -fx-cursor: hand;
+    -fx-border-color: transparent;
+    -fx-background-color: transparent;
+}
+
+.login-link:hover {
+    -fx-text-fill: #1976D2;
+    -fx-underline: true;
+}
+
+.login-link:pressed {
+    -fx-text-fill: #1565C0;
+}
+
+/* ============================================
+   Teacher Dashboard - Premium Cartier Style
+   ============================================ */
+
+/* Dashboard Root Background */
+.dashboard-root {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #E3F2FD 0%, #E0F7FA 100%);
+}
+
+/* Dashboard Header */
+.dashboard-header {
+    -fx-pref-height: 120px;
+    -fx-min-height: 120px;
+    -fx-max-height: 120px;
+    -fx-alignment: center-left;
+    -fx-pref-width: 100%;
+}
+
+/* Floating Header Bar - Premium Style */
+.header-bar {
+    -fx-background-color: #FFFFFF;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.08), 10, 0, 0, 4);
+    -fx-border-color: #E0E0E0;
+    -fx-border-width: 0 0 1 0;
+}
+
+.dashboard-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #1A237E;
+}
+
+.welcome-text {
+    -fx-font-size: 16px;
+    -fx-font-weight: 500;
+    -fx-text-fill: #2D3447;
+}
+
+.logout-button {
+    -fx-background-color: transparent;
+    -fx-border-width: 0;
+    -fx-font-size: 24px;
+    -fx-padding: 8px 12px;
+    -fx-cursor: hand;
+    -fx-background-radius: 8px;
+}
+
+.logout-button:hover {
+    -fx-background-color: rgba(45, 52, 71, 0.1);
+}
+
+.logout-button:pressed {
+    -fx-background-color: rgba(45, 52, 71, 0.2);
+}
+
+/* Cards Container */
+.cards-container {
+    -fx-padding: 50px;
+    -fx-alignment: center;
+}
+
+/* ============================================
+   Magic Card - Default State (Premium Style)
+   ============================================ */
+.dashboard-card {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 20px;
+    -fx-pref-width: 320px;
+    -fx-pref-height: 320px;
+    -fx-min-width: 320px;
+    -fx-min-height: 320px;
+    -fx-max-width: 320px;
+    -fx-max-height: 320px;
+    -fx-padding: 30px;
+    -fx-border-width: 0;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.05), 10, 0, 0, 5);
+    -fx-cursor: hand;
+    -fx-alignment: center;
+}
+
+/* Card Icon */
+.card-icon {
+    -fx-font-size: 80px;
+    -fx-text-alignment: center;
+    -fx-fill: #2D3447;
+}
+
+/* Card Title */
+.card-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #2D3447;
+    -fx-text-alignment: center;
+}
+
+/* Card Description */
+.card-description {
+    -fx-font-size: 12px;
+    -fx-font-weight: 400;
+    -fx-font-style: italic;
+    -fx-text-fill: #9E9E9E;
+    -fx-text-alignment: center;
+    -fx-wrap-text: true;
+    -fx-max-width: 220px;
+}
+
+/* ============================================
+   Magic Card - Hover State (Premium Tech & Luxury)
+   ============================================ */
+.dashboard-card:hover {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #1A237E 0%, #00BCD4 100%);
+    -fx-translate-y: -5;
+    -fx-effect: dropshadow(three-pass-box, rgba(26, 35, 126, 0.4), 20, 0, 0, 8);
+}
+
+.dashboard-card:hover .card-icon {
+    -fx-fill: #FFFFFF;
+}
+
+.dashboard-card:hover .card-title {
+    -fx-text-fill: #FFFFFF;
+}
+
+.dashboard-card:hover .card-description {
+    -fx-text-fill: #FFFFFF;
+}
+
+/* ============================================
+   Additional Polish
+   ============================================ */
+VBox {
+    -fx-spacing: 0;
+}
+
+HBox {
+    -fx-spacing: 0;
+}
+
+/* ============================================
+   Student Dashboard Cards - Lavender Theme
+   ============================================ */
+.student-card {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 20px;
+    -fx-pref-width: 320px;
+    -fx-pref-height: 320px;
+    -fx-min-width: 320px;
+    -fx-min-height: 320px;
+    -fx-max-width: 320px;
+    -fx-max-height: 320px;
+    -fx-padding: 30px;
+    -fx-border-width: 0;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.05), 10, 0, 0, 5);
+    -fx-cursor: hand;
+    -fx-alignment: center;
+}
+
+/* Student Card Hover State - Purple to Pink Gradient */
+.student-card:hover {
+    -fx-background-color: linear-gradient(to bottom right, #6A1B9A, #AB47BC);
+    -fx-translate-y: -5;
+    -fx-effect: dropshadow(three-pass-box, rgba(106, 27, 154, 0.4), 20, 0, 0, 8);
+}
+
+.student-card:hover .card-icon {
+    -fx-fill: #FFFFFF;
+}
+
+.student-card:hover .card-title {
+    -fx-text-fill: #FFFFFF;
+}
+
+.student-card:hover .card-description {
+    -fx-text-fill: #FFFFFF;
+}
+
+/* ============================================
+   Create Question Form - Material Design
+   ============================================ */
+
+/* Form Container */
+.question-form-container {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 15px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 10, 0, 0, 5);
+    -fx-padding: 40px;
+    -fx-spacing: 20px;
+    -fx-alignment: top-center;
+    -fx-max-width: 800px;
+}
+
+/* Form Title */
+.form-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #1A237E;
+    -fx-text-alignment: left;
+}
+
+/* Form Section */
+.form-section {
+    -fx-spacing: 8px;
+    -fx-pref-width: 100%;
+}
+
+/* Section Label */
+.section-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #424242;
+    -fx-text-alignment: left;
+}
+
+/* Material Design TextArea */
+.material-textarea {
+    -fx-background-color: transparent;
+    -fx-border-color: #a0a2ab;
+    -fx-border-width: 0px 0px 2px 0px;
+    -fx-padding: 12px 0px;
+    -fx-font-size: 14px;
+    -fx-text-fill: #1a1a1a;
+    -fx-prompt-text-fill: #9aa0a6;
+    -fx-cursor: text;
+    -fx-pref-height: 120px;
+    -fx-wrap-text: true;
+}
+
+.material-textarea:focused {
+    -fx-border-color: #2196F3;
+    -fx-border-width: 0px 0px 2px 0px;
+    -fx-background-color: transparent;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.material-textarea:hover {
+    -fx-border-color: #6c757d;
+}
+
+/* RadioButton Styling */
+RadioButton {
+    -fx-font-size: 14px;
+    -fx-text-fill: #424242;
+    -fx-cursor: hand;
+}
+
+RadioButton:selected {
+    -fx-text-fill: #2196F3;
+}
+
+/* Form Actions Container */
+.form-actions {
+    -fx-padding: 20px 0px 0px 0px;
+    -fx-spacing: 15px;
+    -fx-alignment: center-right;
+}
+
+/* Save Button - Gradient Blue */
+.save-button {
+    -fx-pref-height: 48px;
+    -fx-pref-width: 150px;
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #2196F3 0%, #21CBF3 100%);
+    -fx-background-radius: 30px;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 14px;
+    -fx-font-weight: 700;
+    -fx-letter-spacing: 0.5px;
+    -fx-cursor: hand;
+    -fx-border-width: 0;
+    -fx-effect: dropshadow(gaussian, rgba(33, 150, 243, 0.3), 8, 0, 0, 2);
+}
+
+.save-button:hover {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #1976D2 0%, #1BB8E8 100%);
+    -fx-effect: dropshadow(gaussian, rgba(33, 150, 243, 0.5), 12, 0, 0, 4);
+}
+
+.save-button:pressed {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #1565C0 0%, #17A8D8 100%);
+    -fx-effect: dropshadow(gaussian, rgba(33, 150, 243, 0.2), 4, 0, 0, 1);
+    -fx-translate-y: 1px;
+}
+
+/* Cancel Button - Gray Style */
+.cancel-button {
+    -fx-pref-height: 48px;
+    -fx-pref-width: 150px;
+    -fx-background-color: transparent;
+    -fx-background-radius: 30px;
+    -fx-text-fill: #757575;
+    -fx-font-size: 14px;
+    -fx-font-weight: 500;
+    -fx-cursor: hand;
+    -fx-border-width: 1px;
+    -fx-border-color: #E0E0E0;
+    -fx-border-radius: 30px;
+}
+
+.cancel-button:hover {
+    -fx-background-color: #F5F5F5;
+    -fx-text-fill: #424242;
+    -fx-border-color: #BDBDBD;
+}
+
+.cancel-button:pressed {
+    -fx-background-color: #EEEEEE;
+    -fx-translate-y: 1px;
+}
+
+/* Smooth transitions for better UX */
+* {
+    -fx-effect: null;
+}

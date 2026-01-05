@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.geometry.Pos?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.se.quiz.quiz_management_system.controller.StudentDashboardController" style="-fx-background-color: linear-gradient(to bottom right, #F3E5F5, #E8EAF6);" stylesheets="@../css/style.css">
+   <top>
+      <!-- Header Toolbar - Minimalist Floating -->
+      <HBox alignment="CENTER_LEFT" maxWidth="Infinity" viewOrder="-1.0" prefHeight="100.0" style="-fx-background-color: #FFFFFF; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 20, 0, 0, 5); -fx-border-color: #F0F0F0; -fx-border-width: 0 0 1 0; -fx-padding: 0 40 0 40;">
+         <children>
+            <!-- Left: Logo + Title -->
+            <HBox alignment="CENTER_LEFT">
+               <children>
+                  <ImageView fitHeight="120.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../image/logo.png" />
+                     </image>
+                  </ImageView>
+                  <Region prefWidth="60.0" />
+                  <Label style="-fx-font-size: 20px; -fx-font-weight: 700; -fx-text-fill: #2D3447;" text="Student Dashboard" />
+               </children>
+            </HBox>
+            
+            <!-- Right: Welcome + Logout -->
+            <HBox alignment="CENTER_RIGHT" spacing="20.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <Label fx:id="lblWelcome" styleClass="welcome-text" text="Xin chào, " />
+                  <Button fx:id="btnLogout" onAction="#handleLogout" styleClass="logout-button" text="🚪" />
+               </children>
+            </HBox>
+         </children>
+      </HBox>
+   </top>
+   
+   <center>
+      <!-- Menu Cards Container -->
+      <StackPane>
+         <children>
+            <HBox alignment="CENTER" styleClass="cards-container">
+               <children>
+                  <!-- Card 1: Take Quiz -->
+                  <VBox alignment="CENTER" spacing="20.0" minWidth="320.0" prefWidth="320.0" maxWidth="320.0" styleClass="student-card" fx:id="cardTakeQuiz" style="-fx-cursor: hand;">
+                     <children>
+                        <Text styleClass="card-icon" text="✏️" />
+                        <Label styleClass="card-title" text="Take Quiz" />
+                        <Label styleClass="card-description" text="Join a class exam or practice" />
+                     </children>
+                     <HBox.hgrow>NEVER</HBox.hgrow>
+                  </VBox>
+                  
+                  <!-- Rigid Spacer - 150px -->
+                  <Region minWidth="150.0" prefWidth="150.0" maxWidth="150.0" />
+                  
+                  <!-- Card 2: My Results -->
+                  <VBox alignment="CENTER" spacing="20.0" minWidth="320.0" prefWidth="320.0" maxWidth="320.0" styleClass="student-card" fx:id="cardMyResults" style="-fx-cursor: hand;">
+                     <children>
+                        <Text styleClass="card-icon" text="🏆" />
+                        <Label styleClass="card-title" text="My Results" />
+                        <Label styleClass="card-description" text="Review history &amp; scores" />
+                     </children>
+                     <HBox.hgrow>NEVER</HBox.hgrow>
+                  </VBox>
+               </children>
+            </HBox>
+         </children>
+      </StackPane>
+   </center>
+</BorderPane>
+

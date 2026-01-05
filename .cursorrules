@@ -1,0 +1,32 @@
+# Project Context: Quiz Management System
+
+## 1. Technology Stack
+- [cite_start]**Language**: Java 17 LTS[cite: 147, 170].
+- [cite_start]**UI Framework**: JavaFX (FXML for layout, CSS for styling)[cite: 171, 213].
+- [cite_start]**Database**: PostgreSQL 15+[cite: 172].
+- [cite_start]**Database Access**: Pure JDBC (No ORM like Hibernate/JPA) using PreparedStatement[cite: 174, 175, 204].
+- [cite_start]**Packaging**: jpackage (build to .exe)[cite: 167].
+- [cite_start]**Auth**: BCrypt for password hashing[cite: 173, 219].
+
+## 2. Project Architecture (MVC)
+- **Model**: Java classes representing DB tables (User, Quiz, Question).
+- **View**: FXML files located in `src/main/resources`.
+- **Controller**: Java classes handling logic for FXML views.
+- [cite_start]**Config**: Database credentials in `src/main/resources/config.properties`[cite: 240, 244].
+
+## 3. Coding Conventions
+- [cite_start]**Class Names**: PascalCase (e.g., `UserService`, `QuizController`)[cite: 237].
+- [cite_start]**Variables/Methods**: camelCase (e.g., `userName`, `calculateScore`).
+- [cite_start]**Package Naming**: lowercase (e.g., `com.group.quiz.ui`)[cite: 239].
+- [cite_start]**Comments**: Clear comments for logic, strictly consistent naming[cite: 32].
+
+## 4. Key Features & Rules
+- [cite_start]**Transaction Management**: Manual commit/rollback for critical actions (e.g., submitting a quiz)[cite: 205, 208].
+- **User Roles**:
+  - [cite_start]**Teacher**: Manage questions, create quizzes, view results, export CSV[cite: 138, 159].
+  - [cite_start]**Student**: Take quizzes, auto-grading, view specific results[cite: 139].
+- **UI UX**: Simple, clear, easy to navigate. [cite_start]Common operations respond < 2s[cite: 25, 30].
+
+## 5. Development Focus
+- [cite_start]Prioritize creating "offline-first" desktop experience connecting to a central DB[cite: 160].
+- [cite_start]Do not suggest web-based solutions (Spring Web) unless explicitly asked[cite: 183].
