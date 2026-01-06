@@ -174,6 +174,14 @@ public class AuthService {
     }
     
     /**
+     * Get the current logged-in user session
+     * @return UserSession of the current user, or null if not logged in
+     */
+    public UserSession getCurrentUser() {
+        return SessionManager.getCurrentUserSession();
+    }
+    
+    /**
      * Logout the current user
      */
     public void logout() {
