@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane style="-fx-background-color: linear-gradient(to bottom right, #F3E5F5, #E8EAF6);" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.se.quiz.quiz_management_system.controller.TakeQuizController">
+   <top>
+      <!-- Header Toolbar - Consistent with other screens -->
+      <HBox alignment="CENTER_LEFT" maxWidth="Infinity" prefHeight="100.0" style="-fx-background-color: #FFFFFF; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 20, 0, 0, 5); -fx-border-color: #F0F0F0; -fx-border-width: 0 0 1 0; -fx-padding: 0 40 0 40;" viewOrder="-1.0">
+         <children>
+            <!-- Left: Logo + Title -->
+            <HBox alignment="CENTER_LEFT">
+               <children>
+                  <ImageView fitHeight="120.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../image/logo.png" />
+                     </image>
+                  </ImageView>
+                  <Region prefWidth="60.0" />
+                  <Label style="-fx-font-size: 20px; -fx-font-weight: 700; -fx-text-fill: #2D3447;" text="Take Quiz" />
+               </children>
+            </HBox>
+            
+            <!-- Spacer to push Exit button to the right -->
+            <Region HBox.hgrow="ALWAYS" />
+            
+            <!-- Right: Exit Button -->
+            <Button fx:id="btnExit" onAction="#handleExit" styleClass="exit-button" text="🚪" />
+         </children>
+      </HBox>
+   </top>
+   
+   <center>
+      <!-- Main Quiz Content -->
+      <VBox alignment="TOP_CENTER" spacing="30.0" style="-fx-padding: 40 40 40 40;">
+         <!-- Timer Label (No Circle) -->
+         <Label fx:id="lblTimer" styleClass="timer-label" text="00:30" />
+         
+         <!-- Question Card -->
+         <HBox alignment="CENTER" styleClass="question-card">
+            <children>
+               <Label fx:id="lblQuestion" styleClass="question-text" text="What is the capital of France?" wrapText="true" />
+            </children>
+         </HBox>
+         
+         <!-- Answer Options -->
+         <VBox alignment="TOP_CENTER" spacing="0.0" style="-fx-padding: 20 20 20 20; -fx-background-color: transparent;" styleClass="answers-container">
+            <children>
+               <Button fx:id="btnAnswerA" maxHeight="60.0" maxWidth="600.0" minHeight="60.0" onAction="#handleAnswerClick" prefHeight="60.0" styleClass="answer-option" text="A. London">
+                  <VBox.margin>
+                     <Insets bottom="20.0" />
+                  </VBox.margin>
+               </Button>
+               <Button fx:id="btnAnswerB" maxHeight="60.0" maxWidth="600.0" minHeight="60.0" onAction="#handleAnswerClick" prefHeight="60.0" styleClass="answer-option" text="B. Paris">
+                  <VBox.margin>
+                     <Insets bottom="20.0" />
+                  </VBox.margin>
+               </Button>
+               <Button fx:id="btnAnswerC" maxHeight="60.0" maxWidth="600.0" minHeight="60.0" onAction="#handleAnswerClick" prefHeight="60.0" styleClass="answer-option" text="C. Berlin">
+                  <VBox.margin>
+                     <Insets bottom="20.0" />
+                  </VBox.margin>
+               </Button>
+               <Button fx:id="btnAnswerD" maxHeight="60.0" maxWidth="600.0" minHeight="60.0" onAction="#handleAnswerClick" prefHeight="60.0" styleClass="answer-option" text="D. Madrid">
+                  <VBox.margin>
+                     <Insets bottom="20.0" />
+                  </VBox.margin>
+               </Button>
+            </children>
+         </VBox>
+         
+         <!-- Next Question Button -->
+         <Button fx:id="btnNext" onAction="#handleNext" styleClass="next-button" text="Next question" />
+      </VBox>
+   </center>
+</BorderPane>

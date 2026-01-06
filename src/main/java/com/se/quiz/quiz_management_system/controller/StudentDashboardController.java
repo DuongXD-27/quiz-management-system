@@ -67,18 +67,56 @@ public class StudentDashboardController implements Initializable {
      * Handle Take Quiz card click
      */
     private void handleTakeQuiz(MouseEvent event) {
-        System.out.println("Clicked: Take Quiz");
-        // TODO: Navigate to Take Quiz screen
-        JavaFXHelper.showInfo("Take Quiz", "Chức năng làm bài kiểm tra sẽ được triển khai sau");
+        try {
+            // Get current stage
+            Stage stage = (Stage) cardTakeQuiz.getScene().getWindow();
+            
+            // Load Available Quizzes FXML (Student View)
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/AvailableQuizzes.fxml"));
+            Parent root = loader.load();
+            
+            // Inject AuthService into AvailableQuizzesController for navigation back
+            AvailableQuizzesController availableQuizzesController = loader.getController();
+            if (authService != null) {
+                availableQuizzesController.setAuthService(authService);
+            }
+            
+            // Create new scene and set it
+            Scene scene = new Scene(root, 800, 600);
+            stage.setScene(scene);
+            stage.setTitle("Quiz Management System - Available Quizzes");
+            
+        } catch (Exception e) {
+            JavaFXHelper.showError("Lỗi hệ thống", "Không thể mở danh sách bài kiểm tra: " + e.getMessage());
+        }
     }
     
     /**
-     * Handle My Results card click
+     * Handle My Results card click - Navigate to Student My Results Screen
      */
     private void handleMyResults(MouseEvent event) {
-        System.out.println("Clicked: My Results");
-        // TODO: Navigate to My Results screen
-        JavaFXHelper.showInfo("My Results", "Chức năng xem kết quả sẽ được triển khai sau");
+        try {
+            // Load StudentMyResults.fxml (Full Screen)
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/StudentMyResults.fxml"));
+            Parent root = loader.load();
+            
+            // Get StudentMyResultsController and pass AuthService
+            StudentMyResultsController controller = loader.getController();
+            if (authService != null) {
+                controller.setAuthService(authService);
+            }
+            
+            // Get current stage and set new scene
+            Stage stage = (Stage) cardMyResults.getScene().getWindow();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.setTitle("Quiz Management System - My Results");
+            stage.show();
+            
+        } catch (Exception e) {
+            JavaFXHelper.showError("System Error", "Failed to load My Results screen: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
     
     /**

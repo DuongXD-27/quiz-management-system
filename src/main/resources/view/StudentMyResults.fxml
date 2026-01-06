@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane style="-fx-background-color: linear-gradient(to bottom right, #4a00e0, #8e2de2);" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.se.quiz.quiz_management_system.controller.StudentMyResultsController">
+   <top>
+      <!-- Header Toolbar -->
+      <HBox alignment="CENTER_LEFT" maxWidth="Infinity" prefHeight="100.0" style="-fx-background-color: #FFFFFF; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 15, 0, 0, 3); -fx-padding: 0 40 0 40;">
+         <children>
+            <!-- Left: Logo + QMS -->
+            <HBox alignment="CENTER_LEFT" spacing="15.0">
+               <children>
+                  <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../image/logo.png" />
+                     </image>
+                  </ImageView>
+                  <Label style="-fx-font-size: 18px; -fx-font-weight: 700; -fx-text-fill: #1A237E;" text="QMS" />
+               </children>
+            </HBox>
+            
+            <!-- Center: Page Title -->
+            <Region HBox.hgrow="ALWAYS" />
+            <Label style="-fx-font-size: 20px; -fx-font-weight: 700; -fx-text-fill: #2D3447;" text="Student Dashboard" />
+            <Region HBox.hgrow="ALWAYS" />
+            
+            <!-- Right: Welcome Text + Logout Button -->
+            <HBox alignment="CENTER_RIGHT" spacing="15.0">
+               <children>
+                  <Label fx:id="lblWelcome" styleClass="welcome-text" text="Welcome," />
+                  <Button fx:id="btnLogout" onAction="#handleLogout" styleClass="logout-button" text="🚪" />
+               </children>
+            </HBox>
+         </children>
+      </HBox>
+   </top>
+   
+   <center>
+      <!-- Main Content Area -->
+      <VBox alignment="TOP_LEFT" spacing="30.0">
+         <padding>
+            <Insets top="40.0" right="60.0" bottom="40.0" left="40.0" />
+         </padding>
+         <children>
+            <!-- Back Button and Title Section -->
+            <VBox alignment="TOP_LEFT" spacing="20.0">
+               <children>
+                  <!-- Back to Dashboard Button -->
+                  <Button fx:id="btnBackToDashboard" onAction="#handleBackToDashboard" styleClass="back-button-white" text="Back to Dashboard" />
+                  
+                  <!-- Page Title "My Results" -->
+                  <Label styleClass="page-title-white" text="My Results" />
+               </children>
+            </VBox>
+            
+            <!-- Results Grid (ScrollPane with FlowPane) -->
+            <ScrollPane fitToWidth="true" styleClass="my-results-scrollpane">
+               <content>
+                  <FlowPane fx:id="resultsContainer" alignment="TOP_LEFT" hgap="20.0" vgap="20.0" style="-fx-padding: 10;">
+                     <!-- Dynamic result cards will be added here by the controller -->
+                  </FlowPane>
+               </content>
+            </ScrollPane>
+         </children>
+      </VBox>
+   </center>
+</BorderPane>

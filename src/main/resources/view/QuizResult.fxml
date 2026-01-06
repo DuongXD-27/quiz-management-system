@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+
+<BorderPane style="-fx-background-color: linear-gradient(to bottom right, #F3E5F5, #E8EAF6);" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.se.quiz.quiz_management_system.controller.QuizResultController">
+   <top>
+      <!-- Header Toolbar - Consistent with other screens -->
+      <HBox alignment="CENTER_LEFT" maxWidth="Infinity" prefHeight="100.0" style="-fx-background-color: #FFFFFF; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 20, 0, 0, 5); -fx-border-color: #F0F0F0; -fx-border-width: 0 0 1 0; -fx-padding: 0 40 0 40;" viewOrder="-1.0">
+         <children>
+            <!-- Left: Logo + Title -->
+            <HBox alignment="CENTER_LEFT">
+               <children>
+                  <ImageView fitHeight="120.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../image/logo.png" />
+                     </image>
+                  </ImageView>
+                  <Region prefWidth="60.0" />
+                  <Label style="-fx-font-size: 20px; -fx-font-weight: 700; -fx-text-fill: #2D3447;" text="My Results" />
+               </children>
+            </HBox>
+            
+            <!-- Spacer to push Exit button to the right -->
+            <Region HBox.hgrow="ALWAYS" />
+            
+            <!-- Right: Exit Button -->
+            <Button fx:id="btnExit" onAction="#handleExit" styleClass="exit-button" text="🚪" />
+         </children>
+      </HBox>
+   </top>
+   
+   <center>
+      <!-- Main Result Card Container -->
+      <StackPane alignment="CENTER">
+         <children>
+            <!-- Result Card - Container (MUST be transparent) -->
+            <VBox alignment="TOP_CENTER" maxWidth="450.0" minWidth="450.0" prefWidth="450.0" spacing="0.0" style="-fx-background-color: transparent; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 20, 0, 0, 10);">
+               <!-- Top Section - Purple Header with Score Circle -->
+               <VBox alignment="CENTER" spacing="0.0" styleClass="result-card-header">
+                  <children>
+                     <!-- Score Circle - Light Gradient Background -->
+                     <StackPane alignment="CENTER" prefHeight="140.0" prefWidth="140.0" styleClass="score-circle-container">
+                        <children>
+                           <!-- White Circle Outline -->
+                           <Circle fill="TRANSPARENT" radius="70.0" stroke="WHITE" strokeWidth="4.0" />
+                           
+                           <!-- Score Text -->
+                           <VBox alignment="CENTER" spacing="5.0">
+                              <children>
+                                 <Label fx:id="lblScore" styleClass="score-text-large" text="45 / 50" />
+                                 <Label styleClass="score-text-small" text="Your Score" />
+                              </children>
+                           </VBox>
+                        </children>
+                     </StackPane>
+                  </children>
+               </VBox>
+               
+               <!-- Bottom Section - White Body with Details and Buttons -->
+               <VBox alignment="CENTER" spacing="20.0" styleClass="result-card-body">
+                  <children>
+                     <!-- Subject Name -->
+                     <Label fx:id="lblSubject" styleClass="result-subject" text="Subject: Mathematics - Chapter 1" />
+                     
+                     <!-- Completion Time -->
+                     <Label fx:id="lblCompletionTime" styleClass="result-info" text="Completion time: 25 minutes" />
+                     
+                     <!-- Button: Return to Dashboard -->
+                     <Button fx:id="btnReturnToDashboard" maxWidth="Infinity" onAction="#handleReturnToDashboard" prefHeight="50.0" styleClass="btn-primary" text="Return to Dashboard">
+                        <VBox.margin>
+                           <Insets top="20.0" />
+                        </VBox.margin>
+                     </Button>
+                     
+                     <!-- Button: Review Answers -->
+                     <Button fx:id="btnReviewAnswers" maxWidth="Infinity" onAction="#handleReviewAnswers" prefHeight="50.0" styleClass="btn-secondary" text="Review answers">
+                        <VBox.margin>
+                           <Insets top="15.0" />
+                        </VBox.margin>
+                     </Button>
+                  </children>
+               </VBox>
+            </VBox>
+         </children>
+      </StackPane>
+   </center>
+</BorderPane>

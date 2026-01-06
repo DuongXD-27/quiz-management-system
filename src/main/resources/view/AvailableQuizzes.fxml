@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane style="-fx-background-color: linear-gradient(to bottom right, #F3E5F5, #E8EAF6);" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.se.quiz.quiz_management_system.controller.AvailableQuizzesController">
+   <top>
+      <!-- Header Toolbar -->
+      <HBox alignment="CENTER_LEFT" maxWidth="Infinity" prefHeight="100.0" style="-fx-background-color: #FFFFFF; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 20, 0, 0, 5); -fx-border-color: #F0F0F0; -fx-border-width: 0 0 1 0; -fx-padding: 0 40 0 40;" viewOrder="-1.0">
+         <children>
+            <!-- Left: Logo + Title -->
+            <HBox alignment="CENTER_LEFT">
+               <children>
+                  <ImageView fitHeight="120.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../image/logo.png" />
+                     </image>
+                  </ImageView>
+                  <Region prefWidth="60.0" />
+                  <Label style="-fx-font-size: 20px; -fx-font-weight: 700; -fx-text-fill: #2D3447;" text="Available Quizzes" />
+               </children>
+            </HBox>
+            
+            <!-- Spacer -->
+            <Region HBox.hgrow="ALWAYS" />
+            
+            <!-- Right: Logout Button -->
+            <Button fx:id="btnLogout" onAction="#handleLogout" styleClass="logout-button" text="🚪" />
+         </children>
+      </HBox>
+   </top>
+   
+   <center>
+      <!-- Quiz List Container with ScrollPane -->
+      <ScrollPane fx:id="scrollPane" fitToWidth="true" styleClass="quiz-list-scrollpane">
+         <content>
+            <VBox fx:id="quizContainer" alignment="TOP_CENTER" spacing="20.0" style="-fx-padding: 20 20 20 20;">
+               <!-- Dynamic quiz cards will be added here by the controller -->
+            </VBox>
+         </content>
+      </ScrollPane>
+   </center>
+   
+   <bottom>
+      <!-- Footer with Back Button -->
+      <HBox alignment="CENTER_LEFT" styleClass="quiz-list-footer">
+         <children>
+            <Button fx:id="btnBack" onAction="#handleBack" styleClass="back-button" text="← Back" />
+         </children>
+      </HBox>
+   </bottom>
+</BorderPane>

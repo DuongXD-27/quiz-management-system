@@ -79,31 +79,28 @@ public class TeacherDashboardController implements Initializable {
     }
     
     /**
-     * Handle Manage Questions card click - Open Create Question Modal
+     * Handle Manage Questions card click - Navigate to Create Question Screen
      */
     private void handleManageQuestions(MouseEvent event) {
         try {
-            // Load CreateQuestion.fxml
+            // Load CreateQuestion.fxml (Full Screen)
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/CreateQuestion.fxml"));
-            Parent createQuestionRoot = loader.load();
+            Parent root = loader.load();
             
-            // Get CreateQuestionController and set parent controller reference
-            CreateQuestionController createQuestionController = loader.getController();
-            createQuestionController.setParentController(this);
+            // Get CreateQuestionController and pass AuthService
+            CreateQuestionController controller = loader.getController();
+            if (authService != null) {
+                controller.setAuthService(authService);
+            }
             
-            // Clear dialog container and add the form
-            dialogContainer.getChildren().clear();
-            dialogContainer.getChildren().add(createQuestionRoot);
-            
-            // Show dialog container
-            dialogContainer.setVisible(true);
-            
-            // Apply blur effect to main content
-            BoxBlur blur = new BoxBlur(10, 10, 3);
-            mainContent.setEffect(blur);
+            // Get current stage and set new scene
+            Stage stage = (Stage) cardQuestions.getScene().getWindow();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
             
         } catch (Exception e) {
-            JavaFXHelper.showError("Lỗi hệ thống", "Không thể mở form tạo câu hỏi: " + e.getMessage());
+            JavaFXHelper.showError("System Error", "Failed to load Create Question screen: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -123,21 +120,62 @@ public class TeacherDashboardController implements Initializable {
     }
     
     /**
-     * Handle Manage Quizzes card click
+     * Handle Manage Quizzes card click - Navigate to Quiz List Screen
      */
     private void handleManageQuizzes(MouseEvent event) {
-        System.out.println("Clicked: Manage Quizzes");
-        // TODO: Navigate to Manage Quizzes screen
-        JavaFXHelper.showInfo("Manage Quizzes", "Chức năng quản lý bài kiểm tra sẽ được triển khai sau");
+        try {
+            // Load QuizList.fxml (Full Screen)
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/QuizList.fxml"));
+            Parent root = loader.load();
+            
+            // Get QuizListController and pass AuthService
+            QuizListController controller = loader.getController();
+            if (authService != null) {
+                controller.setAuthService(authService);
+            }
+            
+            // Get current stage and set new scene
+            Stage stage = (Stage) cardQuizzes.getScene().getWindow();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.setTitle("Quiz Management System - Quiz List");
+            stage.show();
+            
+        } catch (Exception e) {
+            JavaFXHelper.showError("System Error", "Failed to load Quiz List screen: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
     
     /**
-     * Handle View Results card click
+     * Handle View Results card click - Navigate to Student Results Screen
      */
     private void handleViewResults(MouseEvent event) {
-        System.out.println("Clicked: View Results");
-        // TODO: Navigate to View Results screen
-        JavaFXHelper.showInfo("View Results", "Chức năng xem kết quả sẽ được triển khai sau");
+        try {
+            // Load StudentResults.fxml (Full Screen)
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/StudentResults.fxml"));
+            Parent root = loader.load();
+            
+            // Get StudentResultsController and pass data
+            StudentResultsController controller = loader.getController();
+            if (authService != null) {
+                controller.setAuthService(authService);
+            }
+            
+            // Set the quiz information (this would normally come from user selection)
+            controller.setQuizInfo("Quiz 1: Basic");
+            
+            // Get current stage and set new scene
+            Stage stage = (Stage) cardResults.getScene().getWindow();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.setTitle("Quiz Management System - Student Results");
+            stage.show();
+            
+        } catch (Exception e) {
+            JavaFXHelper.showError("System Error", "Failed to load Student Results screen: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
     
     /**

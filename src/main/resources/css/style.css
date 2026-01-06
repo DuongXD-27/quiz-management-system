@@ -636,3 +636,1017 @@ RadioButton:selected {
 * {
     -fx-effect: null;
 }
+
+/* ============================================
+   Quiz List - Purple Card Design
+   ============================================ */
+
+/* Quiz Card Container - White background with purple bottom border/shadow */
+.quiz-card {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 12px;
+    -fx-pref-width: 900px;
+    -fx-min-width: 900px;
+    -fx-max-width: 900px;
+    -fx-pref-height: 120px;
+    -fx-min-height: 120px;
+    -fx-max-height: 120px;
+    -fx-padding: 20px 30px;
+    -fx-border-width: 0;
+    -fx-effect: dropshadow(gaussian, rgba(106, 27, 154, 0.3), 15, 0, 0, 6);
+    -fx-border-color: transparent;
+    -fx-border-width: 0 0 6 0;
+    -fx-border-insets: 0 0 -6 0;
+}
+
+/* Purple bottom border effect using border */
+.quiz-card {
+    -fx-border-color: #6A1B9A;
+    -fx-border-width: 0 0 6 0;
+}
+
+/* Quiz Card Hover State */
+.quiz-card:hover {
+    -fx-effect: dropshadow(gaussian, rgba(106, 27, 154, 0.5), 20, 0, 0, 8);
+    -fx-translate-y: -2;
+}
+
+/* Quiz Subject Label */
+.quiz-subject {
+    -fx-font-size: 20px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #2D3447;
+}
+
+/* Quiz Info Label (Duration, Points) */
+.quiz-info {
+    -fx-font-size: 14px;
+    -fx-font-weight: 500;
+    -fx-text-fill: #757575;
+}
+
+/* Join Now Button - Purple Gradient */
+.join-button {
+    -fx-pref-height: 40px;
+    -fx-pref-width: 120px;
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #6A1B9A 0%, #AB47BC 100%);
+    -fx-background-radius: 20px;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 14px;
+    -fx-font-weight: 700;
+    -fx-letter-spacing: 0.5px;
+    -fx-cursor: hand;
+    -fx-border-width: 0;
+    -fx-effect: dropshadow(gaussian, rgba(106, 27, 154, 0.4), 8, 0, 0, 3);
+}
+
+.join-button:hover {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #4A148C 0%, #8E24AA 100%);
+    -fx-effect: dropshadow(gaussian, rgba(106, 27, 154, 0.6), 12, 0, 0, 4);
+}
+
+.join-button:pressed {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #38006B 0%, #6A1B9A 100%);
+    -fx-effect: dropshadow(gaussian, rgba(106, 27, 154, 0.3), 4, 0, 0, 2);
+    -fx-translate-y: 1px;
+}
+
+/* Back Button */
+.back-button {
+    -fx-pref-height: 40px;
+    -fx-pref-width: 100px;
+    -fx-background-color: transparent;
+    -fx-background-radius: 20px;
+    -fx-text-fill: #6A1B9A;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-cursor: hand;
+    -fx-border-width: 1px;
+    -fx-border-color: #6A1B9A;
+    -fx-border-radius: 20px;
+}
+
+.back-button:hover {
+    -fx-background-color: rgba(106, 27, 154, 0.1);
+    -fx-text-fill: #4A148C;
+    -fx-border-color: #4A148C;
+}
+
+.back-button:pressed {
+    -fx-background-color: rgba(106, 27, 154, 0.2);
+    -fx-translate-y: 1px;
+}
+
+/* Quiz List ScrollPane - Transparent Background */
+.quiz-list-scrollpane {
+    -fx-background: transparent;
+    -fx-background-color: transparent;
+    -fx-border-width: 0;
+}
+
+.quiz-list-scrollpane .viewport {
+    -fx-background-color: transparent;
+}
+
+.quiz-list-scrollpane .scroll-bar:vertical {
+    -fx-background-color: transparent;
+}
+
+.quiz-list-scrollpane .scroll-bar:vertical .track {
+    -fx-background-color: transparent;
+}
+
+.quiz-list-scrollpane .scroll-bar:vertical .thumb {
+    -fx-background-color: rgba(106, 27, 154, 0.3);
+    -fx-background-radius: 5px;
+}
+
+.quiz-list-scrollpane .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: rgba(106, 27, 154, 0.5);
+}
+
+/* Quiz List Footer */
+.quiz-list-footer {
+    -fx-background-color: transparent;
+    -fx-padding: 20px 40px;
+    -fx-alignment: center-left;
+}
+
+/* ============================================
+   Take Quiz Interface Styles
+   ============================================ */
+
+/* Timer Container */
+.timer-container {
+    -fx-alignment: center;
+    -fx-padding: 20px;
+}
+
+/* Timer Label - Large, Bold, Centered */
+.timer-label {
+    -fx-font-size: 24px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #2D3447;
+    -fx-text-alignment: center;
+}
+
+/* Question Card */
+.question-card {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 15px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 10, 0, 0, 5);
+    -fx-padding: 30px 40px;
+    -fx-pref-width: 800px;
+    -fx-max-width: 800px;
+    -fx-alignment: center;
+}
+
+.question-text {
+    -fx-font-size: 22px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #2D3447;
+    -fx-text-alignment: center;
+    -fx-wrap-text: true;
+}
+
+/* 1. Make the CONTAINER transparent so we can see the gaps */
+.answers-container, .vbox-answers {
+    -fx-background-color: transparent !important;
+    -fx-effect: null !important;
+    -fx-border-width: 0;
+}
+
+/* 2. Style the INDIVIDUAL BUTTONS to look like floating cards */
+.answer-option {
+    -fx-background-color: white;
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    /* Add a distinct shadow to each button */
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 10, 0, 0, 4);
+    -fx-padding: 15 20;
+    -fx-font-size: 14px;
+    -fx-alignment: CENTER_LEFT;
+    -fx-pref-width: 600px;
+    -fx-min-width: 600px;
+    -fx-pref-height: 60px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #2D3447;
+    -fx-cursor: hand;
+    -fx-border-width: 0;
+    -fx-background-insets: 0;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.answer-option:hover {
+    -fx-background-color: #f4f4f4;
+    -fx-cursor: hand;
+}
+
+/* Selected state (Purple) - Using .selected class for JavaFX */
+.answer-option.selected {
+    -fx-background-color: linear-gradient(to right, #6A1B9A, #8E24AA);
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(three-pass-box, rgba(106, 27, 154, 0.4), 10, 0, 0, 4);
+}
+
+.answer-option.selected:hover {
+    -fx-background-color: linear-gradient(to right, #4A148C, #7B1FA2);
+}
+
+/* Next Question Button */
+.next-button {
+    -fx-pref-height: 50px;
+    -fx-pref-width: 200px;
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #6A1B9A 0%, #AB47BC 100%);
+    -fx-background-radius: 25px;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 16px;
+    -fx-font-weight: 700;
+    -fx-letter-spacing: 0.5px;
+    -fx-cursor: hand;
+    -fx-border-width: 0;
+    -fx-effect: dropshadow(gaussian, rgba(106, 27, 154, 0.4), 8, 0, 0, 3);
+}
+
+.next-button:hover {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #4A148C 0%, #8E24AA 100%);
+    -fx-effect: dropshadow(gaussian, rgba(106, 27, 154, 0.6), 12, 0, 0, 4);
+}
+
+.next-button:pressed {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #38006B 0%, #6A1B9A 100%);
+    -fx-effect: dropshadow(gaussian, rgba(106, 27, 154, 0.3), 4, 0, 0, 2);
+    -fx-translate-y: 1px;
+}
+
+.next-button:disabled {
+    -fx-background-color: #E0E0E0;
+    -fx-text-fill: #9E9E9E;
+    -fx-cursor: default;
+    -fx-effect: none;
+}
+
+/* Exit Button - Subtle Style */
+.exit-button {
+    -fx-pref-height: 32px;
+    -fx-pref-width: 32px;
+    -fx-background-color: transparent;
+    -fx-background-radius: 16px;
+    -fx-text-fill: #757575;
+    -fx-font-size: 18px;
+    -fx-font-weight: 600;
+    -fx-cursor: hand;
+    -fx-border-width: 0;
+    -fx-padding: 0;
+}
+
+.exit-button:hover {
+    -fx-background-color: rgba(244, 67, 54, 0.1);
+    -fx-text-fill: #F44336;
+}
+
+.exit-button:pressed {
+    -fx-background-color: rgba(244, 67, 54, 0.2);
+    -fx-text-fill: #D32F2F;
+}
+
+/* ============================================
+   Quiz Result Screen Styles
+   ============================================ */
+
+/* Result Card Header - Purple Gradient Background (TOP ONLY rounded) */
+.result-card-header {
+    -fx-background-color: linear-gradient(to bottom, #7B1FA2, #9C27B0);
+    -fx-background-radius: 20 20 0 0;
+    -fx-padding: 50 40 30 40;
+    -fx-alignment: center;
+}
+
+/* Result Card Body - White Background (BOTTOM ONLY rounded) */
+.result-card-body {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 0 0 20 20;
+    -fx-padding: 40 40 40 40;
+    -fx-alignment: center;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.05), 5, 0, 0, 2);
+}
+
+/* Score Circle Container - Light Purple Gradient Background */
+.score-circle-container {
+    -fx-background-color: linear-gradient(to bottom, #D1C4E9, #EDE7F6);
+    -fx-background-radius: 70; /* Match the Circle radius */
+    -fx-pref-width: 140;
+    -fx-pref-height: 140;
+    -fx-min-width: 140;
+    -fx-min-height: 140;
+    -fx-max-width: 140;
+    -fx-max-height: 140;
+}
+
+/* Score Text - Large (e.g., "45 / 50") - Dark text for light gradient background */
+.score-text-large {
+    -fx-font-size: 36px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #4A148C;
+    -fx-text-alignment: center;
+}
+
+/* Score Text - Small (e.g., "Your Score") - Dark text for light gradient background */
+.score-text-small {
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #6A1B9A;
+    -fx-text-alignment: center;
+}
+
+/* Result Subject Label */
+.result-subject {
+    -fx-font-size: 16px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #2D3447;
+    -fx-text-alignment: center;
+}
+
+/* Result Info Label (e.g., completion time) */
+.result-info {
+    -fx-font-size: 14px;
+    -fx-font-weight: 500;
+    -fx-text-fill: #757575;
+    -fx-text-alignment: center;
+}
+
+/* Primary Button - Purple Gradient (Return to Dashboard) */
+.btn-primary {
+    -fx-pref-height: 50px;
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #6A1B9A 0%, #AB47BC 100%);
+    -fx-background-radius: 25px;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 14px;
+    -fx-font-weight: 700;
+    -fx-letter-spacing: 0.5px;
+    -fx-cursor: hand;
+    -fx-border-width: 0;
+    -fx-effect: dropshadow(gaussian, rgba(106, 27, 154, 0.4), 8, 0, 0, 3);
+}
+
+.btn-primary:hover {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #4A148C 0%, #8E24AA 100%);
+    -fx-effect: dropshadow(gaussian, rgba(106, 27, 154, 0.6), 12, 0, 0, 4);
+}
+
+.btn-primary:pressed {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #38006B 0%, #6A1B9A 100%);
+    -fx-effect: dropshadow(gaussian, rgba(106, 27, 154, 0.3), 4, 0, 0, 2);
+    -fx-translate-y: 1px;
+}
+
+/* Secondary Button - White with Purple Border (Review Answers) */
+.btn-secondary {
+    -fx-pref-height: 50px;
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 25px;
+    -fx-text-fill: #6A1B9A;
+    -fx-font-size: 14px;
+    -fx-font-weight: 700;
+    -fx-letter-spacing: 0.5px;
+    -fx-cursor: hand;
+    -fx-border-width: 2px;
+    -fx-border-color: #6A1B9A;
+    -fx-border-radius: 25px;
+}
+
+.btn-secondary:hover {
+    -fx-background-color: rgba(106, 27, 154, 0.1);
+    -fx-text-fill: #4A148C;
+    -fx-border-color: #4A148C;
+}
+
+.btn-secondary:pressed {
+    -fx-background-color: rgba(106, 27, 154, 0.2);
+    -fx-translate-y: 1px;
+}
+
+/* ============================================
+   Create Question Screen Styles
+   ============================================ */
+
+/* Form Container - White Card */
+.create-question-form {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 15px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.08), 12, 0, 0, 4);
+    -fx-padding: 40px;
+}
+
+/* Form Labels */
+.create-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #424242;
+}
+
+/* TextFields - White with border */
+.create-textfield {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #BDBDBD;
+    -fx-border-width: 1px;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-padding: 12px 16px;
+    -fx-font-size: 14px;
+    -fx-text-fill: #2D3447;
+    -fx-prompt-text-fill: #9E9E9E;
+    -fx-pref-height: 45px;
+}
+
+.create-textfield:focused {
+    -fx-border-color: #2196F3;
+    -fx-border-width: 2px;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.create-textfield:hover {
+    -fx-border-color: #757575;
+}
+
+/* TextFields Inline (in answer options) */
+.create-textfield-inline {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #BDBDBD;
+    -fx-border-width: 1px;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-padding: 10px 12px;
+    -fx-font-size: 14px;
+    -fx-text-fill: #2D3447;
+    -fx-prompt-text-fill: #9E9E9E;
+}
+
+.create-textfield-inline:focused {
+    -fx-border-color: #2196F3;
+    -fx-border-width: 2px;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.create-textfield-inline:hover {
+    -fx-border-color: #757575;
+}
+
+/* TextArea - White with border */
+.create-textarea {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #BDBDBD;
+    -fx-border-width: 1px;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-padding: 12px 16px;
+    -fx-font-size: 14px;
+    -fx-text-fill: #2D3447;
+    -fx-prompt-text-fill: #9E9E9E;
+    -fx-wrap-text: true;
+}
+
+.create-textarea:focused {
+    -fx-border-color: #2196F3;
+    -fx-border-width: 2px;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.create-textarea:hover {
+    -fx-border-color: #757575;
+}
+
+/* Answer Option Box */
+.answer-option-box {
+    -fx-background-color: #F5F5F5;
+    -fx-background-radius: 8px;
+    -fx-padding: 12px 15px;
+    -fx-border-color: black;
+    -fx-border-width: 1px;
+    -fx-border-radius: 8px;
+}
+
+/* Add Question Button - Large Blue Gradient (Top to Bottom) */
+.add-question-button {
+    -fx-background-color: linear-gradient(to bottom, #004a99, #007bff);
+    -fx-background-radius: 10px;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 16px;
+    -fx-font-weight: 700;
+    -fx-cursor: hand;
+    -fx-border-width: 0;
+    -fx-effect: dropshadow(gaussian, rgba(0, 74, 153, 0.4), 10, 0, 0, 4);
+}
+
+.add-question-button:hover {
+    -fx-background-color: linear-gradient(to bottom, #003d7a, #0066cc);
+    -fx-effect: dropshadow(gaussian, rgba(0, 74, 153, 0.6), 12, 0, 0, 5);
+}
+
+.add-question-button:pressed {
+    -fx-background-color: linear-gradient(to bottom, #003366, #0052a3);
+    -fx-effect: dropshadow(gaussian, rgba(0, 74, 153, 0.3), 6, 0, 0, 2);
+    -fx-translate-y: 1px;
+}
+
+/* Save Quiz Button - Smaller, Bottom Right */
+.save-quiz-button {
+    -fx-background-color: #4CAF50;
+    -fx-background-radius: 8px;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 14px;
+    -fx-font-weight: 700;
+    -fx-cursor: hand;
+    -fx-border-width: 0;
+    -fx-effect: dropshadow(gaussian, rgba(76, 175, 80, 0.4), 8, 0, 0, 3);
+}
+
+.save-quiz-button:hover {
+    -fx-background-color: #43A047;
+    -fx-effect: dropshadow(gaussian, rgba(76, 175, 80, 0.6), 10, 0, 0, 4);
+}
+
+.save-quiz-button:pressed {
+    -fx-background-color: #388E3C;
+    -fx-effect: dropshadow(gaussian, rgba(76, 175, 80, 0.3), 5, 0, 0, 2);
+    -fx-translate-y: 1px;
+}
+
+/* Back to Dashboard Button */
+.back-button-create {
+    -fx-pref-height: 40px;
+    -fx-pref-width: 180px;
+    -fx-background-color: transparent;
+    -fx-background-radius: 20px;
+    -fx-text-fill: #1976D2;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-cursor: hand;
+    -fx-border-width: 2px;
+    -fx-border-color: #1976D2;
+    -fx-border-radius: 20px;
+}
+
+.back-button-create:hover {
+    -fx-background-color: rgba(25, 118, 210, 0.1);
+    -fx-text-fill: #0D47A1;
+    -fx-border-color: #0D47A1;
+}
+
+.back-button-create:pressed {
+    -fx-background-color: rgba(25, 118, 210, 0.2);
+    -fx-translate-y: 1px;
+}
+
+/* ============================================
+   Quiz List (Teacher) - TableView Styles
+   ============================================ */
+
+/* Table Container - White background with rounded corners */
+.table-container {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 15px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.08), 12, 0, 0, 4);
+    -fx-padding: 20px;
+}
+
+/* Quiz Table - Clean styling */
+.quiz-table {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 15px;
+    -fx-border-color: #E0E0E0;
+    -fx-border-width: 1px;
+    -fx-border-radius: 15px;
+}
+
+/* Remove default table padding/background */
+.quiz-table .corner {
+    -fx-background-color: transparent;
+}
+
+.quiz-table .filler {
+    -fx-background-color: transparent;
+}
+
+/* Table Column Headers */
+.quiz-table .column-header-background {
+    -fx-background-color: #F5F5F5;
+    -fx-background-radius: 15 15 0 0;
+}
+
+.quiz-table .column-header {
+    -fx-background-color: transparent;
+    -fx-border-color: #E0E0E0;
+    -fx-border-width: 0 0 2 0;
+    -fx-padding: 15px 20px;
+}
+
+.quiz-table .column-header .label {
+    -fx-font-size: 14px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #2D3447;
+    -fx-alignment: CENTER_LEFT;
+}
+
+/* Table Rows */
+.quiz-table .table-row-cell {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #E8E8E8;
+    -fx-border-width: 0 0 1 0;
+    -fx-padding: 10px 0;
+}
+
+.quiz-table .table-row-cell:hover {
+    -fx-background-color: #F9F9F9;
+}
+
+.quiz-table .table-row-cell:selected {
+    -fx-background-color: #E3F2FD;
+}
+
+/* Table Cells */
+.quiz-table .table-cell {
+    -fx-padding: 15px 20px;
+    -fx-alignment: CENTER_LEFT;
+    -fx-font-size: 14px;
+    -fx-text-fill: #2D3447;
+}
+
+/* Remove focus border from table */
+.quiz-table:focused {
+    -fx-background-color: #FFFFFF;
+    -fx-background-insets: 0;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+/* Assign to Students Button - Dark Blue/Navy */
+.assign-button {
+    -fx-background-color: #2c3e50;
+    -fx-background-radius: 20px;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-cursor: hand;
+    -fx-padding: 10px 25px;
+    -fx-border-width: 0;
+    -fx-effect: dropshadow(gaussian, rgba(44, 62, 80, 0.3), 6, 0, 0, 2);
+}
+
+.assign-button:hover {
+    -fx-background-color: #34495e;
+    -fx-effect: dropshadow(gaussian, rgba(44, 62, 80, 0.5), 8, 0, 0, 3);
+}
+
+.assign-button:pressed {
+    -fx-background-color: #1a252f;
+    -fx-effect: dropshadow(gaussian, rgba(44, 62, 80, 0.2), 4, 0, 0, 1);
+    -fx-translate-y: 1px;
+}
+
+/* Back to Dashboard Button - Outlined Style */
+.back-button-outline {
+    -fx-background-color: transparent;
+    -fx-background-radius: 8px;
+    -fx-text-fill: #2D3447;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-cursor: hand;
+    -fx-padding: 10px 20px;
+    -fx-border-width: 2px;
+    -fx-border-color: #2D3447;
+    -fx-border-radius: 8px;
+}
+
+.back-button-outline:hover {
+    -fx-background-color: rgba(45, 52, 71, 0.08);
+    -fx-border-color: #1A237E;
+    -fx-text-fill: #1A237E;
+}
+
+.back-button-outline:pressed {
+    -fx-background-color: rgba(45, 52, 71, 0.15);
+    -fx-translate-y: 1px;
+}
+
+/* ============================================
+   Add Student to Quiz Screen Styles
+   ============================================ */
+
+/* Add Student Container - White card with border */
+.add-student-container {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 15px;
+    -fx-border-color: #E0E0E0;
+    -fx-border-width: 1px;
+    -fx-border-radius: 15px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.05), 8, 0, 0, 2);
+}
+
+/* Assigned Students Container - White card with border */
+.assigned-students-container {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 15px;
+    -fx-border-color: #E0E0E0;
+    -fx-border-width: 1px;
+    -fx-border-radius: 15px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.05), 8, 0, 0, 2);
+}
+
+/* Section Title Bold */
+.section-title-bold {
+    -fx-font-size: 16px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #2D3447;
+}
+
+/* Table Header Label */
+.table-header-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #2D3447;
+}
+
+/* Add Student TextField */
+.add-student-textfield {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #BDBDBD;
+    -fx-border-width: 1px;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-padding: 12px 16px;
+    -fx-font-size: 14px;
+    -fx-text-fill: #2D3447;
+    -fx-prompt-text-fill: #9E9E9E;
+    -fx-pref-height: 45px;
+}
+
+.add-student-textfield:focused {
+    -fx-border-color: #2c3e50;
+    -fx-border-width: 2px;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.add-student-textfield:hover {
+    -fx-border-color: #757575;
+}
+
+/* Add Student Button - Blue Gradient, Pill-Shaped */
+.add-student-button {
+    -fx-background-color: linear-gradient(to right, #004e92, #000428);
+    -fx-background-radius: 30px;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 16px;
+    -fx-font-weight: 700;
+    -fx-cursor: hand;
+    -fx-border-width: 0;
+    -fx-effect: dropshadow(gaussian, rgba(0, 78, 146, 0.4), 10, 0, 0, 4);
+}
+
+.add-student-button:hover {
+    -fx-background-color: linear-gradient(to right, #0066b3, #001a3d);
+    -fx-effect: dropshadow(gaussian, rgba(0, 78, 146, 0.6), 12, 0, 0, 5);
+}
+
+.add-student-button:pressed {
+    -fx-background-color: linear-gradient(to right, #003a6b, #000218);
+    -fx-effect: dropshadow(gaussian, rgba(0, 78, 146, 0.3), 6, 0, 0, 2);
+    -fx-translate-y: 1px;
+}
+
+/* Assigned Students Table */
+.assigned-students-table {
+    -fx-background-color: transparent;
+    -fx-border-width: 0;
+}
+
+.assigned-students-table .corner {
+    -fx-background-color: transparent;
+}
+
+.assigned-students-table .filler {
+    -fx-background-color: transparent;
+}
+
+.assigned-students-table .column-header-background {
+    -fx-background-color: transparent;
+}
+
+.assigned-students-table .column-header {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-padding: 0;
+    visibility: hidden;
+}
+
+.assigned-students-table .column-header .label {
+    visibility: hidden;
+}
+
+.assigned-students-table .table-row-cell {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #E8E8E8;
+    -fx-border-width: 0 0 1 0;
+    -fx-padding: 10px 0;
+}
+
+.assigned-students-table .table-row-cell:hover {
+    -fx-background-color: #F9F9F9;
+}
+
+.assigned-students-table .table-row-cell:selected {
+    -fx-background-color: #E3F2FD;
+}
+
+.assigned-students-table .table-cell {
+    -fx-padding: 15px 20px;
+    -fx-alignment: CENTER_LEFT;
+    -fx-font-size: 14px;
+    -fx-text-fill: #2D3447;
+}
+
+.assigned-students-table:focused {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+/* Remove Button - Dark Navy */
+.remove-button {
+    -fx-background-color: #2c3e50;
+    -fx-background-radius: 20px;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-cursor: hand;
+    -fx-padding: 8px 25px;
+    -fx-border-width: 0;
+    -fx-effect: dropshadow(gaussian, rgba(44, 62, 80, 0.3), 6, 0, 0, 2);
+}
+
+.remove-button:hover {
+    -fx-background-color: #e74c3c;
+    -fx-effect: dropshadow(gaussian, rgba(231, 76, 60, 0.5), 8, 0, 0, 3);
+}
+
+.remove-button:pressed {
+    -fx-background-color: #c0392b;
+    -fx-effect: dropshadow(gaussian, rgba(192, 57, 43, 0.3), 4, 0, 0, 1);
+    -fx-translate-y: 1px;
+}
+
+/* ============================================
+   Student Results Screen Styles
+   ============================================ */
+
+/* Student Results ScrollPane - Transparent */
+.student-results-scrollpane {
+    -fx-background: transparent;
+    -fx-background-color: transparent;
+    -fx-border-width: 0;
+}
+
+.student-results-scrollpane .viewport {
+    -fx-background-color: transparent;
+}
+
+.student-results-scrollpane .scroll-bar:vertical {
+    -fx-background-color: transparent;
+}
+
+.student-results-scrollpane .scroll-bar:vertical .track {
+    -fx-background-color: transparent;
+}
+
+.student-results-scrollpane .scroll-bar:vertical .thumb {
+    -fx-background-color: rgba(45, 52, 71, 0.3);
+    -fx-background-radius: 5px;
+}
+
+.student-results-scrollpane .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: rgba(45, 52, 71, 0.5);
+}
+
+/* Student Result Card - White floating card */
+.student-result-card {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 10px;
+    -fx-padding: 20px;
+    -fx-pref-width: 900px;
+    -fx-max-width: 900px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.08), 10, 0, 0, 4);
+    -fx-border-width: 0;
+}
+
+.student-result-card:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.12), 15, 0, 0, 5);
+    -fx-translate-y: -2;
+}
+
+/* Export to CSV Button - Dark Blue */
+.export-csv-button {
+    -fx-background-color: #2c3e50;
+    -fx-background-radius: 8px;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-cursor: hand;
+    -fx-padding: 10px 25px;
+    -fx-border-width: 0;
+    -fx-effect: dropshadow(gaussian, rgba(44, 62, 80, 0.3), 6, 0, 0, 2);
+}
+
+.export-csv-button:hover {
+    -fx-background-color: #34495e;
+    -fx-effect: dropshadow(gaussian, rgba(44, 62, 80, 0.5), 8, 0, 0, 3);
+}
+
+.export-csv-button:pressed {
+    -fx-background-color: #1a252f;
+    -fx-effect: dropshadow(gaussian, rgba(44, 62, 80, 0.2), 4, 0, 0, 1);
+    -fx-translate-y: 1px;
+}
+
+/* ============================================
+   Student My Results Screen Styles
+   ============================================ */
+
+/* Page Title - Large White Text */
+.page-title-white {
+    -fx-font-size: 36px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #FFFFFF;
+}
+
+/* Back Button - White Background */
+.back-button-white {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 8px;
+    -fx-text-fill: #2D3447;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-cursor: hand;
+    -fx-padding: 10px 20px;
+    -fx-border-width: 0;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 8, 0, 0, 3);
+}
+
+.back-button-white:hover {
+    -fx-background-color: #F5F5F5;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 10, 0, 0, 4);
+}
+
+.back-button-white:pressed {
+    -fx-background-color: #E0E0E0;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.08), 5, 0, 0, 2);
+    -fx-translate-y: 1px;
+}
+
+/* My Results ScrollPane - Transparent */
+.my-results-scrollpane {
+    -fx-background: transparent;
+    -fx-background-color: transparent;
+    -fx-border-width: 0;
+}
+
+.my-results-scrollpane .viewport {
+    -fx-background-color: transparent;
+}
+
+.my-results-scrollpane .scroll-bar:vertical {
+    -fx-background-color: transparent;
+}
+
+.my-results-scrollpane .scroll-bar:vertical .track {
+    -fx-background-color: transparent;
+}
+
+.my-results-scrollpane .scroll-bar:vertical .thumb {
+    -fx-background-color: rgba(255, 255, 255, 0.4);
+    -fx-background-radius: 5px;
+}
+
+.my-results-scrollpane .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.6);
+}
+
+/* Result Card - White box with shadow */
+.my-result-card {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 20px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 15, 0, 0, 5);
+    -fx-border-width: 0;
+    -fx-cursor: hand;
+}
+
+.my-result-card:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.25), 20, 0, 0, 8);
+    -fx-translate-y: -3;
+}
