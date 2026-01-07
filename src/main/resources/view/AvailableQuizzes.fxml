@@ -41,7 +41,7 @@
       <!-- Quiz List Container with ScrollPane -->
       <ScrollPane fx:id="scrollPane" fitToWidth="true" styleClass="quiz-list-scrollpane">
          <content>
-            <VBox fx:id="quizContainer" alignment="TOP_CENTER" spacing="20.0" style="-fx-padding: 20 20 20 20;">
+            <VBox fx:id="quizContainer" alignment="TOP_CENTER" spacing="28.0" style="-fx-padding: 28 20 32 20;">
                <!-- Dynamic quiz cards will be added here by the controller -->
             </VBox>
          </content>

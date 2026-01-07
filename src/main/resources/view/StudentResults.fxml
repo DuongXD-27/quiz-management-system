@@ -51,7 +51,10 @@
             <!-- Action Buttons Row -->
             <HBox alignment="CENTER_LEFT" maxWidth="900.0" prefWidth="900.0" spacing="20.0">
                <children>
-                  <Button fx:id="btnBackToDashboard" onAction="#handleBackToDashboard" styleClass="back-button-outline" text="Back to Dashboard" />
+                  <Button fx:id="btnBackToDashboard" onAction="#handleBackToDashboard" text="← Back to Dashboard"
+                          style="-fx-background-color: rgba(25,118,210,0.08); -fx-text-fill: #0b5ed7; -fx-font-weight: 800;
+                                  -fx-padding: 10 20; -fx-background-radius: 10; -fx-cursor: hand;
+                                  -fx-border-color: rgba(11,94,215,0.25); -fx-border-radius: 10;" />
                   <Button fx:id="btnExportCSV" onAction="#handleExportCSV" styleClass="export-csv-button" text="Export to CSV">
                      <HBox.margin>
                         <Insets left="10.0" />
@@ -66,6 +69,9 @@
                   <Label prefWidth="600.0" styleClass="list-header-label" text="Student Fullname" />
                   <Label prefWidth="300.0" styleClass="list-header-label" text="Score" />
                </children>
+               <VBox.margin>
+                  <Insets bottom="4.0" />
+               </VBox.margin>
             </HBox>
             
             <!-- Student Results List (ScrollPane with VBox) -->

@@ -31,9 +31,6 @@ public class QuizResultController implements Initializable, NavigationAware {
     private Button btnReturnToDashboard;
     
     @FXML
-    private Button btnReviewAnswers;
-    
-    @FXML
     private Button btnExit;
     
     // Result data
@@ -73,17 +70,6 @@ public class QuizResultController implements Initializable, NavigationAware {
     @FXML
     private void handleReturnToDashboard() {
         NavigationManager.getInstance().navigateTo(AppScreen.STUDENT_DASHBOARD);
-    }
-    
-    /**
-     * Handle Review Answers button click
-     */
-    @FXML
-    private void handleReviewAnswers() {
-        // TODO: Implement Review Answers functionality
-        // This would load a screen showing all questions with user's answers and correct answers
-        // NavigationManager.getInstance().navigateTo(AppScreen.REVIEW_ANSWERS, data);
-        System.out.println("Review Answers feature - Coming Soon");
     }
     
     /**

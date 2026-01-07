@@ -6,6 +6,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.Node;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Region;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -133,6 +136,7 @@ public class NavigationManager {
             
             // CREATE NEW SCENE
             Scene newScene = new Scene(root);
+            enhanceScrollSpeed(newScene);
             
             // STEP 1: AGGRESSIVE BINDING (Before setting scene)
             if (root instanceof Region) {
@@ -227,6 +231,48 @@ public class NavigationManager {
                 root.applyCss();
                 root.layout();
             }
+        });
+    }
+    
+    /**
+     * Tăng tốc độ cuộn chuột cho tất cả ScrollPane trong scene
+     */
+    private void enhanceScrollSpeed(Scene scene) {
+        final double speedMultiplier = 2.5; // higher = faster scroll
+        
+        scene.addEventFilter(ScrollEvent.SCROLL, event -> {
+            if (event.getDeltaY() == 0) {
+                return;
+            }
+            
+            Node target = (Node) event.getTarget();
+            ScrollPane scrollPane = null;
+            
+            // Tìm ScrollPane cha gần nhất của target
+            while (target != null) {
+                if (target instanceof ScrollPane) {
+                    scrollPane = (ScrollPane) target;
+                    break;
+                }
+                target = target.getParent();
+            }
+            
+            if (scrollPane == null || scrollPane.getContent() == null) {
+                return;
+            }
+            
+            double contentHeight = scrollPane.getContent().getBoundsInLocal().getHeight();
+            if (contentHeight <= 0) {
+                return;
+            }
+            
+            // JavaFX: deltaY dương = cuộn lên → vvalue giảm
+            double delta = (event.getDeltaY() / contentHeight) * speedMultiplier;
+            double newValue = scrollPane.getVvalue() - delta;
+            newValue = Math.min(1.0, Math.max(0.0, newValue));
+            
+            scrollPane.setVvalue(newValue);
+            event.consume();
         });
     }
     

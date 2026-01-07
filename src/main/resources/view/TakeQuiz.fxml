@@ -85,8 +85,21 @@
             </children>
          </VBox>
          
-         <!-- Next Question Button -->
-         <Button fx:id="btnNext" onAction="#handleNext" styleClass="next-button" text="Next question" />
+         <!-- Navigation Buttons Row -->
+         <HBox alignment="CENTER" spacing="40.0">
+            <children>
+               <Button fx:id="btnPrevious" onAction="#handlePrevious" styleClass="secondary-button" text="← Previous question">
+                  <HBox.margin>
+                     <Insets right="40.0" />
+                  </HBox.margin>
+               </Button>
+               <Button fx:id="btnNext" onAction="#handleNext" styleClass="next-button" text="Next question">
+                  <HBox.margin>
+                     <Insets left="40.0" />
+                  </HBox.margin>
+               </Button>
+            </children>
+         </HBox>
       </VBox>
    </center>
 </BorderPane>

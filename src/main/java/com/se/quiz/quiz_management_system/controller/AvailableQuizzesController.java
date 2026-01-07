@@ -12,6 +12,7 @@ import com.se.quiz.quiz_management_system.session.SessionManager;
 import com.se.quiz.quiz_management_system.util.JavaFXHelper;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -287,6 +288,9 @@ public class AvailableQuizzesController implements Initializable {
         
         // Add sections to card
         card.getChildren().addAll(infoSection, joinButton);
+        
+        // Add vertical spacing between cards inside VBox container
+        VBox.setMargin(card, new Insets(6, 0, 6, 0));
         
         return card;
     }

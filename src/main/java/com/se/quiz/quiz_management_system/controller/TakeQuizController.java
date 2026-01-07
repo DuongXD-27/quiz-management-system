@@ -53,6 +53,9 @@ public class TakeQuizController implements Initializable, NavigationAware {
     private Button btnNext;
     
     @FXML
+    private Button btnPrevious;
+    
+    @FXML
     private Button btnExit;
     
     @FXML
@@ -73,6 +76,8 @@ public class TakeQuizController implements Initializable, NavigationAware {
     private int currentQuestionIndex = 0; // 0-based index
     private int correctAnswers = 0;
     private int startTime; // To track completion time
+    private String[] selectedAnswers; // Stores selected answer letter per question
+    private boolean isSubmitted = false; // Prevent duplicate submissions
     
     private AuthService authService;
     private QuizService quizService;
@@ -170,6 +175,7 @@ public class TakeQuizController implements Initializable, NavigationAware {
             
             // Mark as loaded
             quizDataLoaded = true;
+            selectedAnswers = new String[questions.size()];
             
             // Record start time
             startTime = (int) (System.currentTimeMillis() / 1000);
@@ -236,6 +242,45 @@ public class TakeQuizController implements Initializable, NavigationAware {
         // Reset selection
         clearSelection();
         
+        // Re-apply previous selection for this question (if any)
+        if (selectedAnswers != null && questionIndex < selectedAnswers.length) {
+            String saved = selectedAnswers[questionIndex];
+            if (saved != null) {
+                switch (saved) {
+                    case "A":
+                        btnAnswerA.getStyleClass().add("selected");
+                        selectedAnswerButton = btnAnswerA;
+                        break;
+                    case "B":
+                        btnAnswerB.getStyleClass().add("selected");
+                        selectedAnswerButton = btnAnswerB;
+                        break;
+                    case "C":
+                        btnAnswerC.getStyleClass().add("selected");
+                        selectedAnswerButton = btnAnswerC;
+                        break;
+                    case "D":
+                        btnAnswerD.getStyleClass().add("selected");
+                        selectedAnswerButton = btnAnswerD;
+                        break;
+                    default:
+                        selectedAnswerButton = null;
+                }
+            }
+        }
+        
+        // Update navigation buttons
+        if (btnPrevious != null) {
+            btnPrevious.setDisable(currentQuestionIndex == 0);
+        }
+        if (btnNext != null && questions != null) {
+            if (currentQuestionIndex >= questions.size() - 1) {
+                btnNext.setText("Submit quiz");
+            } else {
+                btnNext.setText("Next question");
+            }
+        }
+        
         System.out.println("Showing question " + (questionIndex + 1) + "/" + questions.size());
     }
     
@@ -252,6 +297,19 @@ public class TakeQuizController implements Initializable, NavigationAware {
         // Add selected class to clicked button
         clickedButton.getStyleClass().add("selected");
         selectedAnswerButton = clickedButton;
+        
+        // Persist selection for this question
+        if (selectedAnswers != null && currentQuestionIndex < selectedAnswers.length) {
+            if (clickedButton == btnAnswerA) {
+                selectedAnswers[currentQuestionIndex] = "A";
+            } else if (clickedButton == btnAnswerB) {
+                selectedAnswers[currentQuestionIndex] = "B";
+            } else if (clickedButton == btnAnswerC) {
+                selectedAnswers[currentQuestionIndex] = "C";
+            } else if (clickedButton == btnAnswerD) {
+                selectedAnswers[currentQuestionIndex] = "D";
+            }
+        }
     }
     
     /**
@@ -281,9 +339,18 @@ public class TakeQuizController implements Initializable, NavigationAware {
             if (timeRemaining <= 0) {
                 stopTimer();
                 // Auto-submit quiz when time runs out
-                JavaFXHelper.showWarning("Time's Up!", 
-                    "Time has run out for this quiz. Your answers will be submitted automatically.");
-                navigateToResultScreen();
+                try {
+                    navigateToResultScreen();
+                    // Optional, non-blocking notification after submission
+                    javafx.application.Platform.runLater(() -> 
+                        JavaFXHelper.showWarning("Time's Up!",
+                            "Time has run out. Your quiz has been submitted automatically.")
+                    );
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    JavaFXHelper.showError("Submit Error",
+                        "An error occurred while submitting your quiz automatically: " + ex.getMessage());
+                }
             }
         }));
         
@@ -316,30 +383,12 @@ public class TakeQuizController implements Initializable, NavigationAware {
      */
     @FXML
     private void handleNext() {
-        if (selectedAnswerButton == null) {
+        // Ensure current question has an answer
+        if (selectedAnswers == null || currentQuestionIndex >= selectedAnswers.length || selectedAnswers[currentQuestionIndex] == null) {
             JavaFXHelper.showWarning("No Selection", "Please select an answer before proceeding.");
             return;
         }
-        
-        // Get selected answer letter (A, B, C, or D)
-        String selectedAnswer = null;
-        if (selectedAnswerButton == btnAnswerA) selectedAnswer = "A";
-        else if (selectedAnswerButton == btnAnswerB) selectedAnswer = "B";
-        else if (selectedAnswerButton == btnAnswerC) selectedAnswer = "C";
-        else if (selectedAnswerButton == btnAnswerD) selectedAnswer = "D";
-        
-        // ✅ CHECK ANSWER AGAINST DATABASE VALUE
-        String correctAnswer = currentQuestion.getCorrectAnswer();
-        boolean isCorrect = (selectedAnswer != null && selectedAnswer.equalsIgnoreCase(correctAnswer));
-        
-        // Track correct answers
-        if (isCorrect) {
-            correctAnswers++;
-            System.out.println("Correct! Answer: " + selectedAnswer);
-        } else {
-            System.out.println("Incorrect. Selected: " + selectedAnswer + ", Correct: " + correctAnswer);
-        }
-        
+
         // Check if this was the last question
         if (currentQuestionIndex >= questions.size() - 1) {
             // Quiz finished - Navigate to Result screen
@@ -356,6 +405,27 @@ public class TakeQuizController implements Initializable, NavigationAware {
      * CRITICAL: Saves result to database before navigating
      */
     private void navigateToResultScreen() {
+        // Ensure selectedAnswers array exists to avoid NPE when auto-submitting with unanswered questions
+        if (selectedAnswers == null && questions != null) {
+            selectedAnswers = new String[questions.size()];
+        }
+        
+        // Recalculate correct answers based on all saved selections (unanswered are treated as incorrect)
+        correctAnswers = 0;
+        if (questions != null && selectedAnswers != null) {
+            for (int i = 0; i < questions.size() && i < selectedAnswers.length; i++) {
+                String chosen = selectedAnswers[i];
+                String correct = questions.get(i).getCorrectAnswer();
+                if (chosen != null && correct != null && chosen.equalsIgnoreCase(correct)) {
+                    correctAnswers++;
+                }
+            }
+        }
+        
+        // Guard: prevent double submissions
+        if (!checkAndMarkSubmitted()) {
+            return;
+        }
         // Calculate completion time
         int endTime = (int) (System.currentTimeMillis() / 1000);
         int timeTakenSeconds = endTime - startTime;
@@ -481,5 +551,25 @@ public class TakeQuizController implements Initializable, NavigationAware {
         stopTimer();
         Stage stage = (Stage) btnExit.getScene().getWindow();
         stage.close();
+    }
+    
+    /**
+     * Handle Previous Question button click
+     */
+    @FXML
+    private void handlePrevious() {
+        if (questions == null || currentQuestionIndex <= 0) {
+            return;
+        }
+        showQuestion(currentQuestionIndex - 1);
+    }
+    
+    // Prevent double submissions
+    private boolean checkAndMarkSubmitted() {
+        if (isSubmitted) {
+            return false;
+        }
+        isSubmitted = true;
+        return true;
     }
 }

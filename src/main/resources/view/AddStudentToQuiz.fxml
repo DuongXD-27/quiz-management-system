@@ -53,8 +53,14 @@
             <!-- Back to Dashboard Button -->
             <HBox alignment="CENTER_LEFT" maxWidth="1000.0" prefWidth="1000.0">
                <children>
-                  <Button fx:id="btnBackToDashboard" onAction="#handleBackToDashboard" styleClass="back-button-outline" text="Back to Dashboard" />
+                  <Button fx:id="btnBackToDashboard" onAction="#handleBackToDashboard" text="← Back to Dashboard"
+                          style="-fx-background-color: rgba(25,118,210,0.08); -fx-text-fill: #0b5ed7; -fx-font-weight: 800;
+                                  -fx-padding: 10 20; -fx-background-radius: 10; -fx-cursor: hand;
+                                  -fx-border-color: rgba(11,94,215,0.25); -fx-border-radius: 10;" />
                </children>
+               <VBox.margin>
+                  <Insets bottom="14.0" />
+               </VBox.margin>
             </HBox>
             
             <!-- Add Student Section -->

@@ -1,9 +1,22 @@
 spring.application.name=quiz-management-system
 
-# Database Configuration (CHANGE THESE VALUES!)
-spring.datasource.url=jdbc:postgresql://localhost:5432/quiz_db
-spring.datasource.username=YOUR_USERNAME_HERE
-spring.datasource.password=YOUR_PASSWORD_HERE
+# ============================================
+# DATABASE CONFIGURATION - FOR STUDENTS
+# ============================================
+# Students: Use the teacher's database server
+# Teacher: Use localhost
+# ============================================
+
+# For STUDENTS: Connect to teacher's database
+spring.datasource.url=jdbc:postgresql://192.168.0.103:5432/quiz_db
+spring.datasource.username=postgres
+spring.datasource.password=duong1235
+
+# For TEACHER (if running on teacher's machine):
+# spring.datasource.url=jdbc:postgresql://localhost:5432/quiz_db
+# spring.datasource.username=postgres
+# spring.datasource.password=duong1235
+
 spring.datasource.driver-class-name=org.postgresql.Driver
 
 # JPA/Hibernate Configuration

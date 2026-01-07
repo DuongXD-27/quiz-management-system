@@ -21,23 +21,26 @@
 <AnchorPane xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" 
             fx:controller="com.se.quiz.quiz_management_system.controller.CreateQuestionController"
             minWidth="0.0" minHeight="0.0" prefWidth="1920.0" prefHeight="1080.0"
-            style="-fx-background-color: linear-gradient(to bottom right, #E8EAF6, #E3F2FD);" 
+            style="-fx-background-color: linear-gradient(to bottom right, #e3f2fd, #e8eaf6);
+                    -fx-background-radius: 0 0 18 18;"
             stylesheets="@../css/style.css">
    
    <!-- Header Toolbar - Anchored to Top -->
    <HBox alignment="CENTER_LEFT" prefHeight="100.0" 
-         style="-fx-background-color: #FFFFFF; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 20, 0, 0, 5); -fx-border-color: #F0F0F0; -fx-border-width: 0 0 1 0; -fx-padding: 0 40 0 40;"
+         style="-fx-background-color: linear-gradient(to right, #ffffff, #f7f9ff);
+                -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.12), 20, 0, 0, 6);
+                -fx-border-color: #eef2ff; -fx-border-width: 0 0 1 0; -fx-padding: 0 48 0 48;"
          AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <children>
          <!-- Left: Logo + QMS Text -->
          <HBox alignment="CENTER_LEFT" spacing="15.0">
             <children>
-               <ImageView fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
+               <ImageView fitHeight="58.0" fitWidth="58.0" pickOnBounds="true" preserveRatio="true">
                   <image>
                      <Image url="@../image/logo.png" />
                   </image>
                </ImageView>
-               <Label style="-fx-font-size: 18px; -fx-font-weight: 700; -fx-text-fill: #1A237E;" text="QMS - Create Question" />
+               <Label style="-fx-font-size: 18px; -fx-font-weight: 800; -fx-text-fill: #0f172a;" text="QMS · Create Question" />
             </children>
          </HBox>
          
@@ -45,8 +48,11 @@
          <Region HBox.hgrow="ALWAYS" />
          <HBox alignment="CENTER_RIGHT" spacing="15.0">
             <children>
-               <Label fx:id="lblWelcome" styleClass="welcome-text" text="Welcome, Teacher" />
-               <Button fx:id="btnLogout" onAction="#handleLogout" styleClass="logout-button" text="🚪 Logout" />
+               <Label fx:id="lblWelcome" style="-fx-font-size: 13px; -fx-text-fill: #475569;" text="Welcome, Teacher" />
+               <Button fx:id="btnLogout" onAction="#handleLogout"
+                       style="-fx-background-color: transparent; -fx-text-fill: #0f172a; -fx-font-weight: 700; -fx-cursor: hand;
+                               -fx-border-color: rgba(15,23,42,0.12); -fx-border-radius: 8; -fx-padding: 8 14;"
+                       text="⇦ Logout" />
             </children>
          </HBox>
       </children>
@@ -58,54 +64,79 @@
                AnchorPane.topAnchor="100.0" AnchorPane.bottomAnchor="0.0" 
                AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
       <content>
-         <VBox alignment="TOP_CENTER" spacing="30.0" style="-fx-padding: 40 80 40 80;">
+         <VBox alignment="TOP_CENTER" spacing="32.0" style="-fx-padding: 48 88 48 88;">
             <children>
                <!-- Back Button -->
                <HBox alignment="CENTER_LEFT" maxWidth="1200.0" prefWidth="1200.0">
                   <children>
                      <Button fx:id="btnBackToDashboard" onAction="#handleBackToDashboard" 
-                             style="-fx-background-color: #E3F2FD; -fx-text-fill: #1976D2; -fx-font-weight: 700; -fx-padding: 10 20; -fx-background-radius: 8; -fx-cursor: hand;" 
+                             style="-fx-background-color: rgba(25,118,210,0.08); -fx-text-fill: #0b5ed7; -fx-font-weight: 800;
+                                     -fx-padding: 10 20; -fx-background-radius: 10; -fx-cursor: hand; -fx-border-color: rgba(11,94,215,0.25);
+                                     -fx-border-radius: 10;"
                              text="← Back to Dashboard" />
                   </children>
+                  <VBox.margin>
+                     <Insets bottom="14.0" />
+                  </VBox.margin>
                </HBox>
                
                <!-- Form Card -->
                <VBox maxWidth="1200.0" prefWidth="1200.0" spacing="25.0" 
-                     style="-fx-background-color: #FFFFFF; -fx-background-radius: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 15, 0, 0, 3); -fx-padding: 40;">
+                     style="-fx-background-color: linear-gradient(to bottom right, #ffffff, #f7f9ff);
+                            -fx-background-radius: 18; -fx-effect: dropshadow(three-pass-box, rgba(15,23,42,0.15), 22, 0, 0, 8);
+                            -fx-padding: 44 42 40 42; -fx-border-color: rgba(25,118,210,0.08); -fx-border-radius: 18;">
                   <children>
                      <!-- Form Title -->
-                     <Label text="New Quiz Question" 
-                            style="-fx-font-size: 24px; -fx-font-weight: 700; -fx-text-fill: #1A237E;">
+                     <VBox spacing="4.0">
+                        <children>
+                           <Label text="New Quiz Question" 
+                                  style="-fx-font-size: 26px; -fx-font-weight: 800; -fx-text-fill: #0f172a;" />
+                           <Label text="Craft premium questions with rich options and a clear flow."
+                                  style="-fx-font-size: 13px; -fx-text-fill: #6b7280;" />
+                        </children>
                         <VBox.margin>
-                           <Insets bottom="10.0" />
+                           <Insets bottom="6.0" />
                         </VBox.margin>
-                     </Label>
+                     </VBox>
                      
                      <!-- Quiz Name Field -->
                      <VBox spacing="8.0">
                         <children>
-                           <Label text="Quiz Name:" style="-fx-font-size: 14px; -fx-font-weight: 600; -fx-text-fill: #424242;" />
+                           <Label text="Quiz Name" style="-fx-font-size: 14px; -fx-font-weight: 700; -fx-text-fill: #1f2937;" />
                            <TextField fx:id="txtQuizName" promptText="e.g., Mathematics - Chapter 1" 
-                                      style="-fx-background-color: #F5F5F5; -fx-background-radius: 8; -fx-padding: 12; -fx-font-size: 14px; -fx-border-color: #E0E0E0; -fx-border-radius: 8; -fx-border-width: 1;" />
+                                      style="-fx-background-color: #f8fafc; -fx-background-radius: 10; -fx-padding: 12;
+                                              -fx-font-size: 14px; -fx-border-color: rgba(25,118,210,0.25); -fx-border-radius: 10;
+                                              -fx-border-width: 1.2;" />
                         </children>
                      </VBox>
                      
                      <!-- Time Limit Field -->
                      <VBox spacing="8.0">
                         <children>
-                           <Label text="Question Time Limit (minutes):" style="-fx-font-size: 14px; -fx-font-weight: 600; -fx-text-fill: #424242;" />
+                           <Label text="Quiz Time Limit (minutes)" style="-fx-font-size: 14px; -fx-font-weight: 700; -fx-text-fill: #1f2937;" />
                            <TextField fx:id="txtTimeLimit" promptText="e.g., 2" 
-                                      style="-fx-background-color: #F5F5F5; -fx-background-radius: 8; -fx-padding: 12; -fx-font-size: 14px; -fx-border-color: #E0E0E0; -fx-border-radius: 8; -fx-border-width: 1;" />
+                                      style="-fx-background-color: #f8fafc; -fx-background-radius: 10; -fx-padding: 12;
+                                              -fx-font-size: 14px; -fx-border-color: rgba(76,175,80,0.28); -fx-border-radius: 10;
+                                              -fx-border-width: 1.2;" />
                         </children>
                      </VBox>
                      
                      <!-- Question Content Field -->
                      <VBox spacing="8.0">
                         <children>
-                           <Label text="Question Content:" style="-fx-font-size: 14px; -fx-font-weight: 600; -fx-text-fill: #424242;" />
-                           <TextArea fx:id="txtQuestionContent" prefHeight="150.0" wrapText="true"
-                                     promptText="Enter your question here..." 
-                                     style="-fx-background-color: #F5F5F5; -fx-background-radius: 8; -fx-padding: 12; -fx-font-size: 14px; -fx-border-color: #E0E0E0; -fx-border-radius: 8; -fx-border-width: 1;" />
+                           <Label text="Question Content" style="-fx-font-size: 14px; -fx-font-weight: 700; -fx-text-fill: #1f2937;" />
+                           <VBox style="-fx-background-color: #f8fafc; -fx-background-radius: 12; -fx-padding: 12;
+                                        -fx-border-color: rgba(25,118,210,0.25); -fx-border-radius: 12; -fx-border-width: 1.2;">
+                              <children>
+                                 <TextArea fx:id="txtQuestionContent" prefHeight="170.0" wrapText="true"
+                                           promptText="Enter your question here..." 
+                                           style="-fx-background-color: transparent; -fx-control-inner-background: transparent;
+                                                   -fx-padding: 8; -fx-font-size: 14px; -fx-text-fill: #111111;
+                                                   -fx-prompt-text-fill: #94a3b8; -fx-border-color: transparent;
+                                                   -fx-background-insets: 0; -fx-focus-color: transparent; -fx-faint-focus-color: transparent;"
+                                           VBox.vgrow="ALWAYS" />
+                              </children>
+                           </VBox>
                         </children>
                      </VBox>
                      
@@ -113,7 +144,7 @@
                      <VBox spacing="12.0">
                         <children>
                            <Label text="Answer Options (Select the correct one):" 
-                                  style="-fx-font-size: 14px; -fx-font-weight: 600; -fx-text-fill: #424242;" />
+                                  style="-fx-font-size: 14px; -fx-font-weight: 800; -fx-text-fill: #0f172a;" />
                            
                            <!-- 2x2 Grid Layout for Options -->
                            <GridPane hgap="25.0" vgap="20.0">
@@ -128,7 +159,8 @@
                               <children>
                                  <!-- Option A (Top Left) -->
                                  <HBox alignment="CENTER_LEFT" spacing="12.0" 
-                                       style="-fx-background-color: #F5F5F5; -fx-background-radius: 8; -fx-padding: 12; -fx-border-color: #E0E0E0; -fx-border-radius: 8; -fx-border-width: 1;"
+                                       style="-fx-background-color: #f8fafc; -fx-background-radius: 12; -fx-padding: 14;
+                                              -fx-border-color: rgba(25,118,210,0.25); -fx-border-radius: 12; -fx-border-width: 1.2;"
                                        GridPane.columnIndex="0" GridPane.rowIndex="0">
                                     <children>
                                        <RadioButton fx:id="rbOptionA">
@@ -136,7 +168,7 @@
                                              <ToggleGroup fx:id="answerGroup" />
                                           </toggleGroup>
                                        </RadioButton>
-                                       <Label style="-fx-font-size: 14px; -fx-font-weight: 700; -fx-text-fill: #1976D2; -fx-min-width: 20;" text="A." />
+                                       <Label style="-fx-font-size: 14px; -fx-font-weight: 800; -fx-text-fill: #1976D2; -fx-min-width: 20;" text="A." />
                                        <TextField fx:id="txtOptionA" promptText="Enter option A" 
                                                   style="-fx-background-color: transparent; -fx-font-size: 14px;" 
                                                   HBox.hgrow="ALWAYS" />
@@ -145,11 +177,12 @@
                                  
                                  <!-- Option B (Top Right) -->
                                  <HBox alignment="CENTER_LEFT" spacing="12.0" 
-                                       style="-fx-background-color: #F5F5F5; -fx-background-radius: 8; -fx-padding: 12; -fx-border-color: #E0E0E0; -fx-border-radius: 8; -fx-border-width: 1;"
+                                       style="-fx-background-color: #f8fafc; -fx-background-radius: 12; -fx-padding: 14;
+                                              -fx-border-color: rgba(67,160,71,0.25); -fx-border-radius: 12; -fx-border-width: 1.2;"
                                        GridPane.columnIndex="1" GridPane.rowIndex="0">
                                     <children>
                                        <RadioButton fx:id="rbOptionB" toggleGroup="$answerGroup" />
-                                       <Label style="-fx-font-size: 14px; -fx-font-weight: 700; -fx-text-fill: #43A047; -fx-min-width: 20;" text="B." />
+                                       <Label style="-fx-font-size: 14px; -fx-font-weight: 800; -fx-text-fill: #2e7d32; -fx-min-width: 20;" text="B." />
                                        <TextField fx:id="txtOptionB" promptText="Enter option B" 
                                                   style="-fx-background-color: transparent; -fx-font-size: 14px;" 
                                                   HBox.hgrow="ALWAYS" />
@@ -158,11 +191,12 @@
                                  
                                  <!-- Option C (Bottom Left) -->
                                  <HBox alignment="CENTER_LEFT" spacing="12.0" 
-                                       style="-fx-background-color: #F5F5F5; -fx-background-radius: 8; -fx-padding: 12; -fx-border-color: #E0E0E0; -fx-border-radius: 8; -fx-border-width: 1;"
+                                       style="-fx-background-color: #f8fafc; -fx-background-radius: 12; -fx-padding: 14;
+                                              -fx-border-color: rgba(251,140,0,0.25); -fx-border-radius: 12; -fx-border-width: 1.2;"
                                        GridPane.columnIndex="0" GridPane.rowIndex="1">
                                     <children>
                                        <RadioButton fx:id="rbOptionC" toggleGroup="$answerGroup" />
-                                       <Label style="-fx-font-size: 14px; -fx-font-weight: 700; -fx-text-fill: #FB8C00; -fx-min-width: 20;" text="C." />
+                                       <Label style="-fx-font-size: 14px; -fx-font-weight: 800; -fx-text-fill: #f57c00; -fx-min-width: 20;" text="C." />
                                        <TextField fx:id="txtOptionC" promptText="Enter option C" 
                                                   style="-fx-background-color: transparent; -fx-font-size: 14px;" 
                                                   HBox.hgrow="ALWAYS" />
@@ -171,11 +205,12 @@
                                  
                                  <!-- Option D (Bottom Right) -->
                                  <HBox alignment="CENTER_LEFT" spacing="12.0" 
-                                       style="-fx-background-color: #F5F5F5; -fx-background-radius: 8; -fx-padding: 12; -fx-border-color: #E0E0E0; -fx-border-radius: 8; -fx-border-width: 1;"
+                                       style="-fx-background-color: #f8fafc; -fx-background-radius: 12; -fx-padding: 14;
+                                              -fx-border-color: rgba(229,57,53,0.25); -fx-border-radius: 12; -fx-border-width: 1.2;"
                                        GridPane.columnIndex="1" GridPane.rowIndex="1">
                                     <children>
                                        <RadioButton fx:id="rbOptionD" toggleGroup="$answerGroup" />
-                                       <Label style="-fx-font-size: 14px; -fx-font-weight: 700; -fx-text-fill: #E53935; -fx-min-width: 20;" text="D." />
+                                       <Label style="-fx-font-size: 14px; -fx-font-weight: 800; -fx-text-fill: #d32f2f; -fx-min-width: 20;" text="D." />
                                        <TextField fx:id="txtOptionD" promptText="Enter option D" 
                                                   style="-fx-background-color: transparent; -fx-font-size: 14px;" 
                                                   HBox.hgrow="ALWAYS" />
@@ -188,7 +223,7 @@
                      
                      <!-- Question Count Label -->
                      <Label fx:id="lblQuestionCount" text="Questions added: 0" 
-                            style="-fx-font-size: 14px; -fx-font-weight: 600; -fx-text-fill: #1976D2;">
+                            style="-fx-font-size: 14px; -fx-font-weight: 800; -fx-text-fill: #0b5ed7;">
                         <VBox.margin>
                            <Insets top="15.0" />
                         </VBox.margin>
@@ -197,7 +232,9 @@
                      <!-- Add Question Button -->
                      <Button fx:id="btnAddQuestion" maxWidth="Infinity" onAction="#handleAddQuestion" 
                              prefHeight="55.0" text="➕ Add Question to Quiz"
-                             style="-fx-background-color: #1976D2; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: 700; -fx-background-radius: 10; -fx-cursor: hand;">
+                             style="-fx-background-color: linear-gradient(to right, #2563eb, #1d4ed8);
+                                     -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: 800; -fx-background-radius: 12;
+                                     -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(37,99,235,0.3), 18, 0, 0, 8);">
                         <VBox.margin>
                            <Insets top="10.0" />
                         </VBox.margin>
@@ -210,7 +247,9 @@
                   <children>
                      <Button fx:id="btnSaveQuiz" onAction="#handleSaveQuiz" 
                              prefHeight="50.0" prefWidth="180.0" text="💾 Save Quiz"
-                             style="-fx-background-color: #43A047; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: 700; -fx-background-radius: 10; -fx-cursor: hand;">
+                             style="-fx-background-color: linear-gradient(to right, #16a34a, #15803d);
+                                     -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: 800; -fx-background-radius: 12;
+                                     -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(22,163,74,0.28), 16, 0, 0, 6);">
                      </Button>
                   </children>
                   <VBox.margin>

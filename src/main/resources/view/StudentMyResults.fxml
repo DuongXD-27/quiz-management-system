@@ -56,8 +56,14 @@
             <VBox alignment="TOP_LEFT" spacing="20.0">
                <children>
                   <!-- Back to Dashboard Button -->
-                  <Button fx:id="btnBackToDashboard" onAction="#handleBackToDashboard" styleClass="back-button-white" text="Back to Dashboard" />
-                  
+                  <Button fx:id="btnBackToDashboard" onAction="#handleBackToDashboard" text="← Back to Dashboard"
+                          style="-fx-background-color: rgba(255,255,255,0.12); -fx-text-fill: #ffffff; -fx-font-weight: 800;
+                                  -fx-padding: 10 20; -fx-background-radius: 10; -fx-cursor: hand;
+                                  -fx-border-color: rgba(255,255,255,0.35); -fx-border-radius: 10;">
+                     <VBox.margin>
+                        <Insets bottom="10.0" />
+                     </VBox.margin>
+                  </Button>
                   <!-- Page Title "My Results" -->
                   <Label styleClass="page-title-white" text="My Results" />
                </children>

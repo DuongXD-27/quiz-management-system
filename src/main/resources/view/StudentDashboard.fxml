@@ -81,6 +81,9 @@
                                     <Label styleClass="card-description" text="Join a class exam or practice" 
                                            style="-fx-font-size: 15px; -fx-text-fill: #6B7280; -fx-wrap-text: true; -fx-text-alignment: center;" />
                                  </children>
+                                 <HBox.margin>
+                                    <Insets left="20.0" right="20.0" />
+                                 </HBox.margin>
                               </VBox>
                               
                               <!-- Card 2: My Results -->
@@ -96,6 +99,9 @@
                                     <Label styleClass="card-description" text="Review history &amp; scores" 
                                            style="-fx-font-size: 15px; -fx-text-fill: #6B7280; -fx-wrap-text: true; -fx-text-alignment: center;" />
                                  </children>
+                                 <HBox.margin>
+                                    <Insets left="20.0" right="20.0" />
+                                 </HBox.margin>
                               </VBox>
                            </children>
                         </HBox>

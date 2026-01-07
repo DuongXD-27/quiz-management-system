@@ -632,11 +632,6 @@ RadioButton:selected {
     -fx-translate-y: 1px;
 }
 
-/* Smooth transitions for better UX */
-* {
-    -fx-effect: null;
-}
-
 /* ============================================
    Quiz List - Purple Card Design
    ============================================ */
@@ -885,6 +880,32 @@ RadioButton:selected {
     -fx-text-fill: #9E9E9E;
     -fx-cursor: default;
     -fx-effect: none;
+}
+
+/* Previous Question Button - softer gradient */
+.secondary-button {
+    -fx-pref-height: 50px;
+    -fx-pref-width: 200px;
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #9E9E9E 0%, #BDBDBD 100%);
+    -fx-background-radius: 25px;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 16px;
+    -fx-font-weight: 700;
+    -fx-letter-spacing: 0.5px;
+    -fx-cursor: hand;
+    -fx-border-width: 0;
+    -fx-effect: dropshadow(gaussian, rgba(158, 158, 158, 0.4), 8, 0, 0, 3);
+}
+
+.secondary-button:hover {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #757575 0%, #9E9E9E 100%);
+    -fx-effect: dropshadow(gaussian, rgba(117, 117, 117, 0.6), 12, 0, 0, 4);
+}
+
+.secondary-button:pressed {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #616161 0%, #757575 100%);
+    -fx-effect: dropshadow(gaussian, rgba(97, 97, 97, 0.3), 4, 0, 0, 2);
+    -fx-translate-y: 1px;
 }
 
 /* Exit Button - Subtle Style */

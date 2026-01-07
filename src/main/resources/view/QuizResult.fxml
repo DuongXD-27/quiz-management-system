@@ -81,13 +81,6 @@
                            <Insets top="20.0" />
                         </VBox.margin>
                      </Button>
-                     
-                     <!-- Button: Review Answers -->
-                     <Button fx:id="btnReviewAnswers" maxWidth="Infinity" onAction="#handleReviewAnswers" prefHeight="50.0" styleClass="btn-secondary" text="Review answers">
-                        <VBox.margin>
-                           <Insets top="15.0" />
-                        </VBox.margin>
-                     </Button>
                   </children>
                </VBox>
             </VBox>
