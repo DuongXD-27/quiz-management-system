@@ -1,34 +1,39 @@
 package com.se.quiz.quiz_management_system.controller;
 
+import com.se.quiz.quiz_management_system.entity.Student;
+import com.se.quiz.quiz_management_system.navigation.AppScreen;
+import com.se.quiz.quiz_management_system.navigation.NavigationManager;
+import com.se.quiz.quiz_management_system.navigation.NavigationAware;
 import com.se.quiz.quiz_management_system.service.AuthService;
+import com.se.quiz.quiz_management_system.service.QuizService;
 import com.se.quiz.quiz_management_system.session.SessionManager;
 import com.se.quiz.quiz_management_system.util.JavaFXHelper;
+import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.net.URL;
+import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 /**
  * Controller for the Add Student to Quiz view
  * Allows teachers to assign students to a specific quiz
  */
-public class AddStudentToQuizController implements Initializable {
+public class AddStudentToQuizController implements Initializable, NavigationAware {
     
     @FXML
     private Label lblWelcome;
+    
+    @FXML
+    private Label lblQuizName;
     
     @FXML
     private Button btnBackToDashboard;
@@ -43,20 +48,21 @@ public class AddStudentToQuizController implements Initializable {
     private Button btnAddStudent;
     
     @FXML
-    private Button btnAddAll;
+    private TableView<StudentModel> tblAssignedStudents;
     
     @FXML
-    private TableView<Student> tblAssignedStudents;
+    private TableColumn<StudentModel, String> colUsername;
     
     @FXML
-    private TableColumn<Student, String> colUsername;
-    
-    @FXML
-    private TableColumn<Student, Void> colAction;
+    private TableColumn<StudentModel, Void> colAction;
     
     private AuthService authService;
+    private QuizService quizService;
     
-    private ObservableList<Student> assignedStudents;
+    private ObservableList<StudentModel> assignedStudents;
+    
+    // Current quiz ID (passed from navigation)
+    private Long currentQuizId;
     
     /**
      * Set the AuthService instance
@@ -76,6 +82,43 @@ public class AddStudentToQuizController implements Initializable {
         }
     }
     
+    /**
+     * Set the QuizService instance (injected from Spring context)
+     * @param quizService the quiz service
+     */
+    public void setQuizService(QuizService quizService) {
+        this.quizService = quizService;
+        
+        // Reload assigned students when service is injected
+        if (currentQuizId != null && tblAssignedStudents != null) {
+            loadAssignedStudents();
+        }
+    }
+    
+    /**
+     * Called when navigating to this screen
+     * Receives data from previous screen (e.g., quiz ID)
+     */
+    @Override
+    public void onNavigatedTo(Map<String, Object> data) {
+        if (data != null && data.containsKey("quizId")) {
+            this.currentQuizId = (Long) data.get("quizId");
+            
+            // Update UI with quiz info
+            if (data.containsKey("quizName")) {
+                String quizName = (String) data.get("quizName");
+                if (lblQuizName != null) {
+                    lblQuizName.setText("Quiz: " + quizName);
+                }
+            }
+            
+            // Load assigned students if service is ready
+            if (quizService != null) {
+                loadAssignedStudents();
+            }
+        }
+    }
+    
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // Set up welcome text
@@ -89,8 +132,9 @@ public class AddStudentToQuizController implements Initializable {
         // Set up table columns
         setupTableColumns();
         
-        // Load mock student data
-        loadMockData();
+        // Initialize empty list (will be populated when quiz ID is set via onNavigatedTo)
+        assignedStudents = FXCollections.observableArrayList();
+        tblAssignedStudents.setItems(assignedStudents);
     }
     
     /**
@@ -110,7 +154,7 @@ public class AddStudentToQuizController implements Initializable {
                 
                 // Set button action
                 removeButton.setOnAction(event -> {
-                    Student student = getTableView().getItems().get(getIndex());
+                    StudentModel student = getTableView().getItems().get(getIndex());
                     handleRemoveStudent(student);
                 });
             }
@@ -130,21 +174,50 @@ public class AddStudentToQuizController implements Initializable {
     }
     
     /**
-     * Load mock student data
+     * Load assigned students from database
      */
-    private void loadMockData() {
-        // Create observable list for assigned students
-        assignedStudents = FXCollections.observableArrayList();
-        
-        // Add mock data - one student for demonstration
-        assignedStudents.add(new Student("j.smith"));
-        
-        // Set data to table
-        tblAssignedStudents.setItems(assignedStudents);
+    private void loadAssignedStudents() {
+        try {
+            // Check if QuizService and quizId are available
+            if (quizService == null || currentQuizId == null) {
+                System.out.println("QuizService or quizId not available, using empty data");
+                assignedStudents = FXCollections.observableArrayList();
+                tblAssignedStudents.setItems(assignedStudents);
+                return;
+            }
+            
+            // Fetch assigned students from database
+            List<Student> students = quizService.getStudentsForQuiz(currentQuizId);
+            
+            // Convert to StudentModel
+            ObservableList<StudentModel> modelList = FXCollections.observableArrayList();
+            for (Student student : students) {
+                modelList.add(new StudentModel(
+                    student.getStudentId(),
+                    student.getUsername()
+                ));
+            }
+            
+            // Set data to table
+            assignedStudents = modelList;
+            tblAssignedStudents.setItems(assignedStudents);
+            
+            System.out.println("Loaded " + students.size() + " assigned students for quiz ID " + currentQuizId);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            JavaFXHelper.showError("Data Load Error", 
+                "Failed to load assigned students: " + e.getMessage());
+            
+            // Set empty list on error
+            assignedStudents = FXCollections.observableArrayList();
+            tblAssignedStudents.setItems(assignedStudents);
+        }
     }
     
     /**
      * Handle Add Student button click
+     * CRITICAL: This now saves to database via QuizService
      */
     @FXML
     private void handleAddStudent() {
@@ -157,88 +230,95 @@ public class AddStudentToQuizController implements Initializable {
             return;
         }
         
-        // Check if student already assigned
-        for (Student student : assignedStudents) {
-            if (student.getUsername().equalsIgnoreCase(username)) {
-                JavaFXHelper.showError("Duplicate Entry", 
-                    "Student \"" + username + "\" is already assigned to this quiz");
-                return;
-            }
+        // Validate quizId
+        if (currentQuizId == null) {
+            JavaFXHelper.showError("Error", "No quiz selected. Please return to quiz list and try again.");
+            return;
         }
         
-        // Add student to list
-        assignedStudents.add(new Student(username));
+        // Check if QuizService is available
+        if (quizService == null) {
+            JavaFXHelper.showError("Service Error", "Quiz service is not available. Please try again.");
+            return;
+        }
         
-        // Clear text field
-        txtUsername.clear();
-        
-        // Show success message
-        JavaFXHelper.showInfo("Success", 
-            "Student \"" + username + "\" has been added to the quiz");
-        
-        System.out.println("Added student: " + username);
-    }
-    
-    /**
-     * Handle Add All Students button click
-     */
-    @FXML
-    private void handleAddAll() {
-        // TODO: Implement logic to add all students from a class or course
-        // For now, show a placeholder message
-        JavaFXHelper.showInfo("Add All Students", 
-            "This feature will add all students from the selected class.\n\n" +
-            "Implementation coming soon!");
+        try {
+            // ✅ CRITICAL: Save to database (INSERT INTO student_quiz)
+            boolean success = quizService.assignQuizToStudent(currentQuizId, username);
+            
+            if (success) {
+                // Clear text field
+                txtUsername.clear();
+                
+                // Reload assigned students list
+                loadAssignedStudents();
+                
+                // Show success message
+                JavaFXHelper.showInfo("Success", 
+                    "Student \"" + username + "\" has been assigned to this quiz");
+                
+                System.out.println("Assigned student '" + username + "' to quiz ID " + currentQuizId);
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            
+            // Show user-friendly error message
+            String errorMessage = e.getMessage();
+            if (errorMessage.contains("not found with username")) {
+                JavaFXHelper.showError("Student Not Found", 
+                    "No student found with username: " + username);
+            } else if (errorMessage.contains("already assigned")) {
+                JavaFXHelper.showError("Already Assigned", 
+                    "Student \"" + username + "\" is already assigned to this quiz");
+            } else {
+                JavaFXHelper.showError("Assignment Error", 
+                    "Failed to assign student: " + errorMessage);
+            }
+        }
     }
     
     /**
      * Handle Remove Student button click
+     * CRITICAL: This now deletes from database
      * @param student the student to remove
      */
-    private void handleRemoveStudent(Student student) {
+    private void handleRemoveStudent(StudentModel student) {
         // Confirm removal
         boolean confirmed = JavaFXHelper.showConfirmation("Remove Student", 
             "Are you sure you want to remove \"" + student.getUsername() + "\" from this quiz?");
         
         if (confirmed) {
-            // Remove student from list
-            assignedStudents.remove(student);
-            
-            // Show success message
-            JavaFXHelper.showInfo("Removed", 
-                "Student \"" + student.getUsername() + "\" has been removed from the quiz");
-            
-            System.out.println("Removed student: " + student.getUsername());
+            try {
+                // ✅ CRITICAL: Delete from database
+                boolean success = quizService.removeStudentFromQuiz(currentQuizId, student.getUsername());
+                
+                if (success) {
+                    // Reload list from database
+                    loadAssignedStudents();
+                    
+                    // Show success message
+                    JavaFXHelper.showInfo("Removed", 
+                        "Student \"" + student.getUsername() + "\" has been removed from the quiz");
+                    
+                    System.out.println("Removed student: " + student.getUsername());
+                }
+                
+            } catch (Exception e) {
+                e.printStackTrace();
+                JavaFXHelper.showError("Removal Error", 
+                    "Failed to remove student: " + e.getMessage());
+            }
         }
     }
     
     /**
      * Handle Back to Dashboard button click
+     * Uses NavigationManager to preserve window state
      */
     @FXML
     private void handleBackToDashboard() {
-        try {
-            // Load the Teacher Dashboard
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/TeacherDashboard.fxml"));
-            Parent root = loader.load();
-            
-            // Pass AuthService to the dashboard controller
-            TeacherDashboardController controller = loader.getController();
-            if (authService != null) {
-                controller.setAuthService(authService);
-            }
-            
-            // Get current stage and set new scene
-            Stage stage = (Stage) btnBackToDashboard.getScene().getWindow();
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-            stage.setTitle("Quiz Management System - Teacher Dashboard");
-            stage.show();
-            
-        } catch (IOException e) {
-            e.printStackTrace();
-            JavaFXHelper.showError("Navigation Error", "Failed to load Teacher Dashboard");
-        }
+        NavigationManager.getInstance().navigateTo(AppScreen.TEACHER_DASHBOARD);
     }
     
     /**
@@ -246,45 +326,40 @@ public class AddStudentToQuizController implements Initializable {
      */
     @FXML
     private void handleLogout() {
-        try {
-            // Clear session
-            if (authService != null) {
-                authService.logout();
-            } else {
-                SessionManager.clearSession();
-            }
-            
-            // Load the Login screen
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Login.fxml"));
-            Parent root = loader.load();
-            
-            // Pass AuthService to the login controller
-            LoginController controller = loader.getController();
-            if (authService != null) {
-                controller.setAuthService(authService);
-            }
-            
-            // Get current stage and set new scene
-            Stage stage = (Stage) btnLogout.getScene().getWindow();
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-            stage.setTitle("Quiz Management System - Login");
-            stage.show();
-            
-        } catch (IOException e) {
-            e.printStackTrace();
-            JavaFXHelper.showError("Logout Error", "Failed to logout. Please try again.");
+        // Clear session
+        if (authService != null) {
+            authService.logout();
+        } else {
+            SessionManager.clearSession();
         }
+        
+        // Navigate to Login using NavigationManager
+        NavigationManager.getInstance().navigateToLogin();
     }
     
     /**
-     * Student class - represents a student assigned to the quiz
+     * StudentModel class - represents a student assigned to the quiz
+     * Wrapper class for Student entity with JavaFX properties
      */
-    public static class Student {
-        private final StringProperty username;
+    public static class StudentModel {
+        private final SimpleLongProperty studentId;
+        private final SimpleStringProperty username;
         
-        public Student(String username) {
-            this.username = new SimpleStringProperty(username);
+        public StudentModel(Long studentId, String username) {
+            this.studentId = new SimpleLongProperty(studentId != null ? studentId : 0L);
+            this.username = new SimpleStringProperty(username != null ? username : "");
+        }
+        
+        public Long getStudentId() {
+            return studentId.get();
+        }
+        
+        public void setStudentId(Long studentId) {
+            this.studentId.set(studentId);
+        }
+        
+        public SimpleLongProperty studentIdProperty() {
+            return studentId;
         }
         
         public String getUsername() {
@@ -295,7 +370,7 @@ public class AddStudentToQuizController implements Initializable {
             this.username.set(username);
         }
         
-        public StringProperty usernameProperty() {
+        public SimpleStringProperty usernameProperty() {
             return username;
         }
     }

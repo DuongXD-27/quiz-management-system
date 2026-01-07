@@ -1,23 +1,22 @@
 package com.se.quiz.quiz_management_system.controller;
 
-import com.se.quiz.quiz_management_system.util.JavaFXHelper;
+import com.se.quiz.quiz_management_system.navigation.AppScreen;
+import com.se.quiz.quiz_management_system.navigation.NavigationAware;
+import com.se.quiz.quiz_management_system.navigation.NavigationManager;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.net.URL;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 /**
  * Controller for the Quiz Result view
  * Displays the quiz results with score, subject, and completion time
  */
-public class QuizResultController implements Initializable {
+public class QuizResultController implements Initializable, NavigationAware {
     
     @FXML
     private Label lblScore;
@@ -49,45 +48,31 @@ public class QuizResultController implements Initializable {
     }
     
     /**
-     * Set the result data to display
-     * This method should be called after loading the FXML
-     * 
-     * @param subject The quiz subject name
-     * @param score The user's score
-     * @param totalQuestions The total number of questions
-     * @param timeTaken The time taken to complete the quiz (e.g., "25 minutes")
+     * Called when navigated to this screen
+     * Receives result data from previous screen via NavigationManager
      */
-    public void setResultData(String subject, int score, int totalQuestions, String timeTaken) {
-        this.subjectName = subject;
-        this.score = score;
-        this.totalQuestions = totalQuestions;
-        this.timeTaken = timeTaken;
-        
-        // Update UI
-        lblScore.setText(score + " / " + totalQuestions);
-        lblSubject.setText("Subject: " + subject);
-        lblCompletionTime.setText("Completion time: " + timeTaken);
+    @Override
+    public void onNavigatedTo(Map<String, Object> data) {
+        if (data != null) {
+            this.subjectName = (String) data.get("subject");
+            this.score = data.containsKey("score") ? (Integer) data.get("score") : 0;
+            this.totalQuestions = data.containsKey("totalPoints") ? (Integer) data.get("totalPoints") : 0;
+            this.timeTaken = (String) data.get("timeTaken");
+            
+            // Update UI with received data
+            lblScore.setText(score + " / " + totalQuestions);
+            lblSubject.setText("Subject: " + subjectName);
+            lblCompletionTime.setText("Completion time: " + timeTaken);
+        }
     }
     
     /**
      * Handle Return to Dashboard button click
+     * Uses NavigationManager to preserve window state
      */
     @FXML
     private void handleReturnToDashboard() {
-        try {
-            // Load Student Dashboard
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/StudentDashboard.fxml"));
-            Scene scene = new Scene(loader.load());
-            
-            // Get current stage and set new scene
-            Stage stage = (Stage) btnReturnToDashboard.getScene().getWindow();
-            stage.setScene(scene);
-            stage.setTitle("Student Dashboard - Quiz Management System");
-            
-        } catch (IOException e) {
-            e.printStackTrace();
-            JavaFXHelper.showError("Navigation Error", "Failed to load Student Dashboard.");
-        }
+        NavigationManager.getInstance().navigateTo(AppScreen.STUDENT_DASHBOARD);
     }
     
     /**
@@ -97,7 +82,8 @@ public class QuizResultController implements Initializable {
     private void handleReviewAnswers() {
         // TODO: Implement Review Answers functionality
         // This would load a screen showing all questions with user's answers and correct answers
-        JavaFXHelper.showInfo("Coming Soon", "Review Answers feature will be implemented in the next version.");
+        // NavigationManager.getInstance().navigateTo(AppScreen.REVIEW_ANSWERS, data);
+        System.out.println("Review Answers feature - Coming Soon");
     }
     
     /**
@@ -105,7 +91,7 @@ public class QuizResultController implements Initializable {
      */
     @FXML
     private void handleExit() {
-        // Return to dashboard instead of closing
+        // Return to dashboard
         handleReturnToDashboard();
     }
 }

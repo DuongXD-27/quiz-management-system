@@ -1,16 +1,16 @@
 package com.se.quiz.quiz_management_system.controller;
 
+import com.se.quiz.quiz_management_system.entity.Question;
+import com.se.quiz.quiz_management_system.entity.Quiz;
+import com.se.quiz.quiz_management_system.navigation.AppScreen;
+import com.se.quiz.quiz_management_system.navigation.NavigationManager;
 import com.se.quiz.quiz_management_system.service.AuthService;
+import com.se.quiz.quiz_management_system.service.QuizService;
 import com.se.quiz.quiz_management_system.util.JavaFXHelper;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -73,7 +73,11 @@ public class CreateQuestionController implements Initializable {
     @FXML
     private ToggleGroup answerGroup;
     
+    @FXML
+    private Label lblQuestionCount;
+    
     private AuthService authService;
+    private QuizService quizService;
     
     // Temporary storage for questions added to the quiz
     private List<QuestionData> questionsList = new ArrayList<>();
@@ -89,6 +93,14 @@ public class CreateQuestionController implements Initializable {
         if (authService != null && authService.getCurrentUser() != null) {
             lblWelcome.setText("Welcome, " + authService.getCurrentUser().getUsername());
         }
+    }
+    
+    /**
+     * Set the QuizService instance (injected from Spring context)
+     * @param quizService the quiz service
+     */
+    public void setQuizService(QuizService quizService) {
+        this.quizService = quizService;
     }
     
     @Override
@@ -186,14 +198,8 @@ public class CreateQuestionController implements Initializable {
         );
         questionsList.add(questionData);
         
-        // Log for debugging (TODO: Replace with database insertion)
-        System.out.println("Question Added:");
-        System.out.println("  Quiz: " + quizName);
-        System.out.println("  Time Limit: " + timeLimit + " minutes");
-        System.out.println("  Question: " + questionContent);
-        System.out.println("  Options: A=" + optionA + ", B=" + optionB + ", C=" + optionC + ", D=" + optionD);
-        System.out.println("  Correct Answer: " + correctAnswer);
-        System.out.println("  Total Questions in Quiz: " + questionsList.size());
+        // Update question count display
+        updateQuestionCountLabel();
         
         // Show success message
         JavaFXHelper.showInfo("Success", "Question added successfully!\nTotal questions: " + questionsList.size());
@@ -208,56 +214,69 @@ public class CreateQuestionController implements Initializable {
      */
     @FXML
     private void handleSaveQuiz() {
+        // Validate that at least one question has been added
         if (questionsList.isEmpty()) {
-            JavaFXHelper.showError("Error", "Please add at least one question before saving the quiz");
+            JavaFXHelper.showError("Validation Error", "Please add at least one question before saving the quiz");
             return;
         }
         
-        // TODO: Implement database save logic here
-        // For now, just show a summary
-        String quizName = questionsList.get(0).quizName;
-        int totalQuestions = questionsList.size();
+        // Check if QuizService is available
+        if (quizService == null) {
+            JavaFXHelper.showError("Service Error", "Quiz service is not available. Please try again.");
+            return;
+        }
         
-        System.out.println("\n=== SAVING QUIZ ===");
-        System.out.println("Quiz Name: " + quizName);
-        System.out.println("Total Questions: " + totalQuestions);
-        
-        JavaFXHelper.showInfo("Quiz Saved", 
-            "Quiz \"" + quizName + "\" has been saved successfully!\n" +
-            "Total questions: " + totalQuestions);
-        
-        // Clear all data and return to dashboard
-        questionsList.clear();
-        clearAllFields();
-        handleBackToDashboard();
+        try {
+            // Get quiz information from the first question (all have same quiz name and time limit)
+            String quizName = questionsList.get(0).quizName;
+            int timeLimit = questionsList.get(0).timeLimit;
+            
+            // Convert QuestionData objects to Question entities
+            List<Question> questions = new ArrayList<>();
+            for (QuestionData qData : questionsList) {
+                Question question = new Question(
+                    qData.questionContent,
+                    qData.optionA,
+                    qData.optionB,
+                    qData.optionC,
+                    qData.optionD,
+                    qData.correctAnswer
+                );
+                questions.add(question);
+            }
+            
+            // Save quiz with all questions in a single transaction
+            Quiz savedQuiz = quizService.createQuizWithQuestions(quizName, timeLimit, questions);
+            
+            // Show success message
+            JavaFXHelper.showInfo("Success", 
+                "Quiz \"" + savedQuiz.getQuizName() + "\" has been saved successfully!\n" +
+                "Total questions: " + savedQuiz.getNumberOfQuestion() + "\n" +
+                "Quiz ID: " + savedQuiz.getQuizId());
+            
+            // Clear all data
+            questionsList.clear();
+            clearAllFields();
+            updateQuestionCountLabel();
+            
+            // Navigate to Quiz List to see the newly created quiz
+            NavigationManager.getInstance().navigateTo(AppScreen.QUIZ_LIST);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            JavaFXHelper.showError("Database Error", 
+                "Failed to save quiz: " + e.getMessage() + "\n" +
+                "Please check your database connection and try again.");
+        }
     }
     
     /**
      * Handle Back to Dashboard button click
+     * Uses NavigationManager to preserve window state
      */
     @FXML
     private void handleBackToDashboard() {
-        try {
-            // Load the Teacher Dashboard
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/TeacherDashboard.fxml"));
-            Parent root = loader.load();
-            
-            // Pass AuthService to the dashboard controller
-            TeacherDashboardController controller = loader.getController();
-            if (authService != null) {
-                controller.setAuthService(authService);
-            }
-            
-            // Get current stage and set new scene
-            Stage stage = (Stage) btnBackToDashboard.getScene().getWindow();
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-            stage.show();
-            
-        } catch (IOException e) {
-            e.printStackTrace();
-            JavaFXHelper.showError("Navigation Error", "Failed to load Teacher Dashboard");
-        }
+        NavigationManager.getInstance().navigateTo(AppScreen.TEACHER_DASHBOARD);
     }
     
     /**
@@ -282,33 +301,28 @@ public class CreateQuestionController implements Initializable {
     }
     
     /**
+     * Update the question count label
+     */
+    private void updateQuestionCountLabel() {
+        if (lblQuestionCount != null) {
+            lblQuestionCount.setText("Questions added: " + questionsList.size());
+        }
+    }
+    
+    /**
      * Handle Logout button click
-     * Navigates back to the Login screen
+     * Clears session and navigates back to Login screen
+     * Uses NavigationManager to preserve window state
      */
     @FXML
     private void handleLogout() {
-        try {
-            // Load the Login screen
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Login.fxml"));
-            Parent root = loader.load();
-            
-            // Pass AuthService to the login controller
-            LoginController controller = loader.getController();
-            if (authService != null) {
-                controller.setAuthService(authService);
-            }
-            
-            // Get current stage and set new scene
-            Stage stage = (Stage) btnLogout.getScene().getWindow();
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-            stage.setTitle("Quiz Management System - Login");
-            stage.show();
-            
-        } catch (IOException e) {
-            e.printStackTrace();
-            JavaFXHelper.showError("Navigation Error", "Failed to logout. Please try again.");
+        // Clear session if authService available
+        if (authService != null) {
+            authService.logout();
         }
+        
+        // Navigate to Login using NavigationManager
+        NavigationManager.getInstance().navigateToLogin();
     }
     
     /**

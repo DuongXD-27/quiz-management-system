@@ -7,12 +7,11 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane minWidth="0.0" minHeight="0.0" prefWidth="1920.0" prefHeight="1080.0" style="-fx-background-color: linear-gradient(to bottom right, #4a00e0, #8e2de2);" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.se.quiz.quiz_management_system.controller.StudentMyResultsController">
+<BorderPane minWidth="0.0" minHeight="0.0" prefWidth="1920.0" prefHeight="1080.0" style="-fx-background-color: #E3F2FD;" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.se.quiz.quiz_management_system.controller.QuizResultsListController">
    <top>
       <!-- Header Toolbar -->
       <HBox alignment="CENTER_LEFT" maxWidth="Infinity" prefHeight="100.0" style="-fx-background-color: #FFFFFF; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 15, 0, 0, 3); -fx-padding: 0 40 0 40;">
@@ -31,7 +30,7 @@
             
             <!-- Center: Page Title -->
             <Region HBox.hgrow="ALWAYS" />
-            <Label style="-fx-font-size: 20px; -fx-font-weight: 700; -fx-text-fill: #2D3447;" text="Student Dashboard" />
+            <Label style="-fx-font-size: 20px; -fx-font-weight: 700; -fx-text-fill: #2D3447;" text="Quiz Results Overview" />
             <Region HBox.hgrow="ALWAYS" />
             
             <!-- Right: Welcome Text + Logout Button -->
@@ -47,31 +46,34 @@
    
    <center>
       <!-- Main Content Area -->
-      <VBox alignment="TOP_LEFT" spacing="30.0">
-         <padding>
-            <Insets top="40.0" right="60.0" bottom="40.0" left="40.0" />
-         </padding>
+      <VBox alignment="TOP_CENTER" spacing="30.0" style="-fx-padding: 40 60 40 60;">
          <children>
-            <!-- Back Button and Title Section -->
-            <VBox alignment="TOP_LEFT" spacing="20.0">
+            <!-- Back to Dashboard Button -->
+            <HBox alignment="CENTER_LEFT" maxWidth="1400.0">
                <children>
-                  <!-- Back to Dashboard Button -->
-                  <Button fx:id="btnBackToDashboard" onAction="#handleBackToDashboard" styleClass="back-button-white" text="Back to Dashboard" />
-                  
-                  <!-- Page Title "My Results" -->
-                  <Label styleClass="page-title-white" text="My Results" />
+                  <Button fx:id="btnBackToDashboard" onAction="#handleBackToDashboard" styleClass="back-button-outline" text="← Back to Dashboard" />
+               </children>
+            </HBox>
+            
+            <!-- Page Description -->
+            <VBox alignment="TOP_LEFT" maxWidth="1400.0" spacing="10.0">
+               <children>
+                  <Label style="-fx-font-size: 24px; -fx-font-weight: 700; -fx-text-fill: #1A237E;" text="Select a Quiz to View Results" />
+                  <Label style="-fx-font-size: 14px; -fx-text-fill: #546E7A;" text="Choose a quiz below to view detailed student results and performance statistics." wrapText="true" />
                </children>
             </VBox>
             
-            <!-- Results Grid (ScrollPane with FlowPane) -->
-            <ScrollPane fitToWidth="true" styleClass="my-results-scrollpane">
+            <!-- Quiz Cards Container (Scrollable) -->
+            <ScrollPane fitToWidth="true" hbarPolicy="NEVER" maxWidth="1400.0" style="-fx-background-color: transparent; -fx-background: transparent;" vbarPolicy="AS_NEEDED" VBox.vgrow="ALWAYS">
                <content>
-                  <FlowPane fx:id="resultsContainer" alignment="TOP_LEFT" hgap="20.0" vgap="20.0" style="-fx-padding: 10;">
-                     <!-- Dynamic result cards will be added here by the controller -->
-                  </FlowPane>
+                  <VBox fx:id="quizCardsContainer" spacing="20.0" style="-fx-background-color: transparent;">
+                     <!-- Quiz cards will be dynamically added here -->
+                  </VBox>
                </content>
             </ScrollPane>
          </children>
       </VBox>
    </center>
 </BorderPane>
+
+

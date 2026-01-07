@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane style="-fx-background-color: #E3F2FD;" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.se.quiz.quiz_management_system.controller.QuizListController">
+<BorderPane minWidth="0.0" minHeight="0.0" prefWidth="1920.0" prefHeight="1080.0" style="-fx-background-color: #E3F2FD;" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.se.quiz.quiz_management_system.controller.QuizListController">
    <top>
       <!-- Header Toolbar -->
       <HBox alignment="CENTER_LEFT" maxWidth="Infinity" prefHeight="100.0" style="-fx-background-color: #FFFFFF; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 15, 0, 0, 3); -fx-padding: 0 40 0 40;">
@@ -50,14 +50,14 @@
       <VBox alignment="TOP_CENTER" spacing="30.0" style="-fx-padding: 40 60 40 60;">
          <children>
             <!-- Back to Dashboard Button -->
-            <HBox alignment="CENTER_LEFT" maxWidth="1000.0" prefWidth="1000.0">
+            <HBox alignment="CENTER_LEFT" maxWidth="1400.0">
                <children>
                   <Button fx:id="btnBackToDashboard" onAction="#handleBackToDashboard" styleClass="back-button-outline" text="Back to Dashboard" />
                </children>
             </HBox>
             
             <!-- Quiz Table Container -->
-            <VBox alignment="TOP_CENTER" maxWidth="1000.0" prefWidth="1000.0" styleClass="table-container">
+            <VBox alignment="TOP_CENTER" maxWidth="1400.0" styleClass="table-container">
                <children>
                   <TableView fx:id="tblQuizzes" prefHeight="400.0" styleClass="quiz-table">
                      <columns>

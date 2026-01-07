@@ -1,6 +1,13 @@
 package com.se.quiz.quiz_management_system.controller;
 
+import com.se.quiz.quiz_management_system.entity.Quiz;
+import com.se.quiz.quiz_management_system.entity.StudentQuizResult;
+import com.se.quiz.quiz_management_system.model.Role;
+import com.se.quiz.quiz_management_system.model.UserSession;
+import com.se.quiz.quiz_management_system.navigation.AppScreen;
+import com.se.quiz.quiz_management_system.navigation.NavigationManager;
 import com.se.quiz.quiz_management_system.service.AuthService;
+import com.se.quiz.quiz_management_system.service.ResultService;
 import com.se.quiz.quiz_management_system.session.SessionManager;
 import com.se.quiz.quiz_management_system.util.JavaFXHelper;
 import javafx.fxml.FXML;
@@ -41,6 +48,7 @@ public class StudentMyResultsController implements Initializable {
     private FlowPane resultsContainer;
     
     private AuthService authService;
+    private ResultService resultService;
     
     private List<QuizResult> quizResults;
     
@@ -62,6 +70,19 @@ public class StudentMyResultsController implements Initializable {
         }
     }
     
+    /**
+     * Set the ResultService instance (injected from Spring context)
+     * @param resultService the result service
+     */
+    public void setResultService(ResultService resultService) {
+        this.resultService = resultService;
+        
+        // Reload results when service is injected
+        if (resultsContainer != null) {
+            loadQuizResults();
+        }
+    }
+    
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // Set up welcome text
@@ -78,40 +99,132 @@ public class StudentMyResultsController implements Initializable {
     
     /**
      * Load quiz results and create dynamic cards
+     * CRITICAL: Loads REAL data from database
      */
     private void loadQuizResults() {
-        // Generate mock data
-        quizResults = generateMockData();
-        
         // Clear existing children (if any)
         resultsContainer.getChildren().clear();
         
-        // Create a card for each quiz result
-        for (QuizResult result : quizResults) {
-            AnchorPane card = createResultCard(result);
-            resultsContainer.getChildren().add(card);
+        // Check if service is available
+        if (resultService == null) {
+            System.out.println("⚠️ [StudentMyResultsController] ResultService not yet injected, showing empty state");
+            showEmptyState("Service not available", "Please try again later.");
+            return;
         }
         
-        System.out.println("Loaded " + quizResults.size() + " quiz results");
+        // Get current student ID
+        Long studentId = getCurrentStudentId();
+        if (studentId == null) {
+            System.out.println("⚠️ [StudentMyResultsController] Student ID not found, showing empty state");
+            showEmptyState("Not logged in", "Please log in to view your results.");
+            return;
+        }
+        
+        try {
+            System.out.println("🔵 [StudentMyResultsController] Loading results for student ID: " + studentId);
+            
+            // ═══════════════════════════════════════════════════════════
+            // CRITICAL: LOAD REAL RESULTS FROM DATABASE
+            // ═══════════════════════════════════════════════════════════
+            List<StudentQuizResult> dbResults = resultService.getResultsByStudentId(studentId);
+            
+            if (dbResults == null || dbResults.isEmpty()) {
+                System.out.println("ℹ️ [StudentMyResultsController] No results found for student ID: " + studentId);
+                showEmptyState("No results yet", "You haven't completed any quizzes yet.");
+                return;
+            }
+            
+            System.out.println("✅ [StudentMyResultsController] Found " + dbResults.size() + " results from database");
+            
+            // Convert database results to display models
+            quizResults = new ArrayList<>();
+            for (StudentQuizResult dbResult : dbResults) {
+                // Get quiz name from relationship
+                Quiz quiz = dbResult.getQuiz();
+                String quizName = (quiz != null && quiz.getQuizName() != null) 
+                    ? quiz.getQuizName() 
+                    : "Quiz ID: " + dbResult.getQuizId();
+                
+                // Get score
+                int score = dbResult.getScore() != null ? dbResult.getScore() : 0;
+                int maxScore = dbResult.getTotalPoints() != null ? dbResult.getTotalPoints() : 100;
+                
+                QuizResult displayResult = new QuizResult(quizName, score, maxScore);
+                quizResults.add(displayResult);
+                
+                System.out.println("   - Quiz: " + quizName + ", Score: " + score + "/" + maxScore);
+            }
+            
+            // Create a card for each quiz result
+            for (QuizResult result : quizResults) {
+                AnchorPane card = createResultCard(result);
+                resultsContainer.getChildren().add(card);
+            }
+            
+            System.out.println("✅ [StudentMyResultsController] Displayed " + quizResults.size() + " result cards");
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("❌ [StudentMyResultsController] Error loading results: " + e.getMessage());
+            showEmptyState("Error loading results", "Failed to load your quiz results: " + e.getMessage());
+        }
     }
     
     /**
-     * Generate mock quiz result data
-     * @return List of QuizResult objects
+     * Get current student ID from AuthService or SessionManager
+     * @return student ID or null if not found
      */
-    private List<QuizResult> generateMockData() {
-        List<QuizResult> results = new ArrayList<>();
+    private Long getCurrentStudentId() {
+        // Try to get from AuthService
+        if (authService != null && authService.getCurrentUser() != null) {
+            UserSession currentUser = authService.getCurrentUser();
+            
+            // Check if user is a student
+            if (currentUser.getRole() == Role.STUDENT && currentUser.getUserId() != null) {
+                return currentUser.getUserId();
+            }
+        }
         
-        results.add(new QuizResult("Midterm Exam", 85, 100));
-        results.add(new QuizResult("Java Quiz #1", 92, 100));
-        results.add(new QuizResult("Database Basics", 78, 100));
-        results.add(new QuizResult("Web Development", 88, 100));
-        results.add(new QuizResult("Algorithms Test", 95, 100));
-        results.add(new QuizResult("Final Exam", 90, 100));
-        results.add(new QuizResult("OOP Concepts", 87, 100));
-        results.add(new QuizResult("Data Structures", 91, 100));
+        // Alternative: Get from SessionManager
+        Long userId = SessionManager.getCurrentUserId();
+        if (userId != null) {
+            // Verify role is STUDENT
+            UserSession session = SessionManager.getCurrentUserSession();
+            if (session != null && session.getRole() == Role.STUDENT) {
+                return userId;
+            }
+        }
         
-        return results;
+        return null;
+    }
+    
+    /**
+     * Show empty state message when no results available
+     * @param title the title message
+     * @param message the detail message
+     */
+    private void showEmptyState(String title, String message) {
+        VBox emptyState = new VBox(15);
+        emptyState.setAlignment(Pos.CENTER);
+        emptyState.setStyle("-fx-padding: 60px;");
+        emptyState.setPrefWidth(600);
+        
+        Label titleLabel = new Label("📊 " + title);
+        titleLabel.setStyle(
+            "-fx-font-size: 20px; " +
+            "-fx-font-weight: 600; " +
+            "-fx-text-fill: #757575;"
+        );
+        
+        Label messageLabel = new Label(message);
+        messageLabel.setStyle(
+            "-fx-font-size: 14px; " +
+            "-fx-text-fill: #9E9E9E;"
+        );
+        messageLabel.setWrapText(true);
+        
+        emptyState.getChildren().addAll(titleLabel, messageLabel);
+        resultsContainer.getChildren().add(emptyState);
     }
     
     /**
@@ -176,31 +289,11 @@ public class StudentMyResultsController implements Initializable {
     
     /**
      * Handle Back to Dashboard button click
+     * Uses NavigationManager to preserve window state
      */
     @FXML
     private void handleBackToDashboard() {
-        try {
-            // Load the Student Dashboard
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/StudentDashboard.fxml"));
-            Parent root = loader.load();
-            
-            // Pass AuthService to the dashboard controller
-            StudentDashboardController controller = loader.getController();
-            if (authService != null) {
-                controller.setAuthService(authService);
-            }
-            
-            // Get current stage and set new scene
-            Stage stage = (Stage) btnBackToDashboard.getScene().getWindow();
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-            stage.setTitle("Quiz Management System - Student Dashboard");
-            stage.show();
-            
-        } catch (IOException e) {
-            e.printStackTrace();
-            JavaFXHelper.showError("Navigation Error", "Failed to load Student Dashboard");
-        }
+        NavigationManager.getInstance().navigateTo(AppScreen.STUDENT_DASHBOARD);
     }
     
     /**

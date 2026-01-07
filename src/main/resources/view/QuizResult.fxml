@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
 
-<BorderPane style="-fx-background-color: linear-gradient(to bottom right, #F3E5F5, #E8EAF6);" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.se.quiz.quiz_management_system.controller.QuizResultController">
+<BorderPane minWidth="0.0" minHeight="0.0" prefWidth="1920.0" prefHeight="1080.0" style="-fx-background-color: linear-gradient(to bottom right, #F3E5F5, #E8EAF6);" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.se.quiz.quiz_management_system.controller.QuizResultController">
    <top>
       <!-- Header Toolbar - Consistent with other screens -->
       <HBox alignment="CENTER_LEFT" maxWidth="Infinity" prefHeight="100.0" style="-fx-background-color: #FFFFFF; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 20, 0, 0, 5); -fx-border-color: #F0F0F0; -fx-border-width: 0 0 1 0; -fx-padding: 0 40 0 40;" viewOrder="-1.0">

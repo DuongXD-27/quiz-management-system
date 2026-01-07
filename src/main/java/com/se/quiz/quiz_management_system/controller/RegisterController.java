@@ -2,18 +2,16 @@ package com.se.quiz.quiz_management_system.controller;
 
 import com.se.quiz.quiz_management_system.exception.DuplicateUsernameException;
 import com.se.quiz.quiz_management_system.model.Role;
+import com.se.quiz.quiz_management_system.navigation.AppScreen;
+import com.se.quiz.quiz_management_system.navigation.NavigationManager;
 import com.se.quiz.quiz_management_system.service.AuthService;
 import com.se.quiz.quiz_management_system.util.JavaFXHelper;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -124,30 +122,10 @@ public class RegisterController implements Initializable {
     
     /**
      * Navigate to Login screen
+     * Uses NavigationManager to preserve window state
      */
     private void navigateToLogin() {
-        try {
-            // Get current stage
-            Stage stage = (Stage) btnSignUp.getScene().getWindow();
-            
-            // Load Login FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Login.fxml"));
-            Parent root = loader.load();
-            
-            // Inject AuthService into LoginController
-            LoginController loginController = loader.getController();
-            if (authService != null) {
-                loginController.setAuthService(authService);
-            }
-            
-            // Create new scene and set it
-            Scene scene = new Scene(root, 800, 600);
-            stage.setScene(scene);
-            stage.setTitle("Quiz Management System - Login");
-            
-        } catch (Exception e) {
-            JavaFXHelper.showError("Lỗi hệ thống", "Không thể chuyển đến màn hình đăng nhập: " + e.getMessage());
-        }
+        NavigationManager.getInstance().navigateTo(AppScreen.LOGIN);
     }
 }
 

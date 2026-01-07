@@ -1,6 +1,12 @@
 package com.se.quiz.quiz_management_system.controller;
 
+import com.se.quiz.quiz_management_system.entity.Student;
+import com.se.quiz.quiz_management_system.entity.StudentQuizResult;
+import com.se.quiz.quiz_management_system.navigation.AppScreen;
+import com.se.quiz.quiz_management_system.navigation.NavigationAware;
+import com.se.quiz.quiz_management_system.navigation.NavigationManager;
 import com.se.quiz.quiz_management_system.service.AuthService;
+import com.se.quiz.quiz_management_system.service.ResultService;
 import com.se.quiz.quiz_management_system.session.SessionManager;
 import com.se.quiz.quiz_management_system.util.JavaFXHelper;
 import javafx.fxml.FXML;
@@ -22,13 +28,14 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 /**
  * Controller for the Student Results screen
  * Displays student scores for a specific quiz with CSV export functionality
  */
-public class StudentResultsController implements Initializable {
+public class StudentResultsController implements Initializable, NavigationAware {
     
     @FXML
     private Label lblPageTitle;
@@ -49,10 +56,13 @@ public class StudentResultsController implements Initializable {
     private VBox studentResultsContainer;
     
     private AuthService authService;
+    private ResultService resultService;
     
     private String currentQuizName = "Quiz 1: Basic";
+    private Long currentQuizId; // Store quiz ID from navigation data
     
     private List<StudentResult> studentResults;
+    private List<StudentQuizResult> dbResults; // Store database results for CSV export
     
     /**
      * Set the AuthService instance
@@ -73,6 +83,19 @@ public class StudentResultsController implements Initializable {
     }
     
     /**
+     * Set the ResultService instance (injected from Spring context)
+     * @param resultService the result service
+     */
+    public void setResultService(ResultService resultService) {
+        this.resultService = resultService;
+        
+        // Reload results if quiz ID is already set
+        if (currentQuizId != null && studentResultsContainer != null) {
+            loadStudentResults();
+        }
+    }
+    
+    /**
      * Set the quiz name and update the UI title
      * @param quizName the name of the quiz
      */
@@ -89,6 +112,33 @@ public class StudentResultsController implements Initializable {
         setQuizName(quizName);
     }
     
+    /**
+     * Called when navigated to this screen
+     * Receives quiz data from previous screen (QuizResultsListController)
+     */
+    @Override
+    public void onNavigatedTo(Map<String, Object> data) {
+        if (data != null) {
+            // Get quiz ID and store it
+            if (data.containsKey("quizId")) {
+                this.currentQuizId = (Long) data.get("quizId");
+                System.out.println("StudentResultsController received Quiz ID: " + currentQuizId);
+                
+                // Load real student results from database
+                if (resultService != null && studentResultsContainer != null) {
+                    loadStudentResults();
+                }
+            }
+            
+            // Get quiz name and update UI
+            if (data.containsKey("quizName")) {
+                String quizName = (String) data.get("quizName");
+                setQuizName(quizName);
+                System.out.println("Displaying results for quiz: " + quizName);
+            }
+        }
+    }
+    
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // Set up welcome text
@@ -100,6 +150,7 @@ public class StudentResultsController implements Initializable {
         }
         
         // Set the quiz name dynamically in title (with default value)
+        // Will be overridden by onNavigatedTo if data is passed
         setQuizName("Quiz 1: Basic");
         
         // Load student results data
@@ -108,35 +159,93 @@ public class StudentResultsController implements Initializable {
     
     /**
      * Load student results and create dynamic cards
+     * ✅ CRITICAL: Loads REAL data from database
      */
     private void loadStudentResults() {
-        // Generate mock data
-        studentResults = generateMockData();
-        
         // Clear existing children (if any)
         studentResultsContainer.getChildren().clear();
         
-        // Create a card for each student result
-        for (StudentResult result : studentResults) {
-            HBox card = createStudentResultCard(result);
-            studentResultsContainer.getChildren().add(card);
+        // Check if services and data are available
+        if (resultService == null) {
+            System.out.println("ResultService not yet injected, showing empty state");
+            showEmptyState("Service not available", "Please try again later.");
+            return;
         }
         
-        System.out.println("Loaded " + studentResults.size() + " student results for: " + currentQuizName);
+        if (currentQuizId == null) {
+            System.out.println("Quiz ID not set, showing empty state");
+            showEmptyState("No quiz selected", "Please select a quiz to view results.");
+            return;
+        }
+        
+        try {
+            // ═══════════════════════════════════════════════════════════
+            // CRITICAL: LOAD REAL RESULTS FROM DATABASE
+            // ═══════════════════════════════════════════════════════════
+            this.dbResults = resultService.getResultsByQuizId(currentQuizId);
+            
+            if (dbResults == null || dbResults.isEmpty()) {
+                System.out.println("No results found for quiz ID: " + currentQuizId);
+                showEmptyState("No results yet", "No students have completed this quiz yet.");
+                return;
+            }
+            
+            // Convert database results to display models
+            studentResults = new ArrayList<>();
+            for (StudentQuizResult dbResult : dbResults) {
+                // Get student info
+                Student student = dbResult.getStudent();
+                String studentName = (student != null && student.getFullName() != null) 
+                    ? student.getFullName() 
+                    : "Student ID: " + dbResult.getStudentId();
+                
+                // Format score
+                String scoreDisplay = dbResult.getScore() + "/" + dbResult.getTotalPoints();
+                
+                StudentResult displayResult = new StudentResult(studentName, scoreDisplay);
+                studentResults.add(displayResult);
+            }
+            
+            // Create a card for each student result
+            for (StudentResult result : studentResults) {
+                HBox card = createStudentResultCard(result);
+                studentResultsContainer.getChildren().add(card);
+            }
+            
+            System.out.println("✅ Loaded " + studentResults.size() + " real student results for quiz: " + currentQuizName);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("❌ Error loading student results: " + e.getMessage());
+            showEmptyState("Error loading results", "Failed to load student results: " + e.getMessage());
+        }
     }
     
     /**
-     * Generate mock student result data
-     * @return List of StudentResult objects
+     * Show empty state message when no results available
+     * @param title the title message
+     * @param message the detail message
      */
-    private List<StudentResult> generateMockData() {
-        List<StudentResult> results = new ArrayList<>();
+    private void showEmptyState(String title, String message) {
+        VBox emptyState = new VBox(15);
+        emptyState.setAlignment(Pos.CENTER);
+        emptyState.setStyle("-fx-padding: 60px;");
         
-        results.add(new StudentResult("John Smith", "85/100"));
-        results.add(new StudentResult("Emily Davis", "92/100"));
-        results.add(new StudentResult("Michael Brown", "78/100"));
+        Label titleLabel = new Label("📊 " + title);
+        titleLabel.setStyle(
+            "-fx-font-size: 20px; " +
+            "-fx-font-weight: 600; " +
+            "-fx-text-fill: #757575;"
+        );
         
-        return results;
+        Label messageLabel = new Label(message);
+        messageLabel.setStyle(
+            "-fx-font-size: 14px; " +
+            "-fx-text-fill: #9E9E9E;"
+        );
+        
+        emptyState.getChildren().addAll(titleLabel, messageLabel);
+        studentResultsContainer.getChildren().add(emptyState);
     }
     
     /**
@@ -209,6 +318,7 @@ public class StudentResultsController implements Initializable {
     
     /**
      * Write student results to CSV file
+     * CRITICAL: Export raw numeric score only (not "85/100" format) to prevent Excel date conversion
      * @param file the file to write to
      * @throws IOException if writing fails
      */
@@ -218,43 +328,55 @@ public class StudentResultsController implements Initializable {
             writer.write("Quiz Name,Username,Score\n");
             
             // Write data rows
-            for (StudentResult result : studentResults) {
-                writer.write(currentQuizName + ",");
-                writer.write(result.getStudentName() + ",");
-                writer.write(result.getScore() + "\n");
+            // CRITICAL: Use database results to get raw numeric score
+            if (dbResults != null && !dbResults.isEmpty()) {
+                for (StudentQuizResult dbResult : dbResults) {
+                    // Get student name
+                    String studentName = "Unknown";
+                    if (dbResult.getStudent() != null && dbResult.getStudent().getFullName() != null) {
+                        studentName = dbResult.getStudent().getFullName();
+                    } else if (dbResult.getStudent() != null && dbResult.getStudent().getUsername() != null) {
+                        studentName = dbResult.getStudent().getUsername();
+                    }
+                    
+                    // CRITICAL: Export raw numeric score only (not "85/100" format)
+                    // This prevents Excel from auto-converting "85/100" to a date like "30-Oct"
+                    Integer score = dbResult.getScore();
+                    String scoreValue = (score != null) ? String.valueOf(score) : "0";
+                    
+                    writer.write(currentQuizName + ",");
+                    writer.write(studentName + ",");
+                    writer.write(scoreValue + "\n");
+                }
+            } else {
+                // Fallback: If dbResults not available, parse from display format
+                for (StudentResult result : studentResults) {
+                    String scoreStr = result.getScore();
+                    // Extract numeric part before "/" if format is "85/100"
+                    String scoreValue = scoreStr;
+                    if (scoreStr != null && scoreStr.contains("/")) {
+                        scoreValue = scoreStr.substring(0, scoreStr.indexOf("/")).trim();
+                    }
+                    
+                    writer.write(currentQuizName + ",");
+                    writer.write(result.getStudentName() + ",");
+                    writer.write(scoreValue + "\n");
+                }
             }
             
             writer.flush();
+            
+            System.out.println("✅ [StudentResultsController] CSV exported successfully with raw numeric scores");
         }
     }
     
     /**
      * Handle Back to Dashboard button click
+     * Returns to Quiz Results List (not directly to dashboard)
      */
     @FXML
     private void handleBackToDashboard() {
-        try {
-            // Load the Teacher Dashboard
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/TeacherDashboard.fxml"));
-            Parent root = loader.load();
-            
-            // Pass AuthService to the dashboard controller
-            TeacherDashboardController controller = loader.getController();
-            if (authService != null) {
-                controller.setAuthService(authService);
-            }
-            
-            // Get current stage and set new scene
-            Stage stage = (Stage) btnBackToDashboard.getScene().getWindow();
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-            stage.setTitle("Quiz Management System - Teacher Dashboard");
-            stage.show();
-            
-        } catch (IOException e) {
-            e.printStackTrace();
-            JavaFXHelper.showError("Navigation Error", "Failed to load Teacher Dashboard");
-        }
+        NavigationManager.getInstance().navigateTo(AppScreen.QUIZ_RESULTS_LIST);
     }
     
     /**

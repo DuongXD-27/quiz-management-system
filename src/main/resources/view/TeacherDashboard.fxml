@@ -1,105 +1,148 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.geometry.Pos?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<StackPane xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.se.quiz.quiz_management_system.controller.TeacherDashboardController" style="-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #E3F2FD 0%, #E0F7FA 100%);" stylesheets="@../css/style.css">
-   <children>
-      <!-- Layer 1: Main Dashboard Content -->
-      <BorderPane fx:id="mainContent" style="-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #E3F2FD 0%, #E0F7FA 100%);">
-         <top>
-            <!-- Header Toolbar - Minimalist Floating -->
-            <HBox alignment="CENTER_LEFT" maxWidth="Infinity" viewOrder="-1.0" prefHeight="100.0" style="-fx-background-color: #FFFFFF; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 20, 0, 0, 5); -fx-border-color: #F0F0F0; -fx-border-width: 0 0 1 0; -fx-padding: 0 40 0 40;">
-               <children>
-                  <!-- Left: Logo + Title -->
-                  <HBox alignment="CENTER_LEFT">
-                     <children>
-                        <ImageView fitHeight="120.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../image/logo.png" />
-                           </image>
-                        </ImageView>
-                        <Region prefWidth="60.0" />
-                        <Label style="-fx-font-size: 20px; -fx-font-weight: 700; -fx-text-fill: #2D3447;" text="Teacher Dashboard" />
-                     </children>
-                  </HBox>
-                  
-                  <!-- Right: Welcome + Logout -->
-                  <HBox alignment="CENTER_RIGHT" spacing="20.0" HBox.hgrow="ALWAYS">
-                     <children>
-                        <Label fx:id="lblWelcome" styleClass="welcome-text" text="Xin chào, " />
-                        <Button fx:id="btnLogout" onAction="#handleLogout" styleClass="logout-button" text="🚪" />
-                     </children>
-                  </HBox>
-               </children>
-            </HBox>
-         </top>
-         
-         <center>
-            <!-- Menu Cards Container -->
-            <StackPane>
-               <children>
-                  <HBox alignment="CENTER" spacing="0.0" styleClass="cards-container">
-                     <children>
-                        <!-- Card 1: Manage Questions -->
-                        <VBox alignment="CENTER" spacing="20.0" minWidth="320.0" prefWidth="320.0" maxWidth="320.0" styleClass="dashboard-card" fx:id="cardQuestions">
-                           <children>
-                              <Text styleClass="card-icon" text="❓" />
-                              <Label styleClass="card-title" text="Manage Questions" />
-                              <Label styleClass="card-description" text="Manage question bank &amp; categories" />
-                           </children>
-                           <HBox.margin>
-                              <Insets right="50.0" />
-                           </HBox.margin>
-                        </VBox>
-                        
-                        <!-- Card 2: Manage Quizzes -->
-                        <VBox alignment="CENTER" spacing="20.0" minWidth="320.0" prefWidth="320.0" maxWidth="320.0" styleClass="dashboard-card" fx:id="cardQuizzes">
-                           <children>
-                              <Text styleClass="card-icon" text="📋" />
-                              <Label styleClass="card-title" text="Manage Quizzes" />
-                              <Label styleClass="card-description" text="Create exams &amp; assign to classes" />
-                           </children>
-                           <HBox.margin>
-                              <Insets left="50.0" right="50.0" />
-                           </HBox.margin>
-                        </VBox>
-                        
-                        <!-- Card 3: View Results -->
-                        <VBox alignment="CENTER" spacing="20.0" minWidth="320.0" prefWidth="320.0" maxWidth="320.0" styleClass="dashboard-card" fx:id="cardResults">
-                           <children>
-                              <Text styleClass="card-icon" text="📊" />
-                              <Label styleClass="card-title" text="View Results" />
-                              <Label styleClass="card-description" text="Track student performance &amp; export" />
-                           </children>
-                           <HBox.margin>
-                              <Insets left="50.0" />
-                           </HBox.margin>
-                        </VBox>
-                     </children>
-                  </HBox>
-               </children>
-            </StackPane>
-         </center>
-      </BorderPane>
+<AnchorPane xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" 
+            fx:controller="com.se.quiz.quiz_management_system.controller.TeacherDashboardController"
+            prefHeight="1080.0" prefWidth="1920.0"
+            style="-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #E3F2FD 0%, #E0F7FA 100%);" 
+            stylesheets="@../css/style.css">
+   
+   <!-- Main Content: StackPane anchored to all 4 sides for full-screen layout -->
+   <BorderPane fx:id="mainContent" 
+               AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" 
+               AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+               style="-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #E3F2FD 0%, #E0F7FA 100%);">
       
-      <!-- Layer 2: Dialog Container (Modal Overlay) -->
-      <StackPane fx:id="dialogContainer" alignment="CENTER" visible="false" style="-fx-background-color: rgba(0, 0, 0, 0.4);">
-         <children>
-            <!-- Dialog content will be loaded here -->
-         </children>
-      </StackPane>
-   </children>
-</StackPane>
-
+      <top>
+         <!-- Header Toolbar -->
+         <HBox alignment="CENTER_LEFT" prefHeight="100.0" maxWidth="Infinity" 
+               style="-fx-background-color: #FFFFFF; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 20, 0, 0, 5); -fx-border-color: #F0F0F0; -fx-border-width: 0 0 1 0; -fx-padding: 0 40 0 40;">
+            <children>
+               <!-- Left: Logo + Title -->
+               <HBox alignment="CENTER_LEFT" spacing="20.0">
+                  <children>
+                     <ImageView fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
+                        <image>
+                           <Image url="@../image/logo.png" />
+                        </image>
+                     </ImageView>
+                     <Label style="-fx-font-size: 20px; -fx-font-weight: 700; -fx-text-fill: #2D3447;" text="Teacher Dashboard" />
+                  </children>
+               </HBox>
+               
+               <!-- Right: Welcome + Logout -->
+               <Region HBox.hgrow="ALWAYS" />
+               <HBox alignment="CENTER_RIGHT" spacing="20.0">
+                  <children>
+                     <Label fx:id="lblWelcome" styleClass="welcome-text" text="Xin chào, Teacher" />
+                     <Button fx:id="btnLogout" onAction="#handleLogout" styleClass="logout-button" text="🚪 Logout" />
+                  </children>
+               </HBox>
+            </children>
+         </HBox>
+      </top>
+      
+      <center>
+         <!-- Cards Container - Centered using StackPane -->
+         <StackPane>
+            <children>
+               <VBox alignment="CENTER" spacing="40.0" maxWidth="1400.0">
+                  <children>
+                     <!-- Dashboard Title -->
+                     <Label text="Teacher Dashboard" 
+                            style="-fx-font-size: 28px; -fx-font-weight: 700; -fx-text-fill: #1A237E;">
+                        <padding>
+                           <Insets bottom="20.0" />
+                        </padding>
+                     </Label>
+                     
+                     <!-- Menu Cards Row -->
+                     <HBox alignment="CENTER" spacing="80.0">
+                        <children>
+                           <!-- Card 1: Manage Questions -->
+                           <VBox fx:id="cardQuestions" alignment="CENTER" spacing="25.0" 
+                                 prefWidth="350.0" prefHeight="280.0"
+                                 styleClass="dashboard-card" 
+                                 style="-fx-cursor: hand; -fx-background-color: #FFFFFF; -fx-background-radius: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 20, 0, 0, 5); -fx-padding: 40;">
+                              <children>
+                                 <Text styleClass="card-icon" text="❓" 
+                                       style="-fx-font-size: 64px; -fx-fill: #1976D2;" />
+                                 <Label styleClass="card-title" text="Manage Questions" 
+                                        style="-fx-font-size: 20px; -fx-font-weight: 700; -fx-text-fill: #2D3447;" />
+                                 <Label styleClass="card-description" text="Manage question bank &amp; categories" 
+                                        style="-fx-font-size: 14px; -fx-text-fill: #6B7280; -fx-wrap-text: true; -fx-text-alignment: center;" />
+                              </children>
+                              <HBox.margin>
+                                 <Insets left="20.0" right="20.0" />
+                              </HBox.margin>
+                           </VBox>
+                           
+                           <!-- Card 2: Manage Quizzes -->
+                           <VBox fx:id="cardQuizzes" alignment="CENTER" spacing="25.0" 
+                                 prefWidth="350.0" prefHeight="280.0"
+                                 styleClass="dashboard-card" 
+                                 style="-fx-cursor: hand; -fx-background-color: #FFFFFF; -fx-background-radius: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 20, 0, 0, 5); -fx-padding: 40;">
+                              <children>
+                                 <Text styleClass="card-icon" text="📋" 
+                                       style="-fx-font-size: 64px; -fx-fill: #43A047;" />
+                                 <Label styleClass="card-title" text="Manage Quizzes" 
+                                        style="-fx-font-size: 20px; -fx-font-weight: 700; -fx-text-fill: #2D3447;" />
+                                 <Label styleClass="card-description" text="Create exams &amp; assign to classes" 
+                                        style="-fx-font-size: 14px; -fx-text-fill: #6B7280; -fx-wrap-text: true; -fx-text-alignment: center;" />
+                              </children>
+                              <HBox.margin>
+                                 <Insets left="20.0" right="20.0" />
+                              </HBox.margin>
+                           </VBox>
+                           
+                           <!-- Card 3: View Results -->
+                           <VBox fx:id="cardResults" alignment="CENTER" spacing="25.0" 
+                                 prefWidth="350.0" prefHeight="280.0"
+                                 styleClass="dashboard-card" 
+                                 style="-fx-cursor: hand; -fx-background-color: #FFFFFF; -fx-background-radius: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 20, 0, 0, 5); -fx-padding: 40;">
+                              <children>
+                                 <Text styleClass="card-icon" text="📊" 
+                                       style="-fx-font-size: 64px; -fx-fill: #E53935;" />
+                                 <Label styleClass="card-title" text="View Results" 
+                                        style="-fx-font-size: 20px; -fx-font-weight: 700; -fx-text-fill: #2D3447;" />
+                                 <Label styleClass="card-description" text="Track student performance &amp; export" 
+                                        style="-fx-font-size: 14px; -fx-text-fill: #6B7280; -fx-wrap-text: true; -fx-text-alignment: center;" />
+                              </children>
+                              <HBox.margin>
+                                 <Insets left="20.0" right="20.0" />
+                              </HBox.margin>
+                           </VBox>
+                        </children>
+                     </HBox>
+                  </children>
+                  <padding>
+                     <Insets bottom="50.0" left="50.0" right="50.0" top="50.0" />
+                  </padding>
+               </VBox>
+            </children>
+         </StackPane>
+      </center>
+   </BorderPane>
+   
+   <!-- Layer 2: Dialog Container (Modal Overlay) - Anchored on top of main content -->
+   <StackPane fx:id="dialogContainer" alignment="CENTER" visible="false" 
+              AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" 
+              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+              style="-fx-background-color: rgba(0, 0, 0, 0.4);">
+      <children>
+         <!-- Dialog content will be loaded here -->
+      </children>
+   </StackPane>
+</AnchorPane>

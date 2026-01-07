@@ -1,24 +1,27 @@
 package com.se.quiz.quiz_management_system.controller;
 
+import com.se.quiz.quiz_management_system.entity.Quiz;
+import com.se.quiz.quiz_management_system.navigation.AppScreen;
+import com.se.quiz.quiz_management_system.navigation.NavigationManager;
 import com.se.quiz.quiz_management_system.service.AuthService;
+import com.se.quiz.quiz_management_system.service.QuizService;
 import com.se.quiz.quiz_management_system.session.SessionManager;
 import com.se.quiz.quiz_management_system.util.JavaFXHelper;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 /**
@@ -46,6 +49,7 @@ public class QuizListController implements Initializable {
     private TableColumn<QuizModel, Void> colAction;
     
     private AuthService authService;
+    private QuizService quizService;
     
     private ObservableList<QuizModel> quizData;
     
@@ -64,6 +68,19 @@ public class QuizListController implements Initializable {
             if (username != null) {
                 lblWelcome.setText("Xin chào, " + username);
             }
+        }
+    }
+    
+    /**
+     * Set the QuizService instance (injected from Spring context)
+     * @param quizService the quiz service
+     */
+    public void setQuizService(QuizService quizService) {
+        this.quizService = quizService;
+        
+        // Reload data when service is injected (after initialization)
+        if (tblQuizzes != null) {
+            loadQuizData();
         }
     }
     
@@ -121,19 +138,50 @@ public class QuizListController implements Initializable {
     }
     
     /**
-     * Load quiz data into the table
+     * Load quiz data from database into the table
      */
     private void loadQuizData() {
-        // Create mock quiz data
-        quizData = FXCollections.observableArrayList(
-            new QuizModel("Quiz 1: Basic"),
-            new QuizModel("Quiz 2: Basic"),
-            new QuizModel("Quiz 3: Basic"),
-            new QuizModel("Quiz 4: Basic")
-        );
-        
-        // Set data to table
-        tblQuizzes.setItems(quizData);
+        try {
+            // Check if QuizService is available
+            if (quizService == null) {
+                System.out.println("QuizService not yet injected, using empty data");
+                quizData = FXCollections.observableArrayList();
+                tblQuizzes.setItems(quizData);
+                return;
+            }
+            
+            // Fetch all quizzes from database
+            List<Quiz> quizzes = quizService.getAllQuizzes();
+            
+            // Convert Quiz entities to QuizModel for TableView
+            ObservableList<QuizModel> modelList = FXCollections.observableArrayList();
+            for (Quiz quiz : quizzes) {
+                modelList.add(new QuizModel(
+                    quiz.getQuizId(),
+                    quiz.getQuizName(),
+                    quiz.getTimeLimit() != null ? quiz.getTimeLimit() : 0,
+                    quiz.getNumberOfQuestion() != null ? quiz.getNumberOfQuestion() : 0
+                ));
+            }
+            
+            // Set data to table
+            quizData = modelList;
+            tblQuizzes.setItems(quizData);
+            
+            // Force table refresh
+            tblQuizzes.refresh();
+            
+            System.out.println("Loaded " + quizzes.size() + " quizzes from database");
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            JavaFXHelper.showError("Data Load Error", 
+                "Failed to load quizzes from database: " + e.getMessage());
+            
+            // Set empty list on error
+            quizData = FXCollections.observableArrayList();
+            tblQuizzes.setItems(quizData);
+        }
     }
     
     /**
@@ -141,60 +189,23 @@ public class QuizListController implements Initializable {
      * @param quiz the selected quiz
      */
     private void handleAssignToStudents(QuizModel quiz) {
-        System.out.println("Assigning quiz to students: " + quiz.getName());
+        System.out.println("Assigning quiz to students: " + quiz.getName() + " (ID: " + quiz.getQuizId() + ")");
         
-        try {
-            // Load Add Student to Quiz screen
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/AddStudentToQuiz.fxml"));
-            Parent root = loader.load();
-            
-            // Pass AuthService to the controller
-            AddStudentToQuizController controller = loader.getController();
-            if (authService != null) {
-                controller.setAuthService(authService);
-            }
-            
-            // Get current stage and set new scene
-            Stage stage = (Stage) tblQuizzes.getScene().getWindow();
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-            stage.setTitle("Quiz Management System - Add Students to Quiz");
-            stage.show();
-            
-        } catch (Exception e) {
-            e.printStackTrace();
-            JavaFXHelper.showError("Navigation Error", 
-                "Failed to load Add Students screen: " + e.getMessage());
-        }
+        // Pass quiz ID and name to AddStudentToQuiz screen
+        Map<String, Object> data = new HashMap<>();
+        data.put("quizId", quiz.getQuizId());
+        data.put("quizName", quiz.getName());
+        
+        NavigationManager.getInstance().navigateTo(AppScreen.ADD_STUDENT_TO_QUIZ, data);
     }
     
     /**
      * Handle Back to Dashboard button click
+     * Uses NavigationManager to preserve window state
      */
     @FXML
     private void handleBackToDashboard() {
-        try {
-            // Load the Teacher Dashboard
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/TeacherDashboard.fxml"));
-            Parent root = loader.load();
-            
-            // Pass AuthService to the dashboard controller
-            TeacherDashboardController controller = loader.getController();
-            if (authService != null) {
-                controller.setAuthService(authService);
-            }
-            
-            // Get current stage and set new scene
-            Stage stage = (Stage) btnBackToDashboard.getScene().getWindow();
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-            stage.setTitle("Quiz Management System - Teacher Dashboard");
-            stage.show();
-            
-        } catch (IOException e) {
-            e.printStackTrace();
-            JavaFXHelper.showError("Navigation Error", "Failed to load Teacher Dashboard");
-        }
+        NavigationManager.getInstance().navigateTo(AppScreen.TEACHER_DASHBOARD);
     }
     
     /**
@@ -202,47 +213,48 @@ public class QuizListController implements Initializable {
      */
     @FXML
     private void handleLogout() {
-        try {
-            // Clear session
-            if (authService != null) {
-                authService.logout();
-            } else {
-                SessionManager.clearSession();
-            }
-            
-            // Load the Login screen
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Login.fxml"));
-            Parent root = loader.load();
-            
-            // Pass AuthService to the login controller
-            LoginController controller = loader.getController();
-            if (authService != null) {
-                controller.setAuthService(authService);
-            }
-            
-            // Get current stage and set new scene
-            Stage stage = (Stage) btnLogout.getScene().getWindow();
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-            stage.setTitle("Quiz Management System - Login");
-            stage.show();
-            
-        } catch (IOException e) {
-            e.printStackTrace();
-            JavaFXHelper.showError("Logout Error", "Failed to logout. Please try again.");
+        // Clear session
+        if (authService != null) {
+            authService.logout();
+        } else {
+            SessionManager.clearSession();
         }
+        
+        // Navigate to Login using NavigationManager
+        NavigationManager.getInstance().navigateToLogin();
     }
     
     /**
      * QuizModel class - represents a quiz in the table
+     * Wrapper class for Quiz entity with JavaFX properties
      */
     public static class QuizModel {
-        private final StringProperty name;
+        private final SimpleLongProperty quizId;
+        private final SimpleStringProperty name;
+        private final SimpleIntegerProperty timeLimit;
+        private final SimpleIntegerProperty questionCount;
         
-        public QuizModel(String name) {
-            this.name = new SimpleStringProperty(name);
+        public QuizModel(Long quizId, String name, Integer timeLimit, Integer questionCount) {
+            this.quizId = new SimpleLongProperty(quizId != null ? quizId : 0L);
+            this.name = new SimpleStringProperty(name != null ? name : "Untitled Quiz");
+            this.timeLimit = new SimpleIntegerProperty(timeLimit != null ? timeLimit : 0);
+            this.questionCount = new SimpleIntegerProperty(questionCount != null ? questionCount : 0);
         }
         
+        // Quiz ID
+        public Long getQuizId() {
+            return quizId.get();
+        }
+        
+        public void setQuizId(Long quizId) {
+            this.quizId.set(quizId);
+        }
+        
+        public SimpleLongProperty quizIdProperty() {
+            return quizId;
+        }
+        
+        // Name
         public String getName() {
             return name.get();
         }
@@ -251,8 +263,34 @@ public class QuizListController implements Initializable {
             this.name.set(name);
         }
         
-        public StringProperty nameProperty() {
+        public SimpleStringProperty nameProperty() {
             return name;
+        }
+        
+        // Time Limit
+        public Integer getTimeLimit() {
+            return timeLimit.get();
+        }
+        
+        public void setTimeLimit(Integer timeLimit) {
+            this.timeLimit.set(timeLimit);
+        }
+        
+        public SimpleIntegerProperty timeLimitProperty() {
+            return timeLimit;
+        }
+        
+        // Question Count
+        public Integer getQuestionCount() {
+            return questionCount.get();
+        }
+        
+        public void setQuestionCount(Integer questionCount) {
+            this.questionCount.set(questionCount);
+        }
+        
+        public SimpleIntegerProperty questionCountProperty() {
+            return questionCount;
         }
     }
 }

@@ -11,14 +11,22 @@ import jakarta.persistence.*;
 @IdClass(StudentQuizId.class)
 public class StudentQuiz {
     
+    // Composite primary key fields matching StudentQuizId
     @Id
-    @ManyToOne
-    @JoinColumn(name = "student_id", nullable = false)
-    private Student student;
+    @Column(name = "student_id", nullable = false)
+    private Long studentId;
     
     @Id
+    @Column(name = "quiz_id", nullable = false)
+    private Long quizId;
+    
+    // Relationships to Student and Quiz, mapped via the FK columns above
     @ManyToOne
-    @JoinColumn(name = "quiz_id", nullable = false)
+    @JoinColumn(name = "student_id", insertable = false, updatable = false)
+    private Student student;
+    
+    @ManyToOne
+    @JoinColumn(name = "quiz_id", insertable = false, updatable = false)
     private Quiz quiz;
     
     public StudentQuiz() {
@@ -27,9 +35,27 @@ public class StudentQuiz {
     public StudentQuiz(Student student, Quiz quiz) {
         this.student = student;
         this.quiz = quiz;
+        this.studentId = student != null ? student.getStudentId() : null;
+        this.quizId = quiz != null ? quiz.getQuizId() : null;
     }
     
     // Getters and Setters
+    
+    public Long getStudentId() {
+        return studentId;
+    }
+    
+    public void setStudentId(Long studentId) {
+        this.studentId = studentId;
+    }
+    
+    public Long getQuizId() {
+        return quizId;
+    }
+    
+    public void setQuizId(Long quizId) {
+        this.quizId = quizId;
+    }
     
     public Student getStudent() {
         return student;
@@ -37,6 +63,7 @@ public class StudentQuiz {
     
     public void setStudent(Student student) {
         this.student = student;
+        this.studentId = student != null ? student.getStudentId() : null;
     }
     
     public Quiz getQuiz() {
@@ -45,22 +72,14 @@ public class StudentQuiz {
     
     public void setQuiz(Quiz quiz) {
         this.quiz = quiz;
-    }
-    
-    // Helper methods to get IDs for composite key
-    public Long getStudentId() {
-        return student != null ? student.getStudentId() : null;
-    }
-    
-    public Long getQuizId() {
-        return quiz != null ? quiz.getQuizId() : null;
+        this.quizId = quiz != null ? quiz.getQuizId() : null;
     }
     
     @Override
     public String toString() {
         return "StudentQuiz{" +
-                "studentId=" + getStudentId() +
-                ", quizId=" + getQuizId() +
+                "studentId=" + studentId +
+                ", quizId=" + quizId +
                 '}';
     }
 }

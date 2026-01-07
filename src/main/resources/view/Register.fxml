@@ -20,7 +20,7 @@
       <HBox styleClass="root-container">
          <children>
             <!-- Left Section: Brand Area -->
-            <VBox alignment="CENTER" maxWidth="Infinity" minWidth="450.0" prefWidth="450.0" spacing="15.0" styleClass="left-pane">
+            <VBox alignment="CENTER" maxWidth="Infinity" minWidth="400.0" spacing="15.0" styleClass="left-pane" HBox.hgrow="ALWAYS">
                <children>
                   <ImageView fitHeight="200.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="logo-image">
                      <image>
@@ -36,7 +36,7 @@
             </VBox>
             
             <!-- Right Section: Register Form -->
-            <VBox alignment="CENTER" maxWidth="Infinity" minWidth="550.0" styleClass="right-pane">
+            <VBox alignment="CENTER" maxWidth="Infinity" minWidth="500.0" styleClass="right-pane" HBox.hgrow="ALWAYS">
                <children>
                   <VBox alignment="CENTER" spacing="30.0" styleClass="form-container">
                      <children>

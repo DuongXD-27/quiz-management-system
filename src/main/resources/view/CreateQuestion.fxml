@@ -10,7 +10,7 @@
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
@@ -18,157 +18,207 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<BorderPane style="-fx-background-color: linear-gradient(to bottom right, #E8EAF6, #E3F2FD);" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.se.quiz.quiz_management_system.controller.CreateQuestionController">
-   <top>
-      <!-- Header Toolbar -->
-      <HBox alignment="CENTER_LEFT" maxWidth="Infinity" prefHeight="100.0" styleClass="header-bar" style="-fx-padding: 0 40 0 40;">
-         <children>
-            <!-- Left: Logo + QMS Text -->
-            <HBox alignment="CENTER_LEFT" spacing="10.0">
-               <children>
-                  <ImageView fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../image/logo.png" />
-                     </image>
-                  </ImageView>
-                  <Label style="-fx-font-size: 18px; -fx-font-weight: 700; -fx-text-fill: #1A237E;" text="QMS" />
-               </children>
-            </HBox>
-            
-            <!-- Center: Page Title -->
-            <Region HBox.hgrow="ALWAYS" />
-            <Label style="-fx-font-size: 20px; -fx-font-weight: 700; -fx-text-fill: #2D3447;" text="Create New Question" />
-            <Region HBox.hgrow="ALWAYS" />
-            
-            <!-- Right: Welcome Text + Logout Button -->
-            <HBox alignment="CENTER_RIGHT" spacing="15.0">
-               <children>
-                  <Label fx:id="lblWelcome" styleClass="welcome-text" text="Welcome, Teacher" />
-                  <Button fx:id="btnLogout" onAction="#handleLogout" styleClass="logout-button" text="🚪" />
-               </children>
-            </HBox>
-         </children>
-      </HBox>
-   </top>
+<AnchorPane xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" 
+            fx:controller="com.se.quiz.quiz_management_system.controller.CreateQuestionController"
+            minWidth="0.0" minHeight="0.0" prefWidth="1920.0" prefHeight="1080.0"
+            style="-fx-background-color: linear-gradient(to bottom right, #E8EAF6, #E3F2FD);" 
+            stylesheets="@../css/style.css">
    
-   <center>
-      <!-- Main Content Area -->
-      <ScrollPane fitToWidth="true" style="-fx-background: transparent; -fx-background-color: transparent;" hbarPolicy="NEVER">
-         <content>
-            <VBox alignment="TOP_CENTER" spacing="30.0" style="-fx-padding: 40 60 40 60;">
-               <children>
-                  <!-- Back to Dashboard Button -->
-                  <HBox alignment="CENTER_LEFT" maxWidth="900.0" prefWidth="900.0">
-                     <children>
-                        <Button fx:id="btnBackToDashboard" onAction="#handleBackToDashboard" styleClass="back-button-create" text="Back to Dashboard" />
-                     </children>
-                  </HBox>
-                  
-                  <!-- Form Container -->
-                  <VBox alignment="TOP_CENTER" maxWidth="900.0" prefWidth="900.0" spacing="25.0" styleClass="create-question-form">
-                     <children>
-                        <!-- Quiz Name Field -->
-                        <VBox spacing="8.0">
-                           <children>
-                              <Label styleClass="create-label" text="Quiz Name:" />
-                              <TextField fx:id="txtQuizName" promptText="Enter quiz name" styleClass="create-textfield" />
-                           </children>
-                        </VBox>
-                        
-                        <!-- Question Time Limit Field -->
-                        <VBox spacing="8.0">
-                           <children>
-                              <Label styleClass="create-label" text="Question Time Limit (minutes):" />
-                              <TextField fx:id="txtTimeLimit" promptText="Enter time limit in minutes" styleClass="create-textfield" />
-                           </children>
-                        </VBox>
-                        
-                        <!-- Question Content Field -->
-                        <VBox spacing="8.0">
-                           <children>
-                              <Label styleClass="create-label" text="Question Content:" />
-                              <TextArea fx:id="txtQuestionContent" prefHeight="150.0" promptText="Enter the question content here..." styleClass="create-textarea" wrapText="true" />
-                           </children>
-                        </VBox>
-                        
-                        <!-- Answer Options Section -->
-                        <VBox spacing="15.0">
-                           <children>
-                              <Label styleClass="create-label" text="Select the correct answer:" />
-                              
-                              <!-- 2x2 Grid for Answer Options -->
-                              <GridPane hgap="20.0" vgap="20.0">
-                                 <columnConstraints>
-                                    <ColumnConstraints hgrow="ALWAYS" percentWidth="50.0" />
-                                    <ColumnConstraints hgrow="ALWAYS" percentWidth="50.0" />
-                                 </columnConstraints>
-                                 <rowConstraints>
-                                    <RowConstraints vgrow="SOMETIMES" />
-                                    <RowConstraints vgrow="SOMETIMES" />
-                                 </rowConstraints>
-                                 <children>
-                                    <!-- Option A -->
-                                    <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="answer-option-box" GridPane.columnIndex="0" GridPane.rowIndex="0">
-                                       <children>
-                                          <RadioButton fx:id="rbOptionA">
-                                             <toggleGroup>
-                                                <ToggleGroup fx:id="answerGroup" />
-                                             </toggleGroup>
-                                          </RadioButton>
-                                          <Label style="-fx-font-size: 14px; -fx-font-weight: 600; -fx-text-fill: #424242;" text="A" />
-                                          <TextField fx:id="txtOptionA" promptText="Enter option A" styleClass="create-textfield-inline" HBox.hgrow="ALWAYS" />
-                                       </children>
-                                    </HBox>
-                                    
-                                    <!-- Option B -->
-                                    <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="answer-option-box" GridPane.columnIndex="1" GridPane.rowIndex="0">
-                                       <children>
-                                          <RadioButton fx:id="rbOptionB" toggleGroup="$answerGroup" />
-                                          <Label style="-fx-font-size: 14px; -fx-font-weight: 600; -fx-text-fill: #424242;" text="B" />
-                                          <TextField fx:id="txtOptionB" promptText="Enter option B" styleClass="create-textfield-inline" HBox.hgrow="ALWAYS" />
-                                       </children>
-                                    </HBox>
-                                    
-                                    <!-- Option C -->
-                                    <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="answer-option-box" GridPane.columnIndex="0" GridPane.rowIndex="1">
-                                       <children>
-                                          <RadioButton fx:id="rbOptionC" toggleGroup="$answerGroup" />
-                                          <Label style="-fx-font-size: 14px; -fx-font-weight: 600; -fx-text-fill: #424242;" text="C" />
-                                          <TextField fx:id="txtOptionC" promptText="Enter option C" styleClass="create-textfield-inline" HBox.hgrow="ALWAYS" />
-                                       </children>
-                                    </HBox>
-                                    
-                                    <!-- Option D -->
-                                    <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="answer-option-box" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                                       <children>
-                                          <RadioButton fx:id="rbOptionD" toggleGroup="$answerGroup" />
-                                          <Label style="-fx-font-size: 14px; -fx-font-weight: 600; -fx-text-fill: #424242;" text="D" />
-                                          <TextField fx:id="txtOptionD" promptText="Enter option D" styleClass="create-textfield-inline" HBox.hgrow="ALWAYS" />
-                                       </children>
-                                    </HBox>
-                                 </children>
-                              </GridPane>
-                           </children>
-                        </VBox>
-                        
-                        <!-- Add Question Button (Full Width) -->
-                        <Button fx:id="btnAddQuestion" maxWidth="Infinity" onAction="#handleAddQuestion" prefHeight="55.0" styleClass="add-question-button" text="+ Add Question">
-                           <VBox.margin>
-                              <Insets top="30.0" />
-                           </VBox.margin>
-                        </Button>
-                     </children>
-                  </VBox>
-                  
-                  <!-- Save Quiz Button (Bottom Right) -->
-                  <HBox alignment="CENTER_RIGHT" maxWidth="900.0" prefWidth="900.0">
-                     <children>
-                        <Button fx:id="btnSaveQuiz" onAction="#handleSaveQuiz" prefHeight="45.0" prefWidth="150.0" styleClass="save-quiz-button" text="Save Quiz" />
-                     </children>
-                  </HBox>
-               </children>
-            </VBox>
-         </content>
-      </ScrollPane>
-   </center>
-</BorderPane>
+   <!-- Header Toolbar - Anchored to Top -->
+   <HBox alignment="CENTER_LEFT" prefHeight="100.0" 
+         style="-fx-background-color: #FFFFFF; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 20, 0, 0, 5); -fx-border-color: #F0F0F0; -fx-border-width: 0 0 1 0; -fx-padding: 0 40 0 40;"
+         AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <children>
+         <!-- Left: Logo + QMS Text -->
+         <HBox alignment="CENTER_LEFT" spacing="15.0">
+            <children>
+               <ImageView fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
+                  <image>
+                     <Image url="@../image/logo.png" />
+                  </image>
+               </ImageView>
+               <Label style="-fx-font-size: 18px; -fx-font-weight: 700; -fx-text-fill: #1A237E;" text="QMS - Create Question" />
+            </children>
+         </HBox>
+         
+         <!-- Right: Welcome + Logout -->
+         <Region HBox.hgrow="ALWAYS" />
+         <HBox alignment="CENTER_RIGHT" spacing="15.0">
+            <children>
+               <Label fx:id="lblWelcome" styleClass="welcome-text" text="Welcome, Teacher" />
+               <Button fx:id="btnLogout" onAction="#handleLogout" styleClass="logout-button" text="🚪 Logout" />
+            </children>
+         </HBox>
+      </children>
+   </HBox>
+   
+   <!-- Main Content - Anchored to All Sides -->
+   <ScrollPane fitToWidth="true" hbarPolicy="NEVER" 
+               style="-fx-background: transparent; -fx-background-color: transparent;"
+               AnchorPane.topAnchor="100.0" AnchorPane.bottomAnchor="0.0" 
+               AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+      <content>
+         <VBox alignment="TOP_CENTER" spacing="30.0" style="-fx-padding: 40 80 40 80;">
+            <children>
+               <!-- Back Button -->
+               <HBox alignment="CENTER_LEFT" maxWidth="1200.0" prefWidth="1200.0">
+                  <children>
+                     <Button fx:id="btnBackToDashboard" onAction="#handleBackToDashboard" 
+                             style="-fx-background-color: #E3F2FD; -fx-text-fill: #1976D2; -fx-font-weight: 700; -fx-padding: 10 20; -fx-background-radius: 8; -fx-cursor: hand;" 
+                             text="← Back to Dashboard" />
+                  </children>
+               </HBox>
+               
+               <!-- Form Card -->
+               <VBox maxWidth="1200.0" prefWidth="1200.0" spacing="25.0" 
+                     style="-fx-background-color: #FFFFFF; -fx-background-radius: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 15, 0, 0, 3); -fx-padding: 40;">
+                  <children>
+                     <!-- Form Title -->
+                     <Label text="New Quiz Question" 
+                            style="-fx-font-size: 24px; -fx-font-weight: 700; -fx-text-fill: #1A237E;">
+                        <VBox.margin>
+                           <Insets bottom="10.0" />
+                        </VBox.margin>
+                     </Label>
+                     
+                     <!-- Quiz Name Field -->
+                     <VBox spacing="8.0">
+                        <children>
+                           <Label text="Quiz Name:" style="-fx-font-size: 14px; -fx-font-weight: 600; -fx-text-fill: #424242;" />
+                           <TextField fx:id="txtQuizName" promptText="e.g., Mathematics - Chapter 1" 
+                                      style="-fx-background-color: #F5F5F5; -fx-background-radius: 8; -fx-padding: 12; -fx-font-size: 14px; -fx-border-color: #E0E0E0; -fx-border-radius: 8; -fx-border-width: 1;" />
+                        </children>
+                     </VBox>
+                     
+                     <!-- Time Limit Field -->
+                     <VBox spacing="8.0">
+                        <children>
+                           <Label text="Question Time Limit (minutes):" style="-fx-font-size: 14px; -fx-font-weight: 600; -fx-text-fill: #424242;" />
+                           <TextField fx:id="txtTimeLimit" promptText="e.g., 2" 
+                                      style="-fx-background-color: #F5F5F5; -fx-background-radius: 8; -fx-padding: 12; -fx-font-size: 14px; -fx-border-color: #E0E0E0; -fx-border-radius: 8; -fx-border-width: 1;" />
+                        </children>
+                     </VBox>
+                     
+                     <!-- Question Content Field -->
+                     <VBox spacing="8.0">
+                        <children>
+                           <Label text="Question Content:" style="-fx-font-size: 14px; -fx-font-weight: 600; -fx-text-fill: #424242;" />
+                           <TextArea fx:id="txtQuestionContent" prefHeight="150.0" wrapText="true"
+                                     promptText="Enter your question here..." 
+                                     style="-fx-background-color: #F5F5F5; -fx-background-radius: 8; -fx-padding: 12; -fx-font-size: 14px; -fx-border-color: #E0E0E0; -fx-border-radius: 8; -fx-border-width: 1;" />
+                        </children>
+                     </VBox>
+                     
+                     <!-- Answer Options Section -->
+                     <VBox spacing="12.0">
+                        <children>
+                           <Label text="Answer Options (Select the correct one):" 
+                                  style="-fx-font-size: 14px; -fx-font-weight: 600; -fx-text-fill: #424242;" />
+                           
+                           <!-- 2x2 Grid Layout for Options -->
+                           <GridPane hgap="25.0" vgap="20.0">
+                              <columnConstraints>
+                                 <ColumnConstraints hgrow="ALWAYS" percentWidth="50.0" />
+                                 <ColumnConstraints hgrow="ALWAYS" percentWidth="50.0" />
+                              </columnConstraints>
+                              <rowConstraints>
+                                 <RowConstraints vgrow="SOMETIMES" minHeight="60.0" />
+                                 <RowConstraints vgrow="SOMETIMES" minHeight="60.0" />
+                              </rowConstraints>
+                              <children>
+                                 <!-- Option A (Top Left) -->
+                                 <HBox alignment="CENTER_LEFT" spacing="12.0" 
+                                       style="-fx-background-color: #F5F5F5; -fx-background-radius: 8; -fx-padding: 12; -fx-border-color: #E0E0E0; -fx-border-radius: 8; -fx-border-width: 1;"
+                                       GridPane.columnIndex="0" GridPane.rowIndex="0">
+                                    <children>
+                                       <RadioButton fx:id="rbOptionA">
+                                          <toggleGroup>
+                                             <ToggleGroup fx:id="answerGroup" />
+                                          </toggleGroup>
+                                       </RadioButton>
+                                       <Label style="-fx-font-size: 14px; -fx-font-weight: 700; -fx-text-fill: #1976D2; -fx-min-width: 20;" text="A." />
+                                       <TextField fx:id="txtOptionA" promptText="Enter option A" 
+                                                  style="-fx-background-color: transparent; -fx-font-size: 14px;" 
+                                                  HBox.hgrow="ALWAYS" />
+                                    </children>
+                                 </HBox>
+                                 
+                                 <!-- Option B (Top Right) -->
+                                 <HBox alignment="CENTER_LEFT" spacing="12.0" 
+                                       style="-fx-background-color: #F5F5F5; -fx-background-radius: 8; -fx-padding: 12; -fx-border-color: #E0E0E0; -fx-border-radius: 8; -fx-border-width: 1;"
+                                       GridPane.columnIndex="1" GridPane.rowIndex="0">
+                                    <children>
+                                       <RadioButton fx:id="rbOptionB" toggleGroup="$answerGroup" />
+                                       <Label style="-fx-font-size: 14px; -fx-font-weight: 700; -fx-text-fill: #43A047; -fx-min-width: 20;" text="B." />
+                                       <TextField fx:id="txtOptionB" promptText="Enter option B" 
+                                                  style="-fx-background-color: transparent; -fx-font-size: 14px;" 
+                                                  HBox.hgrow="ALWAYS" />
+                                    </children>
+                                 </HBox>
+                                 
+                                 <!-- Option C (Bottom Left) -->
+                                 <HBox alignment="CENTER_LEFT" spacing="12.0" 
+                                       style="-fx-background-color: #F5F5F5; -fx-background-radius: 8; -fx-padding: 12; -fx-border-color: #E0E0E0; -fx-border-radius: 8; -fx-border-width: 1;"
+                                       GridPane.columnIndex="0" GridPane.rowIndex="1">
+                                    <children>
+                                       <RadioButton fx:id="rbOptionC" toggleGroup="$answerGroup" />
+                                       <Label style="-fx-font-size: 14px; -fx-font-weight: 700; -fx-text-fill: #FB8C00; -fx-min-width: 20;" text="C." />
+                                       <TextField fx:id="txtOptionC" promptText="Enter option C" 
+                                                  style="-fx-background-color: transparent; -fx-font-size: 14px;" 
+                                                  HBox.hgrow="ALWAYS" />
+                                    </children>
+                                 </HBox>
+                                 
+                                 <!-- Option D (Bottom Right) -->
+                                 <HBox alignment="CENTER_LEFT" spacing="12.0" 
+                                       style="-fx-background-color: #F5F5F5; -fx-background-radius: 8; -fx-padding: 12; -fx-border-color: #E0E0E0; -fx-border-radius: 8; -fx-border-width: 1;"
+                                       GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                    <children>
+                                       <RadioButton fx:id="rbOptionD" toggleGroup="$answerGroup" />
+                                       <Label style="-fx-font-size: 14px; -fx-font-weight: 700; -fx-text-fill: #E53935; -fx-min-width: 20;" text="D." />
+                                       <TextField fx:id="txtOptionD" promptText="Enter option D" 
+                                                  style="-fx-background-color: transparent; -fx-font-size: 14px;" 
+                                                  HBox.hgrow="ALWAYS" />
+                                    </children>
+                                 </HBox>
+                              </children>
+                           </GridPane>
+                        </children>
+                     </VBox>
+                     
+                     <!-- Question Count Label -->
+                     <Label fx:id="lblQuestionCount" text="Questions added: 0" 
+                            style="-fx-font-size: 14px; -fx-font-weight: 600; -fx-text-fill: #1976D2;">
+                        <VBox.margin>
+                           <Insets top="15.0" />
+                        </VBox.margin>
+                     </Label>
+                     
+                     <!-- Add Question Button -->
+                     <Button fx:id="btnAddQuestion" maxWidth="Infinity" onAction="#handleAddQuestion" 
+                             prefHeight="55.0" text="➕ Add Question to Quiz"
+                             style="-fx-background-color: #1976D2; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: 700; -fx-background-radius: 10; -fx-cursor: hand;">
+                        <VBox.margin>
+                           <Insets top="10.0" />
+                        </VBox.margin>
+                     </Button>
+                  </children>
+               </VBox>
+               
+               <!-- Save Quiz Button - Bottom Right -->
+               <HBox alignment="CENTER_RIGHT" maxWidth="1200.0" prefWidth="1200.0">
+                  <children>
+                     <Button fx:id="btnSaveQuiz" onAction="#handleSaveQuiz" 
+                             prefHeight="50.0" prefWidth="180.0" text="💾 Save Quiz"
+                             style="-fx-background-color: #43A047; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: 700; -fx-background-radius: 10; -fx-cursor: hand;">
+                     </Button>
+                  </children>
+                  <VBox.margin>
+                     <Insets top="20.0" />
+                  </VBox.margin>
+               </HBox>
+            </children>
+         </VBox>
+      </content>
+   </ScrollPane>
+</AnchorPane>

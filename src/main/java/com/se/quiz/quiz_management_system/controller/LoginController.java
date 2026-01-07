@@ -1,17 +1,17 @@
 package com.se.quiz.quiz_management_system.controller;
 
 import com.se.quiz.quiz_management_system.exception.AuthenticationException;
+import com.se.quiz.quiz_management_system.model.UserSession;
+import com.se.quiz.quiz_management_system.navigation.AppScreen;
+import com.se.quiz.quiz_management_system.navigation.NavigationManager;
 import com.se.quiz.quiz_management_system.service.AuthService;
+import com.se.quiz.quiz_management_system.session.SessionManager;
 import com.se.quiz.quiz_management_system.util.JavaFXHelper;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -74,12 +74,16 @@ public class LoginController implements Initializable {
             // Attempt login
             authService.login(username, password);
             
-            // Login successful
-            System.out.println("Login Success");
-            JavaFXHelper.showInfo("Đăng nhập thành công", "Chào mừng bạn quay trở lại!");
+            // Get current user session
+            UserSession session = SessionManager.getCurrentUserSession();
+            if (session == null) {
+                JavaFXHelper.showError("Lỗi hệ thống", "Không thể lấy thông tin phiên đăng nhập");
+                return;
+            }
             
-            // TODO: Navigate to Dashboard
-            // For now, just print to console as requested
+            // Navigate to appropriate dashboard based on role
+            String role = session.getRole().name();
+            NavigationManager.getInstance().navigateToDashboard(role);
             
         } catch (AuthenticationException e) {
             // Login failed
@@ -95,35 +99,7 @@ public class LoginController implements Initializable {
      */
     @FXML
     private void handleRegister() {
-        navigateToRegister();
-    }
-    
-    /**
-     * Navigate to Register screen
-     */
-    private void navigateToRegister() {
-        try {
-            // Get current stage
-            Stage stage = (Stage) btnLogin.getScene().getWindow();
-            
-            // Load Register FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Register.fxml"));
-            Parent root = loader.load();
-            
-            // Inject AuthService into RegisterController
-            RegisterController registerController = loader.getController();
-            if (authService != null) {
-                registerController.setAuthService(authService);
-            }
-            
-            // Create new scene and set it
-            Scene scene = new Scene(root, 800, 600);
-            stage.setScene(scene);
-            stage.setTitle("Quiz Management System - Register");
-            
-        } catch (Exception e) {
-            JavaFXHelper.showError("Lỗi hệ thống", "Không thể chuyển đến màn hình đăng ký: " + e.getMessage());
-        }
+        NavigationManager.getInstance().navigateTo(AppScreen.REGISTER);
     }
     
     /**

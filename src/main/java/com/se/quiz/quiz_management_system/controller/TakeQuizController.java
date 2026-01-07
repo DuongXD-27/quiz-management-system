@@ -1,29 +1,35 @@
 package com.se.quiz.quiz_management_system.controller;
 
+import com.se.quiz.quiz_management_system.entity.Question;
+import com.se.quiz.quiz_management_system.entity.Quiz;
+import com.se.quiz.quiz_management_system.entity.StudentQuizResult;
+import com.se.quiz.quiz_management_system.navigation.AppScreen;
+import com.se.quiz.quiz_management_system.navigation.NavigationAware;
+import com.se.quiz.quiz_management_system.navigation.NavigationManager;
 import com.se.quiz.quiz_management_system.service.AuthService;
+import com.se.quiz.quiz_management_system.service.QuizService;
+import com.se.quiz.quiz_management_system.service.ResultService;
+import com.se.quiz.quiz_management_system.session.SessionManager;
 import com.se.quiz.quiz_management_system.util.JavaFXHelper;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 /**
  * Controller for the Take Quiz view
  * Handles quiz question display, answer selection, and timer
  */
-public class TakeQuizController implements Initializable {
+public class TakeQuizController implements Initializable, NavigationAware {
     
     @FXML
     private Label lblTimer;
@@ -49,19 +55,30 @@ public class TakeQuizController implements Initializable {
     @FXML
     private Button btnExit;
     
+    @FXML
+    private Label lblCurrentQuestion;
+    
+    @FXML
+    private Label lblTotalQuestions;
+    
     // Current question data
     private Question currentQuestion;
     private Button selectedAnswerButton;
-    private int timeRemaining = 30; // seconds
+    private int timeRemaining; // seconds (loaded from quiz)
     private Timeline timerTimeline;
     
     // Quiz tracking
-    private int currentQuestionNumber = 1;
-    private int totalQuestions = 5; // Mock: 5 questions in this quiz
+    private Quiz currentQuiz;
+    private List<Question> questions;
+    private int currentQuestionIndex = 0; // 0-based index
     private int correctAnswers = 0;
     private int startTime; // To track completion time
     
     private AuthService authService;
+    private QuizService quizService;
+    private ResultService resultService;
+    private Long quizId; // Quiz ID passed from previous screen
+    private boolean quizDataLoaded = false;
     
     /**
      * Set the AuthService instance
@@ -72,68 +89,154 @@ public class TakeQuizController implements Initializable {
     }
     
     /**
-     * Simple Question data class
+     * Set the QuizService instance (injected from Spring context)
+     * @param quizService the quiz service
      */
-    private static class Question {
-        private final String questionText;
-        private final List<String> answers;
-        private final int correctAnswerIndex; // 0-based index
+    public void setQuizService(QuizService quizService) {
+        this.quizService = quizService;
         
-        public Question(String questionText, List<String> answers, int correctAnswerIndex) {
-            this.questionText = questionText;
-            this.answers = answers;
-            this.correctAnswerIndex = correctAnswerIndex;
+        // If quiz ID already set, load data now
+        if (quizId != null && !quizDataLoaded) {
+            loadQuizData();
         }
-        
-        public String getQuestionText() {
-            return questionText;
+    }
+    
+    /**
+     * Set the ResultService instance (injected from Spring context)
+     * @param resultService the result service
+     */
+    public void setResultService(ResultService resultService) {
+        this.resultService = resultService;
+    }
+    
+    /**
+     * Called when navigated to this screen
+     * Receives data passed from previous screen
+     */
+    @Override
+    public void onNavigatedTo(Map<String, Object> data) {
+        if (data != null && data.containsKey("quizId")) {
+            this.quizId = (Long) data.get("quizId");
+            System.out.println("TakeQuizController received Quiz ID: " + quizId);
+            
+            // Load quiz data if service is available
+            if (quizService != null && !quizDataLoaded) {
+                loadQuizData();
+            }
         }
-        
-        public List<String> getAnswers() {
-            return answers;
-        }
-        
-        public int getCorrectAnswerIndex() {
-            return correctAnswerIndex;
+    }
+    
+    /**
+     * Load quiz data from database
+     * CRITICAL: Loads real time limit and questions from DB
+     */
+    private void loadQuizData() {
+        try {
+            // Validate quiz service
+            if (quizService == null) {
+                JavaFXHelper.showError("Service Error", "Quiz service is not available.");
+                handleExit();
+                return;
+            }
+            
+            // Validate quiz ID
+            if (quizId == null) {
+                JavaFXHelper.showError("Error", "No quiz selected.");
+                handleExit();
+                return;
+            }
+            
+            // ✅ LOAD QUIZ FROM DATABASE
+            currentQuiz = quizService.getQuizById(quizId);
+            
+            // ✅ SET TIME LIMIT FROM QUIZ (convert minutes to seconds)
+            if (currentQuiz.getTimeLimit() != null && currentQuiz.getTimeLimit() > 0) {
+                timeRemaining = currentQuiz.getTimeLimit() * 60; // minutes → seconds
+            } else {
+                // Default 30 minutes if not set
+                timeRemaining = 30 * 60;
+            }
+            
+            // ✅ LOAD QUESTIONS FROM DATABASE
+            questions = quizService.getQuestionsForQuiz(quizId);
+            
+            // Validate questions exist
+            if (questions == null || questions.isEmpty()) {
+                JavaFXHelper.showError("No Questions", 
+                    "This quiz has no questions. Please contact your teacher.");
+                handleExit();
+                return;
+            }
+            
+            // Mark as loaded
+            quizDataLoaded = true;
+            
+            // Record start time
+            startTime = (int) (System.currentTimeMillis() / 1000);
+            
+            // ✅ UPDATE UI WITH REAL DATA
+            if (lblTotalQuestions != null) {
+                lblTotalQuestions.setText("/" + questions.size());
+            }
+            
+            // ✅ START QUIZ
+            showQuestion(0);
+            startTimer();
+            
+            System.out.println("Loaded quiz: " + currentQuiz.getQuizName() + 
+                             " with " + questions.size() + " questions, " + 
+                             currentQuiz.getTimeLimit() + " minutes time limit");
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            JavaFXHelper.showError("Load Error", 
+                "Failed to load quiz: " + e.getMessage());
+            handleExit();
         }
     }
     
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        // Record start time (in seconds)
-        startTime = (int) (System.currentTimeMillis() / 1000);
+        // ✅ DO NOT START QUIZ HERE
+        // Wait for quiz data to be loaded via onNavigatedTo() + loadQuizData()
+        // This ensures we have real quiz data before starting
         
-        // Initialize with mock question
-        loadQuestion();
-        
-        // Start timer
-        startTimer();
+        System.out.println("TakeQuizController initialized - waiting for quiz data");
     }
     
     /**
-     * Load a mock question
+     * Show a question from the loaded questions list
+     * @param questionIndex the 0-based index of the question to display
      */
-    private void loadQuestion() {
-        // Create mock question
-        List<String> answers = new ArrayList<>();
-        answers.add("London");
-        answers.add("Paris");
-        answers.add("Berlin");
-        answers.add("Madrid");
+    private void showQuestion(int questionIndex) {
+        // Validate index
+        if (questions == null || questionIndex < 0 || questionIndex >= questions.size()) {
+            System.err.println("Invalid question index: " + questionIndex);
+            return;
+        }
         
-        currentQuestion = new Question("What is the capital of France?", answers, 1);
+        // Get current question
+        currentQuestion = questions.get(questionIndex);
+        currentQuestionIndex = questionIndex;
         
-        // Display question
-        lblQuestion.setText(currentQuestion.getQuestionText());
+        // ✅ DISPLAY REAL QUESTION FROM DATABASE
+        lblQuestion.setText(currentQuestion.getProblem());
         
-        // Display answers
-        btnAnswerA.setText("A. " + answers.get(0));
-        btnAnswerB.setText("B. " + answers.get(1));
-        btnAnswerC.setText("C. " + answers.get(2));
-        btnAnswerD.setText("D. " + answers.get(3));
+        // ✅ DISPLAY REAL OPTIONS FROM DATABASE
+        btnAnswerA.setText("A. " + (currentQuestion.getOptionA() != null ? currentQuestion.getOptionA() : ""));
+        btnAnswerB.setText("B. " + (currentQuestion.getOptionB() != null ? currentQuestion.getOptionB() : ""));
+        btnAnswerC.setText("C. " + (currentQuestion.getOptionC() != null ? currentQuestion.getOptionC() : ""));
+        btnAnswerD.setText("D. " + (currentQuestion.getOptionD() != null ? currentQuestion.getOptionD() : ""));
+        
+        // Update question counter
+        if (lblCurrentQuestion != null) {
+            lblCurrentQuestion.setText(String.valueOf(questionIndex + 1));
+        }
         
         // Reset selection
         clearSelection();
+        
+        System.out.println("Showing question " + (questionIndex + 1) + "/" + questions.size());
     }
     
     /**
@@ -164,9 +267,10 @@ public class TakeQuizController implements Initializable {
     
     /**
      * Start the countdown timer
+     * ✅ Uses timeRemaining from quiz data (already set in loadQuizData)
      */
     private void startTimer() {
-        timeRemaining = 30;
+        // ✅ DO NOT RESET timeRemaining here - it's already set from quiz
         updateTimerDisplay();
         
         // Create timeline that updates every second
@@ -176,13 +280,17 @@ public class TakeQuizController implements Initializable {
             
             if (timeRemaining <= 0) {
                 stopTimer();
-                // Auto-submit or show timeout message
-                JavaFXHelper.showWarning("Time's Up!", "Time has run out for this question.");
+                // Auto-submit quiz when time runs out
+                JavaFXHelper.showWarning("Time's Up!", 
+                    "Time has run out for this quiz. Your answers will be submitted automatically.");
+                navigateToResultScreen();
             }
         }));
         
         timerTimeline.setCycleCount(Timeline.INDEFINITE);
         timerTimeline.play();
+        
+        System.out.println("Timer started: " + (timeRemaining / 60) + " minutes");
     }
     
     /**
@@ -213,72 +321,156 @@ public class TakeQuizController implements Initializable {
             return;
         }
         
-        // Get selected answer index
-        int selectedIndex = -1;
-        if (selectedAnswerButton == btnAnswerA) selectedIndex = 0;
-        else if (selectedAnswerButton == btnAnswerB) selectedIndex = 1;
-        else if (selectedAnswerButton == btnAnswerC) selectedIndex = 2;
-        else if (selectedAnswerButton == btnAnswerD) selectedIndex = 3;
+        // Get selected answer letter (A, B, C, or D)
+        String selectedAnswer = null;
+        if (selectedAnswerButton == btnAnswerA) selectedAnswer = "A";
+        else if (selectedAnswerButton == btnAnswerB) selectedAnswer = "B";
+        else if (selectedAnswerButton == btnAnswerC) selectedAnswer = "C";
+        else if (selectedAnswerButton == btnAnswerD) selectedAnswer = "D";
         
-        // Check if answer is correct
-        boolean isCorrect = (selectedIndex == currentQuestion.getCorrectAnswerIndex());
+        // ✅ CHECK ANSWER AGAINST DATABASE VALUE
+        String correctAnswer = currentQuestion.getCorrectAnswer();
+        boolean isCorrect = (selectedAnswer != null && selectedAnswer.equalsIgnoreCase(correctAnswer));
         
         // Track correct answers
         if (isCorrect) {
             correctAnswers++;
+            System.out.println("Correct! Answer: " + selectedAnswer);
+        } else {
+            System.out.println("Incorrect. Selected: " + selectedAnswer + ", Correct: " + correctAnswer);
         }
         
         // Check if this was the last question
-        if (currentQuestionNumber >= totalQuestions) {
+        if (currentQuestionIndex >= questions.size() - 1) {
             // Quiz finished - Navigate to Result screen
             stopTimer();
             navigateToResultScreen();
         } else {
             // Move to next question
-            currentQuestionNumber++;
-            stopTimer();
-            loadQuestion();
-            startTimer();
+            showQuestion(currentQuestionIndex + 1);
         }
     }
     
     /**
      * Navigate to the Quiz Result screen
+     * CRITICAL: Saves result to database before navigating
      */
     private void navigateToResultScreen() {
+        // Calculate completion time
+        int endTime = (int) (System.currentTimeMillis() / 1000);
+        int timeTakenSeconds = endTime - startTime;
+        int minutes = timeTakenSeconds / 60;
+        int seconds = timeTakenSeconds % 60;
+        String timeTaken = minutes + " minute" + (minutes != 1 ? "s" : "");
+        if (seconds > 0) {
+            timeTaken += " " + seconds + " second" + (seconds != 1 ? "s" : "");
+        }
+        
+        // Calculate total questions
+        int totalQuestions = questions != null ? questions.size() : 0;
+        
+        // Calculate score (10 points per question)
+        int score = correctAnswers * 10;
+        int totalPoints = totalQuestions * 10;
+        
+        // ═══════════════════════════════════════════════════════════
+        // CRITICAL: SAVE RESULT TO DATABASE
+        // ═══════════════════════════════════════════════════════════
+        System.out.println("========================================");
+        System.out.println("🔴 [TakeQuizController] STARTING RESULT SAVE PROCESS");
+        System.out.println("========================================");
+        
         try {
-            // Calculate completion time
-            int endTime = (int) (System.currentTimeMillis() / 1000);
-            int timeTakenSeconds = endTime - startTime;
-            int minutes = timeTakenSeconds / 60;
-            int seconds = timeTakenSeconds % 60;
-            String timeTaken = minutes + " minute" + (minutes != 1 ? "s" : "");
-            if (seconds > 0) {
-                timeTaken += " " + seconds + " second" + (seconds != 1 ? "s" : "");
+            // Get current student ID from session
+            Long studentId = SessionManager.getCurrentUserId();
+            System.out.println("🔵 [TakeQuizController] Retrieved studentId from session: " + studentId);
+            System.out.println("🔵 [TakeQuizController] Current quizId: " + quizId);
+            System.out.println("🔵 [TakeQuizController] ResultService available: " + (resultService != null));
+            
+            if (studentId == null) {
+                System.err.println("❌ [TakeQuizController] CRITICAL ERROR: Student ID is NULL!");
+                System.err.println("   - This means SessionManager.getCurrentUserId() returned null");
+                System.err.println("   - Student may not be logged in properly");
             }
             
-            // Load QuizResult.fxml
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/QuizResult.fxml"));
-            Scene scene = new Scene(loader.load());
+            if (quizId == null) {
+                System.err.println("❌ [TakeQuizController] CRITICAL ERROR: Quiz ID is NULL!");
+                System.err.println("   - This means quiz data was not passed correctly");
+            }
             
-            // Get the controller and set result data
-            QuizResultController controller = loader.getController();
-            controller.setResultData(
-                "Mathematics - Chapter 1",  // Subject (mock data)
-                correctAnswers * 10,         // Score (10 points per correct answer)
-                totalQuestions * 10,         // Total points
-                timeTaken
-            );
+            if (resultService == null) {
+                System.err.println("❌ [TakeQuizController] CRITICAL ERROR: ResultService is NULL!");
+                System.err.println("   - This means Spring dependency injection failed");
+                System.err.println("   - Check if NavigationManager.injectResultService() is being called");
+            }
             
-            // Get current stage and set new scene
-            Stage stage = (Stage) btnNext.getScene().getWindow();
-            stage.setScene(scene);
-            stage.setTitle("Quiz Result - Quiz Management System");
-            
-        } catch (IOException e) {
+            if (studentId != null && quizId != null && resultService != null) {
+                System.out.println("🔵 [TakeQuizController] All required data available - creating result object");
+                
+                // Create result object
+                StudentQuizResult result = new StudentQuizResult();
+                result.setStudentId(studentId);
+                result.setQuizId(quizId);
+                result.setScore(score);
+                result.setTotalPoints(totalPoints);
+                result.setCorrectAnswers(correctAnswers);
+                result.setTotalQuestions(totalQuestions);
+                result.setCompletionTimeSeconds(timeTakenSeconds);
+                // submittedAt will be set automatically in service
+                
+                System.out.println("🔵 [TakeQuizController] Result object created:");
+                System.out.println("   - Student ID: " + result.getStudentId());
+                System.out.println("   - Quiz ID: " + result.getQuizId());
+                System.out.println("   - Score: " + result.getScore() + "/" + result.getTotalPoints());
+                System.out.println("   - Correct: " + result.getCorrectAnswers() + "/" + result.getTotalQuestions());
+                System.out.println("   - Time: " + result.getCompletionTimeSeconds() + " seconds");
+                
+                // CRITICAL: Save to database
+                System.out.println("🔵 [TakeQuizController] Calling resultService.saveResult()...");
+                StudentQuizResult savedResult = resultService.saveResult(result);
+                
+                System.out.println("========================================");
+                System.out.println("✅ [TakeQuizController] RESULT SAVED SUCCESSFULLY!");
+                System.out.println("   - Result ID: " + savedResult.getResultId());
+                System.out.println("   - Student: " + savedResult.getStudentId());
+                System.out.println("   - Quiz: " + savedResult.getQuizId());
+                System.out.println("   - Score: " + savedResult.getScore() + "/" + savedResult.getTotalPoints());
+                System.out.println("   - Submitted At: " + savedResult.getSubmittedAt());
+                System.out.println("========================================");
+            } else {
+                System.err.println("========================================");
+                System.err.println("❌ [TakeQuizController] CANNOT SAVE RESULT - Missing required data:");
+                System.err.println("   - studentId: " + studentId);
+                System.err.println("   - quizId: " + quizId);
+                System.err.println("   - resultService: " + (resultService != null ? "available" : "NULL"));
+                System.err.println("========================================");
+            }
+        } catch (IllegalStateException e) {
+            // Student already completed this quiz (shouldn't happen, but handle it)
+            System.err.println("❌ Error: Student has already completed this quiz");
+            JavaFXHelper.showError("Duplicate Submission", 
+                "You have already completed this quiz. Duplicate submissions are not allowed.");
+        } catch (Exception e) {
+            // Log error but continue to result screen
             e.printStackTrace();
-            JavaFXHelper.showError("Navigation Error", "Failed to load Quiz Result screen.");
+            System.err.println("❌ Error saving result to database: " + e.getMessage());
+            JavaFXHelper.showError("Save Error", 
+                "Failed to save result to database. Please contact your teacher.");
         }
+        
+        // Prepare result data to pass to next screen
+        java.util.Map<String, Object> resultData = new java.util.HashMap<>();
+        resultData.put("subject", currentQuiz != null ? currentQuiz.getQuizName() : "Quiz"); // ✅ REAL QUIZ NAME
+        resultData.put("score", score);
+        resultData.put("totalPoints", totalPoints);
+        resultData.put("timeTaken", timeTaken);
+        resultData.put("correctAnswers", correctAnswers); // Add for clarity
+        resultData.put("totalQuestions", totalQuestions); // Add for clarity
+        
+        System.out.println("Quiz completed: " + correctAnswers + "/" + totalQuestions + " correct");
+        
+        // Navigate to Quiz Result screen with data
+        NavigationManager.getInstance().navigateTo(AppScreen.QUIZ_RESULT, resultData);
     }
     
     /**

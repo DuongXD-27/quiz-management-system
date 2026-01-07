@@ -1,25 +1,25 @@
 package com.se.quiz.quiz_management_system.controller;
 
+import com.se.quiz.quiz_management_system.entity.Quiz;
+import com.se.quiz.quiz_management_system.model.Role;
+import com.se.quiz.quiz_management_system.model.UserSession;
+import com.se.quiz.quiz_management_system.navigation.AppScreen;
+import com.se.quiz.quiz_management_system.navigation.NavigationManager;
 import com.se.quiz.quiz_management_system.service.AuthService;
+import com.se.quiz.quiz_management_system.service.QuizService;
+import com.se.quiz.quiz_management_system.service.ResultService;
 import com.se.quiz.quiz_management_system.session.SessionManager;
 import com.se.quiz.quiz_management_system.util.JavaFXHelper;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 /**
  * Controller for the Available Quizzes view (Student)
@@ -37,6 +37,8 @@ public class AvailableQuizzesController implements Initializable {
     private Button btnLogout;
     
     private AuthService authService;
+    private QuizService quizService;
+    private ResultService resultService;
     
     /**
      * Set the AuthService instance
@@ -47,17 +49,49 @@ public class AvailableQuizzesController implements Initializable {
     }
     
     /**
+     * Set the QuizService instance (injected from Spring context)
+     * @param quizService the quiz service
+     */
+    public void setQuizService(QuizService quizService) {
+        this.quizService = quizService;
+        
+        // Reload quizzes when service is injected
+        if (quizContainer != null) {
+            loadQuizzes();
+        }
+    }
+    
+    /**
+     * Set the ResultService instance (injected from Spring context)
+     * @param resultService the result service
+     */
+    public void setResultService(ResultService resultService) {
+        this.resultService = resultService;
+        
+        // Reload quizzes to check completion status
+        if (quizContainer != null) {
+            loadQuizzes();
+        }
+    }
+    
+    /**
      * Mock Quiz data class for demonstration
      */
     private static class QuizData {
+        private final Long quizId;
         private final String subject;
         private final String duration;
         private final String points;
         
-        public QuizData(String subject, String duration, String points) {
+        public QuizData(Long quizId, String subject, String duration, String points) {
+            this.quizId = quizId;
             this.subject = subject;
             this.duration = duration;
             this.points = points;
+        }
+        
+        public Long getQuizId() {
+            return quizId;
         }
         
         public String getSubject() {
@@ -79,37 +113,103 @@ public class AvailableQuizzesController implements Initializable {
     }
     
     /**
-     * Load quizzes and create quiz cards dynamically
+     * Load quizzes assigned to the logged-in student
+     * CRITICAL: Uses JOIN query to fetch only assigned quizzes
      */
     private void loadQuizzes() {
-        // Generate mock quiz data
-        List<QuizData> quizzes = generateMockQuizzes();
-        
-        // Clear existing children
-        quizContainer.getChildren().clear();
-        
-        // Create a quiz card for each quiz
-        for (QuizData quiz : quizzes) {
-            HBox quizCard = createQuizCard(quiz);
-            quizContainer.getChildren().add(quizCard);
+        try {
+            // Clear existing children
+            quizContainer.getChildren().clear();
+            
+            // Check if services are available
+            if (quizService == null) {
+                System.out.println("QuizService not yet injected, showing empty list");
+                addEmptyStateMessage();
+                return;
+            }
+            
+            // Get current student ID
+            Long studentId = getCurrentStudentId();
+            if (studentId == null) {
+                System.out.println("Student ID not found, showing empty list");
+                addEmptyStateMessage();
+                return;
+            }
+            
+            // ✅ CRITICAL: Fetch quizzes assigned to this student via JOIN query
+            // SQL: SELECT q.* FROM quiz q JOIN student_quiz sq ON q.quiz_id = sq.quiz_id WHERE sq.student_id = ?
+            List<Quiz> quizzes = quizService.getQuizzesForStudent(studentId);
+            
+            if (quizzes.isEmpty()) {
+                addEmptyStateMessage();
+                System.out.println("No quizzes assigned to student ID " + studentId);
+            } else {
+                // Create a quiz card for each quiz
+                for (Quiz quiz : quizzes) {
+                    QuizData quizData = new QuizData(
+                        quiz.getQuizId(),
+                        quiz.getQuizName(),
+                        (quiz.getTimeLimit() != null ? quiz.getTimeLimit() + " minutes" : "No time limit"),
+                        (quiz.getNumberOfQuestion() != null ? quiz.getNumberOfQuestion() + " questions" : "")
+                    );
+                    HBox quizCard = createQuizCard(quizData);
+                    quizContainer.getChildren().add(quizCard);
+                }
+                System.out.println("Loaded " + quizzes.size() + " quizzes for student ID " + studentId);
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            JavaFXHelper.showError("Data Load Error", 
+                "Failed to load quizzes: " + e.getMessage());
+            addEmptyStateMessage();
         }
     }
     
     /**
-     * Generate mock quiz data
-     * @return List of QuizData objects
+     * Get current student ID from AuthService or SessionManager
+     * @return student ID or null if not found
      */
-    private List<QuizData> generateMockQuizzes() {
-        List<QuizData> quizzes = new ArrayList<>();
+    private Long getCurrentStudentId() {
+        // Try to get from AuthService
+        if (authService != null && authService.getCurrentUser() != null) {
+            UserSession currentUser = authService.getCurrentUser();
+            
+            // Check if user is a student
+            if (currentUser.getRole() == Role.STUDENT && currentUser.getUserId() != null) {
+                // For students, userId IS the student_id
+                return currentUser.getUserId();
+            }
+        }
         
-        quizzes.add(new QuizData("Mathematics - Chapter 1", "60 minutes", "100 points"));
-        quizzes.add(new QuizData("Physics - Mechanics", "45 minutes", "80 points"));
-        quizzes.add(new QuizData("Chemistry - Organic", "50 minutes", "90 points"));
-        quizzes.add(new QuizData("Biology - Cell Structure", "40 minutes", "75 points"));
-        quizzes.add(new QuizData("History - World War II", "35 minutes", "70 points"));
-        quizzes.add(new QuizData("English Literature", "55 minutes", "95 points"));
+        // Alternative: Get from SessionManager
+        Long userId = SessionManager.getCurrentUserId();
+        if (userId != null) {
+            // Verify role is STUDENT
+            UserSession session = SessionManager.getCurrentUserSession();
+            if (session != null && session.getRole() == Role.STUDENT) {
+                return userId;
+            }
+        }
         
-        return quizzes;
+        System.out.println("Could not get student ID from current user");
+        return null;
+    }
+    
+    /**
+     * Add empty state message when no quizzes available
+     */
+    private void addEmptyStateMessage() {
+        Label emptyLabel = new Label("No quizzes assigned yet.\nPlease contact your teacher.");
+        emptyLabel.setStyle(
+            "-fx-font-size: 16px; " +
+            "-fx-text-fill: #757575; " +
+            "-fx-padding: 40px; " +
+            "-fx-text-alignment: center;"
+        );
+        VBox emptyBox = new VBox(emptyLabel);
+        emptyBox.setAlignment(Pos.CENTER);
+        quizContainer.getChildren().add(emptyBox);
     }
     
     /**
@@ -153,11 +253,37 @@ public class AvailableQuizzesController implements Initializable {
         // Right section: Join Now button
         Button joinButton = new Button("Join Now");
         joinButton.getStyleClass().add("join-button");
-        joinButton.setOnAction(e -> {
-            // Get stage from the button's scene
-            Stage stage = (Stage) joinButton.getScene().getWindow();
-            handleJoinQuiz(quiz, stage);
-        });
+        
+        // ═══════════════════════════════════════════════════════════
+        // CRITICAL: CHECK IF STUDENT HAS COMPLETED THIS QUIZ
+        // ═══════════════════════════════════════════════════════════
+        boolean hasCompleted = false;
+        if (resultService != null) {
+            Long studentId = getCurrentStudentId();
+            if (studentId != null && quiz.getQuizId() != null) {
+                hasCompleted = resultService.hasStudentCompletedQuiz(studentId, quiz.getQuizId());
+            }
+        }
+        
+        if (hasCompleted) {
+            // Student has already completed this quiz
+            joinButton.setText("✓ Completed");
+            joinButton.setDisable(true);
+            joinButton.setStyle(
+                "-fx-background-color: #9E9E9E; " +
+                "-fx-text-fill: white; " +
+                "-fx-font-size: 14px; " +
+                "-fx-font-weight: 600; " +
+                "-fx-padding: 12 30 12 30; " +
+                "-fx-background-radius: 25px; " +
+                "-fx-cursor: default; " +
+                "-fx-opacity: 0.7;"
+            );
+            System.out.println("Quiz " + quiz.getQuizId() + " already completed by student");
+        } else {
+            // Student hasn't completed this quiz yet - allow start
+            joinButton.setOnAction(e -> handleJoinQuiz(quiz));
+        }
         
         // Add sections to card
         card.getChildren().addAll(infoSection, joinButton);
@@ -168,29 +294,15 @@ public class AvailableQuizzesController implements Initializable {
     /**
      * Handle Join Now button click
      * @param quiz the quiz data
-     * @param stage the current stage
      */
-    private void handleJoinQuiz(QuizData quiz, Stage stage) {
-        try {
-            // Load Take Quiz FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/TakeQuiz.fxml"));
-            Parent root = loader.load();
-            
-            // Inject AuthService into TakeQuizController if needed
-            TakeQuizController takeQuizController = loader.getController();
-            if (authService != null) {
-                takeQuizController.setAuthService(authService);
-            }
-            
-            // Create new scene and set it
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-            stage.setTitle("Quiz Management System - Take Quiz");
-            
-        } catch (Exception e) {
-            JavaFXHelper.showError("Error", "Failed to load quiz: " + e.getMessage());
-            e.printStackTrace();
-        }
+    private void handleJoinQuiz(QuizData quiz) {
+        // Prepare data to pass to TakeQuiz screen
+        Map<String, Object> data = new HashMap<>();
+        data.put("quizId", quiz.getQuizId());
+        data.put("quizTitle", quiz.getSubject());
+        
+        // Navigate to Take Quiz screen with data
+        NavigationManager.getInstance().navigateTo(AppScreen.TAKE_QUIZ, data);
     }
     
     /**
@@ -198,29 +310,7 @@ public class AvailableQuizzesController implements Initializable {
      */
     @FXML
     private void handleBack() {
-        try {
-            // Get current stage
-            Stage stage = (Stage) btnBack.getScene().getWindow();
-            
-            // Load Student Dashboard FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/StudentDashboard.fxml"));
-            Parent root = loader.load();
-            
-            // Inject AuthService into StudentDashboardController
-            StudentDashboardController studentDashboardController = loader.getController();
-            if (authService != null) {
-                studentDashboardController.setAuthService(authService);
-            }
-            
-            // Create new scene and set it
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-            stage.setTitle("Quiz Management System - Student Dashboard");
-            
-        } catch (Exception e) {
-            JavaFXHelper.showError("Navigation Error", "Failed to go back: " + e.getMessage());
-            e.printStackTrace();
-        }
+        NavigationManager.getInstance().navigateTo(AppScreen.STUDENT_DASHBOARD);
     }
     
     /**
@@ -228,34 +318,14 @@ public class AvailableQuizzesController implements Initializable {
      */
     @FXML
     private void handleLogout() {
-        try {
-            // Clear session
-            if (authService != null) {
-                authService.logout();
-            } else {
-                SessionManager.clearSession();
-            }
-            
-            // Load the Login screen
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Login.fxml"));
-            Parent root = loader.load();
-            
-            // Pass AuthService to the login controller
-            LoginController controller = loader.getController();
-            if (authService != null) {
-                controller.setAuthService(authService);
-            }
-            
-            // Get current stage and set new scene
-            Stage stage = (Stage) btnLogout.getScene().getWindow();
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-            stage.setTitle("Quiz Management System - Login");
-            stage.show();
-            
-        } catch (IOException e) {
-            e.printStackTrace();
-            JavaFXHelper.showError("Logout Error", "Failed to logout. Please try again.");
+        // Clear session
+        if (authService != null) {
+            authService.logout();
+        } else {
+            SessionManager.clearSession();
         }
+        
+        // Navigate to Login screen
+        NavigationManager.getInstance().navigateToLogin();
     }
 }

@@ -1,21 +1,18 @@
 package com.se.quiz.quiz_management_system.controller;
 
+import com.se.quiz.quiz_management_system.navigation.AppScreen;
+import com.se.quiz.quiz_management_system.navigation.NavigationManager;
 import com.se.quiz.quiz_management_system.service.AuthService;
 import com.se.quiz.quiz_management_system.session.SessionManager;
 import com.se.quiz.quiz_management_system.util.JavaFXHelper;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.effect.BoxBlur;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -82,27 +79,7 @@ public class TeacherDashboardController implements Initializable {
      * Handle Manage Questions card click - Navigate to Create Question Screen
      */
     private void handleManageQuestions(MouseEvent event) {
-        try {
-            // Load CreateQuestion.fxml (Full Screen)
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/CreateQuestion.fxml"));
-            Parent root = loader.load();
-            
-            // Get CreateQuestionController and pass AuthService
-            CreateQuestionController controller = loader.getController();
-            if (authService != null) {
-                controller.setAuthService(authService);
-            }
-            
-            // Get current stage and set new scene
-            Stage stage = (Stage) cardQuestions.getScene().getWindow();
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-            stage.show();
-            
-        } catch (Exception e) {
-            JavaFXHelper.showError("System Error", "Failed to load Create Question screen: " + e.getMessage());
-            e.printStackTrace();
-        }
+        NavigationManager.getInstance().navigateTo(AppScreen.CREATE_QUESTION);
     }
     
     /**
@@ -123,59 +100,15 @@ public class TeacherDashboardController implements Initializable {
      * Handle Manage Quizzes card click - Navigate to Quiz List Screen
      */
     private void handleManageQuizzes(MouseEvent event) {
-        try {
-            // Load QuizList.fxml (Full Screen)
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/QuizList.fxml"));
-            Parent root = loader.load();
-            
-            // Get QuizListController and pass AuthService
-            QuizListController controller = loader.getController();
-            if (authService != null) {
-                controller.setAuthService(authService);
-            }
-            
-            // Get current stage and set new scene
-            Stage stage = (Stage) cardQuizzes.getScene().getWindow();
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-            stage.setTitle("Quiz Management System - Quiz List");
-            stage.show();
-            
-        } catch (Exception e) {
-            JavaFXHelper.showError("System Error", "Failed to load Quiz List screen: " + e.getMessage());
-            e.printStackTrace();
-        }
+        NavigationManager.getInstance().navigateTo(AppScreen.QUIZ_LIST);
     }
     
     /**
-     * Handle View Results card click - Navigate to Student Results Screen
+     * Handle View Results card click - Navigate to Quiz Results List Screen
+     * (Shows list of quizzes, then user can select a quiz to view student results)
      */
     private void handleViewResults(MouseEvent event) {
-        try {
-            // Load StudentResults.fxml (Full Screen)
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/StudentResults.fxml"));
-            Parent root = loader.load();
-            
-            // Get StudentResultsController and pass data
-            StudentResultsController controller = loader.getController();
-            if (authService != null) {
-                controller.setAuthService(authService);
-            }
-            
-            // Set the quiz information (this would normally come from user selection)
-            controller.setQuizInfo("Quiz 1: Basic");
-            
-            // Get current stage and set new scene
-            Stage stage = (Stage) cardResults.getScene().getWindow();
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-            stage.setTitle("Quiz Management System - Student Results");
-            stage.show();
-            
-        } catch (Exception e) {
-            JavaFXHelper.showError("System Error", "Failed to load Student Results screen: " + e.getMessage());
-            e.printStackTrace();
-        }
+        NavigationManager.getInstance().navigateTo(AppScreen.QUIZ_RESULTS_LIST);
     }
     
     /**
@@ -183,33 +116,15 @@ public class TeacherDashboardController implements Initializable {
      */
     @FXML
     private void handleLogout() {
-        try {
-            // Clear session
-            if (authService != null) {
-                authService.logout();
-            } else {
-                SessionManager.clearSession();
-            }
-            
-            // Navigate back to Login screen
-            Stage stage = (Stage) btnLogout.getScene().getWindow();
-            
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Login.fxml"));
-            Parent root = loader.load();
-            
-            // Inject AuthService into LoginController
-            LoginController loginController = loader.getController();
-            if (authService != null) {
-                loginController.setAuthService(authService);
-            }
-            
-            Scene scene = new Scene(root, 800, 600);
-            stage.setScene(scene);
-            stage.setTitle("Quiz Management System - Login");
-            
-        } catch (Exception e) {
-            JavaFXHelper.showError("Lỗi hệ thống", "Không thể đăng xuất: " + e.getMessage());
+        // Clear session
+        if (authService != null) {
+            authService.logout();
+        } else {
+            SessionManager.clearSession();
         }
+        
+        // Navigate to Login screen
+        NavigationManager.getInstance().navigateToLogin();
     }
 }
 
