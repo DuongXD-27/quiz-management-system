@@ -24,10 +24,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-/**
- * Controller for Quiz Results List View
- * Displays all quizzes with "View All Student Results" button for each quiz
- */
+// Controller for Quiz Results List View
+// Displays all quizzes with "View All Student Results" button for each quiz
+
 public class QuizResultsListController implements Initializable {
     
     @FXML
@@ -45,10 +44,9 @@ public class QuizResultsListController implements Initializable {
     private AuthService authService;
     private QuizService quizService;
     
-    /**
-     * Set the AuthService instance
-     * @param authService the authentication service
-     */
+    // Set the AuthService instance
+    // @param authService the authentication service
+    
     public void setAuthService(AuthService authService) {
         this.authService = authService;
         
@@ -63,10 +61,9 @@ public class QuizResultsListController implements Initializable {
         }
     }
     
-    /**
-     * Set the QuizService instance (injected from Spring context)
-     * @param quizService the quiz service
-     */
+    // Set the QuizService instance (injected from Spring context)
+    // @param quizService the quiz service
+    
     public void setQuizService(QuizService quizService) {
         this.quizService = quizService;
         
@@ -90,9 +87,8 @@ public class QuizResultsListController implements Initializable {
         loadQuizCards();
     }
     
-    /**
-     * Load quiz cards from database
-     */
+    // Load quiz cards from database
+    
     private void loadQuizCards() {
         // Clear existing cards
         quizCardsContainer.getChildren().clear();
@@ -127,11 +123,10 @@ public class QuizResultsListController implements Initializable {
         }
     }
     
-    /**
-     * Create a quiz card UI component
-     * @param quiz the quiz entity
-     * @return VBox containing the quiz card
-     */
+    // Create a quiz card UI component
+    // @param quiz the quiz entity
+    // @return VBox containing the quiz card
+    
     private VBox createQuizCard(Quiz quiz) {
         // Main card container
         VBox card = new VBox();
@@ -231,9 +226,8 @@ public class QuizResultsListController implements Initializable {
         return card;
     }
     
-    /**
-     * Show empty state when no quizzes exist
-     */
+    // Show empty state when no quizzes exist
+    
     private void showEmptyState() {
         VBox emptyState = new VBox(20);
         emptyState.setAlignment(Pos.CENTER);
@@ -273,11 +267,10 @@ public class QuizResultsListController implements Initializable {
         quizCardsContainer.getChildren().add(emptyState);
     }
     
-    /**
-     * Handle View Student Results button click
-     * Navigate to Student Results screen with quiz data
-     * @param quiz the selected quiz
-     */
+    // Handle View Student Results button click
+    // Navigate to Student Results screen with quiz data
+    // @param quiz the selected quiz
+    
     private void handleViewStudentResults(Quiz quiz) {
         try {
             // Prepare data to pass to Student Results screen
@@ -296,17 +289,15 @@ public class QuizResultsListController implements Initializable {
         }
     }
     
-    /**
-     * Handle Back to Dashboard button click
-     */
+    // Handle Back to Dashboard button click
+    
     @FXML
     private void handleBackToDashboard() {
         NavigationManager.getInstance().navigateTo(AppScreen.TEACHER_DASHBOARD);
     }
     
-    /**
-     * Handle Logout button click
-     */
+    // Handle Logout button click
+    
     @FXML
     private void handleLogout() {
         // Clear session

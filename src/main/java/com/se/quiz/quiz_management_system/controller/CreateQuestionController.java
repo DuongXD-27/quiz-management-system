@@ -16,10 +16,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-/**
- * Controller for the Create Question view
- * Allows teachers to create new questions and quizzes
- */
+// Controller for the Create Question view
+// Allows teachers to create new questions and quizzes
+
 public class CreateQuestionController implements Initializable {
     
     @FXML
@@ -82,10 +81,9 @@ public class CreateQuestionController implements Initializable {
     // Temporary storage for questions added to the quiz
     private List<QuestionData> questionsList = new ArrayList<>();
     
-    /**
-     * Set the AuthService instance
-     * @param authService the authentication service
-     */
+    // Set the AuthService instance
+    // @param authService the authentication service
+    
     public void setAuthService(AuthService authService) {
         this.authService = authService;
         
@@ -95,10 +93,9 @@ public class CreateQuestionController implements Initializable {
         }
     }
     
-    /**
-     * Set the QuizService instance (injected from Spring context)
-     * @param quizService the quiz service
-     */
+    // Set the QuizService instance (injected from Spring context)
+    // @param quizService the quiz service
+    
     public void setQuizService(QuizService quizService) {
         this.quizService = quizService;
     }
@@ -122,10 +119,9 @@ public class CreateQuestionController implements Initializable {
         });
     }
     
-    /**
-     * Handle Add Question button click
-     * Validates and temporarily stores the question
-     */
+    // Handle Add Question button click
+    // Validates and temporarily stores the question
+    
     @FXML
     private void handleAddQuestion() {
         // Validate Quiz Name
@@ -208,10 +204,9 @@ public class CreateQuestionController implements Initializable {
         clearQuestionFields();
     }
     
-    /**
-     * Handle Save Quiz button click
-     * Saves all added questions as a complete quiz
-     */
+    // Handle Save Quiz button click
+    // Saves all added questions as a complete quiz
+    
     @FXML
     private void handleSaveQuiz() {
         // Validate that at least one question has been added
@@ -270,18 +265,16 @@ public class CreateQuestionController implements Initializable {
         }
     }
     
-    /**
-     * Handle Back to Dashboard button click
-     * Uses NavigationManager to preserve window state
-     */
+    // Handle Back to Dashboard button click
+    // Uses NavigationManager to preserve window state
+    
     @FXML
     private void handleBackToDashboard() {
         NavigationManager.getInstance().navigateTo(AppScreen.TEACHER_DASHBOARD);
     }
     
-    /**
-     * Clear only the question-specific fields
-     */
+    // Clear only the question-specific fields
+    
     private void clearQuestionFields() {
         txtQuestionContent.clear();
         txtOptionA.clear();
@@ -291,29 +284,26 @@ public class CreateQuestionController implements Initializable {
         answerGroup.selectToggle(null);
     }
     
-    /**
-     * Clear all form fields
-     */
+    // Clear all form fields
+    
     private void clearAllFields() {
         txtQuizName.clear();
         txtTimeLimit.clear();
         clearQuestionFields();
     }
     
-    /**
-     * Update the question count label
-     */
+    // Update the question count label
+    
     private void updateQuestionCountLabel() {
         if (lblQuestionCount != null) {
             lblQuestionCount.setText("Questions added: " + questionsList.size());
         }
     }
     
-    /**
-     * Handle Logout button click
-     * Clears session and navigates back to Login screen
-     * Uses NavigationManager to preserve window state
-     */
+    // Handle Logout button click
+    // Clears session and navigates back to Login screen
+    // Uses NavigationManager to preserve window state
+    
     @FXML
     private void handleLogout() {
         // Clear session if authService available
@@ -325,9 +315,8 @@ public class CreateQuestionController implements Initializable {
         NavigationManager.getInstance().navigateToLogin();
     }
     
-    /**
-     * Inner class to store question data temporarily
-     */
+    // Inner class to store question data temporarily
+    
     private static class QuestionData {
         String quizName;
         int timeLimit;

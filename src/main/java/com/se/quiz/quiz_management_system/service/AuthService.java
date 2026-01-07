@@ -16,9 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
-/**
- * AuthService - Handles user authentication and registration
- */
+    // AuthService - Handles user authentication and registration
+    
 @Service
 public class AuthService {
     
@@ -30,15 +29,14 @@ public class AuthService {
     @Autowired
     private StudentRepository studentRepository;
     
-    /**
-     * Register a new user
-     * @param username the username
-     * @param password the plain text password
-     * @param fullName the full name
-     * @param role the role (LECTURER or STUDENT)
-     * @return the created user's ID
-     * @throws DuplicateUsernameException if username already exists
-     */
+    // Register a new user
+    // @param username the username
+    // @param password the plain text password
+    // @param fullName the full name
+    // @param role the role (LECTURER or STUDENT)
+    // @return the created user's ID
+    // @throws DuplicateUsernameException if username already exists
+    
     @Transactional
     public Long register(String username, String password, String fullName, Role role) {
         // Check for duplicate username in both tables
@@ -63,14 +61,13 @@ public class AuthService {
         }
     }
 
-    /**
- * Register a new teacher
- * @param username the username
- * @param password the plain text password
- * @param fullName the full name
- * @return the created teacher's ID
- * @throws DuplicateUsernameException if username already exists
- */
+    // Register a new teacher
+    // @param username the username
+    // @param password the plain text password
+    // @param fullName the full name
+    // @return the created teacher's ID
+    // @throws DuplicateUsernameException if username already exists
+    
     @Transactional
     public Long registerTeacher(String username, String password, String fullName) {
         // Check for duplicate username in teacher table
@@ -87,15 +84,14 @@ public class AuthService {
         return teacher.getTeacherId();
     }
     
-    /**
-     * Register a new student with student code
-     * @param username the username
-     * @param password the plain text password
-     * @param fullName the full name
-     * @param studentCode the student code
-     * @return the created student's ID
-     * @throws DuplicateUsernameException if username already exists
-     */
+    // Register a new student with student code
+    // @param username the username
+    // @param password the plain text password
+    // @param fullName the full name
+    // @param studentCode the student code
+    // @return the created student's ID
+    // @throws DuplicateUsernameException if username already exists
+   
     @Transactional
     public Long registerStudent(String username, String password, String fullName, String studentCode) {
         // Check for duplicate username in both tables
@@ -112,13 +108,12 @@ public class AuthService {
         return student.getStudentId();
     }
     
-    /**
-     * Login a user
-     * @param username the username
-     * @param password the plain text password
-     * @return UserSession if login successful
-     * @throws AuthenticationException if credentials are invalid
-     */
+    // Login a user
+    // @param username the username
+    // @param password the plain text password
+    // @return UserSession if login successful
+    // @throws AuthenticationException if credentials are invalid
+    
     @Transactional(readOnly = true)
     public UserSession login(String username, String password) {
         // Try to find user in teacher table first
@@ -173,17 +168,16 @@ public class AuthService {
         throw new AuthenticationException("Không tìm thấy username '" + username + "'");
     }
     
-    /**
-     * Get the current logged-in user session
-     * @return UserSession of the current user, or null if not logged in
-     */
+    // Get the current logged-in user session
+    // @return UserSession of the current user, or null if not logged in
     public UserSession getCurrentUser() {
         return SessionManager.getCurrentUserSession();
     }
     
-    /**
-     * Logout the current user
-     */
+    // Logout the current user
+    // @return the created teacher's ID
+    // @throws DuplicateUsernameException if username already exists
+    
     public void logout() {
         SessionManager.clearSession();
     }

@@ -24,10 +24,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-/**
- * Controller for the Quiz List view (Teacher)
- * Displays quizzes in a TableView with action buttons
- */
+// Controller for the Quiz List view (Teacher)
+// Displays quizzes in a TableView with action buttons
+
 public class QuizListController implements Initializable {
     
     @FXML
@@ -53,28 +52,26 @@ public class QuizListController implements Initializable {
     
     private ObservableList<QuizModel> quizData;
     
-    /**
-     * Set the AuthService instance
-     * @param authService the authentication service
-     */
+    // Set the AuthService instance
+    // @param authService the authentication service
+    
     public void setAuthService(AuthService authService) {
         this.authService = authService;
         
         // Update welcome text if user is logged in
         if (authService != null && authService.getCurrentUser() != null) {
-            lblWelcome.setText("Xin chào, " + authService.getCurrentUser().getUsername());
+            lblWelcome.setText("Hello, " + authService.getCurrentUser().getUsername());
         } else {
             String username = SessionManager.getCurrentUsername();
             if (username != null) {
-                lblWelcome.setText("Xin chào, " + username);
+                lblWelcome.setText("Hello, " + username);
             }
         }
     }
     
-    /**
-     * Set the QuizService instance (injected from Spring context)
-     * @param quizService the quiz service
-     */
+    // Set the QuizService instance (injected from Spring context)
+    // @param quizService the quiz service
+    
     public void setQuizService(QuizService quizService) {
         this.quizService = quizService;
         
@@ -89,9 +86,9 @@ public class QuizListController implements Initializable {
         // Set up welcome text
         String username = SessionManager.getCurrentUsername();
         if (username != null) {
-            lblWelcome.setText("Xin chào, " + username);
+            lblWelcome.setText("Hello, " + username);
         } else {
-            lblWelcome.setText("Xin chào,");
+            lblWelcome.setText("Hello,");
         }
         
         // Set up table columns
@@ -101,9 +98,8 @@ public class QuizListController implements Initializable {
         loadQuizData();
     }
     
-    /**
-     * Set up table columns with cell value factories and custom cell factories
-     */
+    // Set up table columns with cell value factories and custom cell factories
+    
     private void setupTableColumns() {
         // Quiz Name column - bind to name property
         colQuizName.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -137,9 +133,8 @@ public class QuizListController implements Initializable {
         });
     }
     
-    /**
-     * Load quiz data from database into the table
-     */
+    // Load quiz data from database into the table
+    
     private void loadQuizData() {
         try {
             // Check if QuizService is available
@@ -184,10 +179,9 @@ public class QuizListController implements Initializable {
         }
     }
     
-    /**
-     * Handle Assign to Students button click
-     * @param quiz the selected quiz
-     */
+    // Handle Assign to Students button click
+    // @param quiz the selected quiz
+    
     private void handleAssignToStudents(QuizModel quiz) {
         System.out.println("Assigning quiz to students: " + quiz.getName() + " (ID: " + quiz.getQuizId() + ")");
         
@@ -199,18 +193,16 @@ public class QuizListController implements Initializable {
         NavigationManager.getInstance().navigateTo(AppScreen.ADD_STUDENT_TO_QUIZ, data);
     }
     
-    /**
-     * Handle Back to Dashboard button click
-     * Uses NavigationManager to preserve window state
-     */
+    // Handle Back to Dashboard button click
+    // Uses NavigationManager to preserve window state
+    
     @FXML
     private void handleBackToDashboard() {
         NavigationManager.getInstance().navigateTo(AppScreen.TEACHER_DASHBOARD);
     }
     
-    /**
-     * Handle Logout button click
-     */
+    // Handle Logout button click
+    
     @FXML
     private void handleLogout() {
         // Clear session
@@ -224,10 +216,9 @@ public class QuizListController implements Initializable {
         NavigationManager.getInstance().navigateToLogin();
     }
     
-    /**
-     * QuizModel class - represents a quiz in the table
-     * Wrapper class for Quiz entity with JavaFX properties
-     */
+    // QuizModel class - represents a quiz in the table
+    // Wrapper class for Quiz entity with JavaFX properties
+    
     public static class QuizModel {
         private final SimpleLongProperty quizId;
         private final SimpleStringProperty name;

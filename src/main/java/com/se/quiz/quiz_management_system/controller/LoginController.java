@@ -16,9 +16,8 @@ import javafx.scene.control.TextField;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-/**
- * Controller for the Login view
- */
+// Controller for the Login view
+
 public class LoginController implements Initializable {
     
     @FXML
@@ -32,10 +31,9 @@ public class LoginController implements Initializable {
     
     private AuthService authService;
     
-    /**
-     * Set the AuthService instance (injected from Spring context)
-     * @param authService the AuthService instance
-     */
+    // Set the AuthService instance (injected from Spring context)
+    // @param authService the AuthService instance
+    
     public void setAuthService(AuthService authService) {
         this.authService = authService;
     }
@@ -45,9 +43,8 @@ public class LoginController implements Initializable {
         // Initialize controller
     }
     
-    /**
-     * Handle login button click
-     */
+    // Handle login button click
+    
     @FXML
     private void handleLogin() {
         String username = txtUsername.getText().trim();
@@ -55,18 +52,18 @@ public class LoginController implements Initializable {
         
         // Validate input
         if (username.isEmpty()) {
-            JavaFXHelper.showError("Lỗi đăng nhập", "Vui lòng nhập email hoặc username");
+            JavaFXHelper.showError("Login error", "Please enter email or username");
             return;
         }
         
         if (password.isEmpty()) {
-            JavaFXHelper.showError("Lỗi đăng nhập", "Vui lòng nhập mật khẩu");
+            JavaFXHelper.showError("Login error", "Please enter password");
             return;
         }
         
         // Check if AuthService is available
         if (authService == null) {
-            JavaFXHelper.showError("Lỗi hệ thống", "AuthService chưa được khởi tạo");
+            JavaFXHelper.showError("System error", "AuthService is not initialized");
             return;
         }
         
@@ -77,7 +74,7 @@ public class LoginController implements Initializable {
             // Get current user session
             UserSession session = SessionManager.getCurrentUserSession();
             if (session == null) {
-                JavaFXHelper.showError("Lỗi hệ thống", "Không thể lấy thông tin phiên đăng nhập");
+                JavaFXHelper.showError("System error", "Cannot get login session information");
                 return;
             }
             
@@ -87,28 +84,26 @@ public class LoginController implements Initializable {
             
         } catch (AuthenticationException e) {
             // Login failed
-            JavaFXHelper.showError("Đăng nhập thất bại", e.getMessage());
+            JavaFXHelper.showError("Login failed", e.getMessage());
         } catch (Exception e) {
             // Unexpected error
-            JavaFXHelper.showError("Lỗi hệ thống", "Đã xảy ra lỗi: " + e.getMessage());
+            JavaFXHelper.showError("System error", "An error occurred: " + e.getMessage());
         }
     }
     
-    /**
-     * Handle register link click - Navigate to Register screen
-     */
+    // Handle register link click - Navigate to Register screen
+    
     @FXML
     private void handleRegister() {
         NavigationManager.getInstance().navigateTo(AppScreen.REGISTER);
     }
     
-    /**
-     * Handle forgot password link click (placeholder)
-     */
+    // Handle forgot password link click (placeholder)
+    
     @FXML
     private void handleForgotPassword() {
         // TODO: Navigate to Forgot Password screen
-        JavaFXHelper.showInfo("Quên mật khẩu", "Chức năng quên mật khẩu sẽ được triển khai sau");
+        JavaFXHelper.showInfo("Forgot password", "The forgot password function will be implemented later");
     }
 }
 

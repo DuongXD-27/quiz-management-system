@@ -1,8 +1,7 @@
 package com.se.quiz.quiz_management_system.exception;
 
-/**
- * Exception thrown when authentication fails
- */
+    // Exception thrown when authentication fails
+    
 public class AuthenticationException extends RuntimeException {
     
     public AuthenticationException(String message) {

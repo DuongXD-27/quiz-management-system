@@ -25,10 +25,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-/**
- * Controller for the Take Quiz view
- * Handles quiz question display, answer selection, and timer
- */
+    // Controller for the Take Quiz view
+    // Handles quiz question display, answer selection, and timer
+    
 public class TakeQuizController implements Initializable, NavigationAware {
     
     @FXML
@@ -85,18 +84,16 @@ public class TakeQuizController implements Initializable, NavigationAware {
     private Long quizId; // Quiz ID passed from previous screen
     private boolean quizDataLoaded = false;
     
-    /**
-     * Set the AuthService instance
-     * @param authService the authentication service
-     */
+    // Set the AuthService instance
+    // @param authService the authentication service
+    
     public void setAuthService(AuthService authService) {
         this.authService = authService;
     }
     
-    /**
-     * Set the QuizService instance (injected from Spring context)
-     * @param quizService the quiz service
-     */
+    // Set the QuizService instance (injected from Spring context)
+    // @param quizService the quiz service
+    
     public void setQuizService(QuizService quizService) {
         this.quizService = quizService;
         
@@ -106,18 +103,16 @@ public class TakeQuizController implements Initializable, NavigationAware {
         }
     }
     
-    /**
-     * Set the ResultService instance (injected from Spring context)
-     * @param resultService the result service
-     */
+    // Set the ResultService instance (injected from Spring context)
+    // @param resultService the result service
+    
     public void setResultService(ResultService resultService) {
         this.resultService = resultService;
     }
     
-    /**
-     * Called when navigated to this screen
-     * Receives data passed from previous screen
-     */
+    // Called when navigated to this screen
+    // Receives data passed from previous screen
+    
     @Override
     public void onNavigatedTo(Map<String, Object> data) {
         if (data != null && data.containsKey("quizId")) {
@@ -131,10 +126,9 @@ public class TakeQuizController implements Initializable, NavigationAware {
         }
     }
     
-    /**
-     * Load quiz data from database
-     * CRITICAL: Loads real time limit and questions from DB
-     */
+    // Load quiz data from database
+    // CRITICAL: Loads real time limit and questions from DB
+    
     private void loadQuizData() {
         try {
             // Validate quiz service
@@ -151,10 +145,10 @@ public class TakeQuizController implements Initializable, NavigationAware {
                 return;
             }
             
-            // ✅ LOAD QUIZ FROM DATABASE
+            // LOAD QUIZ FROM DATABASE
             currentQuiz = quizService.getQuizById(quizId);
             
-            // ✅ SET TIME LIMIT FROM QUIZ (convert minutes to seconds)
+            // SET TIME LIMIT FROM QUIZ (convert minutes to seconds)
             if (currentQuiz.getTimeLimit() != null && currentQuiz.getTimeLimit() > 0) {
                 timeRemaining = currentQuiz.getTimeLimit() * 60; // minutes → seconds
             } else {
@@ -162,7 +156,7 @@ public class TakeQuizController implements Initializable, NavigationAware {
                 timeRemaining = 30 * 60;
             }
             
-            // ✅ LOAD QUESTIONS FROM DATABASE
+            // LOAD QUESTIONS FROM DATABASE
             questions = quizService.getQuestionsForQuiz(quizId);
             
             // Validate questions exist
@@ -180,12 +174,12 @@ public class TakeQuizController implements Initializable, NavigationAware {
             // Record start time
             startTime = (int) (System.currentTimeMillis() / 1000);
             
-            // ✅ UPDATE UI WITH REAL DATA
+            // UPDATE UI WITH REAL DATA
             if (lblTotalQuestions != null) {
                 lblTotalQuestions.setText("/" + questions.size());
             }
             
-            // ✅ START QUIZ
+            // START QUIZ
             showQuestion(0);
             startTimer();
             
@@ -210,10 +204,9 @@ public class TakeQuizController implements Initializable, NavigationAware {
         System.out.println("TakeQuizController initialized - waiting for quiz data");
     }
     
-    /**
-     * Show a question from the loaded questions list
-     * @param questionIndex the 0-based index of the question to display
-     */
+    // Show a question from the loaded questions list
+    // @param questionIndex the 0-based index of the question to display
+    
     private void showQuestion(int questionIndex) {
         // Validate index
         if (questions == null || questionIndex < 0 || questionIndex >= questions.size()) {
@@ -284,9 +277,8 @@ public class TakeQuizController implements Initializable, NavigationAware {
         System.out.println("Showing question " + (questionIndex + 1) + "/" + questions.size());
     }
     
-    /**
-     * Handle answer button click
-     */
+    // Handle answer button click
+    
     @FXML
     private void handleAnswerClick(javafx.event.ActionEvent event) {
         Button clickedButton = (Button) event.getSource();
@@ -312,9 +304,8 @@ public class TakeQuizController implements Initializable, NavigationAware {
         }
     }
     
-    /**
-     * Clear selection from all answer buttons
-     */
+    // Clear selection from all answer buttons
+    
     private void clearSelection() {
         btnAnswerA.getStyleClass().remove("selected");
         btnAnswerB.getStyleClass().remove("selected");
@@ -323,12 +314,11 @@ public class TakeQuizController implements Initializable, NavigationAware {
         selectedAnswerButton = null;
     }
     
-    /**
-     * Start the countdown timer
-     * ✅ Uses timeRemaining from quiz data (already set in loadQuizData)
-     */
+    // Start the countdown timer
+    // Uses timeRemaining from quiz data (already set in loadQuizData)
+    
     private void startTimer() {
-        // ✅ DO NOT RESET timeRemaining here - it's already set from quiz
+        // DO NOT RESET timeRemaining here - it's already set from quiz
         updateTimerDisplay();
         
         // Create timeline that updates every second
@@ -360,27 +350,24 @@ public class TakeQuizController implements Initializable, NavigationAware {
         System.out.println("Timer started: " + (timeRemaining / 60) + " minutes");
     }
     
-    /**
-     * Stop the timer
-     */
+    // Stop the timer
+    
     private void stopTimer() {
         if (timerTimeline != null) {
             timerTimeline.stop();
         }
     }
     
-    /**
-     * Update timer display
-     */
+    // Update timer display
+    
     private void updateTimerDisplay() {
         int minutes = timeRemaining / 60;
         int seconds = timeRemaining % 60;
         lblTimer.setText(String.format("%02d:%02d", minutes, seconds));
     }
     
-    /**
-     * Handle Next Question button click
-     */
+    // Handle Next Question button click
+    
     @FXML
     private void handleNext() {
         // Ensure current question has an answer
@@ -400,10 +387,9 @@ public class TakeQuizController implements Initializable, NavigationAware {
         }
     }
     
-    /**
-     * Navigate to the Quiz Result screen
-     * CRITICAL: Saves result to database before navigating
-     */
+    // Navigate to the Quiz Result screen
+    // CRITICAL: Saves result to database before navigating
+    
     private void navigateToResultScreen() {
         // Ensure selectedAnswers array exists to avoid NPE when auto-submitting with unanswered questions
         if (selectedAnswers == null && questions != null) {
@@ -543,9 +529,8 @@ public class TakeQuizController implements Initializable, NavigationAware {
         NavigationManager.getInstance().navigateTo(AppScreen.QUIZ_RESULT, resultData);
     }
     
-    /**
-     * Handle Exit button click
-     */
+    // Handle Exit button click
+    
     @FXML
     private void handleExit() {
         stopTimer();
@@ -553,9 +538,8 @@ public class TakeQuizController implements Initializable, NavigationAware {
         stage.close();
     }
     
-    /**
-     * Handle Previous Question button click
-     */
+    // Handle Previous Question button click
+    
     @FXML
     private void handlePrevious() {
         if (questions == null || currentQuestionIndex <= 0) {

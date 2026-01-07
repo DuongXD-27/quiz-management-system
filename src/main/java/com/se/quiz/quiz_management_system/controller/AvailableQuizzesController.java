@@ -22,10 +22,10 @@ import javafx.scene.layout.VBox;
 import java.net.URL;
 import java.util.*;
 
-/**
- * Controller for the Available Quizzes view (Student)
- * Displays available quizzes in a card-based layout
- */
+
+// Controller for the Available Quizzes view (Student)
+// Displays available quizzes in a card-based layout
+
 public class AvailableQuizzesController implements Initializable {
     
     @FXML
@@ -41,10 +41,10 @@ public class AvailableQuizzesController implements Initializable {
     private QuizService quizService;
     private ResultService resultService;
     
-    /**
-     * Set the AuthService instance
-     * @param authService the AuthService instance
-     */
+
+    // Set the AuthService instance
+    // @param authService the AuthService instance
+    
     public void setAuthService(AuthService authService) {
         this.authService = authService;
     }
@@ -62,10 +62,9 @@ public class AvailableQuizzesController implements Initializable {
         }
     }
     
-    /**
-     * Set the ResultService instance (injected from Spring context)
-     * @param resultService the result service
-     */
+    // Set the ResultService instance (injected from Spring context)
+    //@param resultService the result service
+    
     public void setResultService(ResultService resultService) {
         this.resultService = resultService;
         
@@ -75,9 +74,8 @@ public class AvailableQuizzesController implements Initializable {
         }
     }
     
-    /**
-     * Mock Quiz data class for demonstration
-     */
+
+    // Mock Quiz data class for demonstration
     private static class QuizData {
         private final Long quizId;
         private final String subject;
@@ -113,10 +111,9 @@ public class AvailableQuizzesController implements Initializable {
         loadQuizzes();
     }
     
-    /**
-     * Load quizzes assigned to the logged-in student
-     * CRITICAL: Uses JOIN query to fetch only assigned quizzes
-     */
+    // Load quizzes assigned to the logged-in student
+    // CRITICAL: Uses JOIN query to fetch only assigned quizzes
+    
     private void loadQuizzes() {
         try {
             // Clear existing children
@@ -137,7 +134,7 @@ public class AvailableQuizzesController implements Initializable {
                 return;
             }
             
-            // ✅ CRITICAL: Fetch quizzes assigned to this student via JOIN query
+            // CRITICAL: Fetch quizzes assigned to this student via JOIN query
             // SQL: SELECT q.* FROM quiz q JOIN student_quiz sq ON q.quiz_id = sq.quiz_id WHERE sq.student_id = ?
             List<Quiz> quizzes = quizService.getQuizzesForStudent(studentId);
             
@@ -167,10 +164,9 @@ public class AvailableQuizzesController implements Initializable {
         }
     }
     
-    /**
-     * Get current student ID from AuthService or SessionManager
-     * @return student ID or null if not found
-     */
+    // Get current student ID from AuthService or SessionManager
+    // @return student ID or null if not found
+    
     private Long getCurrentStudentId() {
         // Try to get from AuthService
         if (authService != null && authService.getCurrentUser() != null) {
@@ -197,9 +193,8 @@ public class AvailableQuizzesController implements Initializable {
         return null;
     }
     
-    /**
-     * Add empty state message when no quizzes available
-     */
+    // Add empty state message when no quizzes available
+    
     private void addEmptyStateMessage() {
         Label emptyLabel = new Label("No quizzes assigned yet.\nPlease contact your teacher.");
         emptyLabel.setStyle(
@@ -213,11 +208,10 @@ public class AvailableQuizzesController implements Initializable {
         quizContainer.getChildren().add(emptyBox);
     }
     
-    /**
-     * Create a quiz card UI component
-     * @param quiz the quiz data
-     * @return HBox representing the quiz card
-     */
+    // Create a quiz card UI component
+    // @param quiz the quiz data
+    // @return HBox representing the quiz card
+
     private HBox createQuizCard(QuizData quiz) {
         // Main card container
         HBox card = new HBox();
@@ -295,10 +289,8 @@ public class AvailableQuizzesController implements Initializable {
         return card;
     }
     
-    /**
-     * Handle Join Now button click
-     * @param quiz the quiz data
-     */
+    // Handle Join Now button click
+    // @param quiz the quiz data
     private void handleJoinQuiz(QuizData quiz) {
         // Prepare data to pass to TakeQuiz screen
         Map<String, Object> data = new HashMap<>();
@@ -309,17 +301,13 @@ public class AvailableQuizzesController implements Initializable {
         NavigationManager.getInstance().navigateTo(AppScreen.TAKE_QUIZ, data);
     }
     
-    /**
-     * Handle Back button click - Navigate to Student Dashboard
-     */
+    // Handle Back button click - Navigate to Student Dashboard
     @FXML
     private void handleBack() {
         NavigationManager.getInstance().navigateTo(AppScreen.STUDENT_DASHBOARD);
     }
     
-    /**
-     * Handle Logout button click
-     */
+    // Handle Logout button click
     @FXML
     private void handleLogout() {
         // Clear session

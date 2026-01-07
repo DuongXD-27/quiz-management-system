@@ -17,10 +17,9 @@ import org.springframework.context.ApplicationContext;
 import java.io.IOException;
 import java.util.*;
 
-/**
- * NavigationManager - Singleton quản lý điều hướng giữa các màn hình
- * Sử dụng Finite State Machine (FSM) pattern với Window State Management
- */
+    // NavigationManager - Singleton manages navigation between screens
+    // Uses Finite State Machine (FSM) pattern with Window State Management
+    
 public class NavigationManager {
     
     private static NavigationManager instance;
@@ -40,9 +39,8 @@ public class NavigationManager {
     private NavigationManager() {
     }
     
-    /**
-     * Lấy instance của NavigationManager (Singleton)
-     */
+    // Get the instance of NavigationManager (Singleton)
+    
     public static NavigationManager getInstance() {
         if (instance == null) {
             instance = new NavigationManager();
@@ -50,50 +48,45 @@ public class NavigationManager {
         return instance;
     }
     
-    /**
-     * Khởi tạo NavigationManager với primary stage và Spring context
-     * @param primaryStage Stage chính của ứng dụng
-     * @param springContext Spring ApplicationContext để inject dependencies
-     */
+    // Initialize NavigationManager with primary stage and Spring context
+    // @param primaryStage The main stage of the application
+    // @param springContext Spring ApplicationContext to inject dependencies
+    
     public void initialize(Stage primaryStage, ApplicationContext springContext) {
         this.primaryStage = primaryStage;
         this.springContext = springContext;
     }
     
-    /**
-     * Chuyển sang màn hình mới (Simple version without data)
-     * @param screen Màn hình đích
-     */
+    // Navigate to a new screen (Simple version without data)
+    // @param screen The destination screen
+    
     public void switchScene(AppScreen screen) {
         navigateTo(screen, null, true);
     }
     
-    /**
-     * Chuyển sang màn hình mới
-     * @param screen Màn hình đích
-     */
+    // Navigate to a new screen
+    // @param screen The destination screen
+    
     public void navigateTo(AppScreen screen) {
         navigateTo(screen, null);
     }
     
-    /**
-     * Chuyển sang màn hình mới với dữ liệu truyền vào
-     * @param screen Màn hình đích
-     * @param data Dữ liệu cần truyền (Map<String, Object>)
-     */
+    // Navigate to a new screen with data
+    // @param screen The destination screen
+    // @param data The data to pass (Map<String, Object>)
+    
     public void navigateTo(AppScreen screen, Map<String, Object> data) {
         navigateTo(screen, data, true);
     }
     
-    /**
-     * Chuyển sang màn hình mới với tùy chọn lưu history
-     * @param screen Màn hình đích
-     * @param data Dữ liệu cần truyền
-     * @param addToHistory Có lưu vào history hay không
-     */
+    // Navigate to a new screen with data and option to add to history
+    // @param screen The destination screen
+    // @param data The data to pass (Map<String, Object>)
+    // @param addToHistory Whether to add to history or not
+    
     public void navigateTo(AppScreen screen, Map<String, Object> data, boolean addToHistory) {
         try {
-            // Lưu màn hình hiện tại vào history nếu cần
+            // Save current screen to history if needed
             if (addToHistory && primaryStage.getScene() != null) {
                 AppScreen currentScreen = getCurrentScreen();
                 if (currentScreen != null) {
@@ -101,7 +94,7 @@ public class NavigationManager {
                 }
             }
             
-            // Clear và set data mới
+            // Clear and set new data
             transferData.clear();
             if (data != null) {
                 transferData.putAll(data);
@@ -111,24 +104,22 @@ public class NavigationManager {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(screen.getFxmlPath()));
             Parent root = loader.load();
             
-            // Lấy controller và inject dependencies
+            // Get controller and inject dependencies
             Object controller = loader.getController();
             
-            // Inject Spring services nếu controller có setter methods
+            // Inject Spring services if controller has setter methods
             if (springContext != null) {
                 injectAuthService(controller);
                 injectQuizService(controller);
                 injectResultService(controller);
             }
             
-            // Inject data nếu implements NavigationAware
+            // Inject data if implements NavigationAware
             if (controller instanceof NavigationAware) {
                 ((NavigationAware) controller).onNavigatedTo(transferData);
             }
             
-            // ═══════════════════════════════════════════════════════════
             // CRITICAL: HARD LAYOUT RESET PROTOCOL
-            // ═══════════════════════════════════════════════════════════
             
             // SNAPSHOT STATE
             final boolean wasMaximized = primaryStage.isMaximized();
@@ -168,18 +159,16 @@ public class NavigationManager {
         }
     }
     
-    /**
-     * FORCE LAYOUT REFRESH using "Window Shake" technique
-     * 
-     * This method implements a HARD RESET of the layout system by:
-     * 1. Toggling maximized state (false->true) to force OS resize event
-     * 2. Forcing CSS application and layout recalculation
-     * 3. Setting absolute position as fail-safe
-     * 
-     * @param stage The Stage to refresh
-     * @param root The root Parent node
-     * @param wasMaximized Whether the stage was maximized before
-     */
+    // FORCE LAYOUT REFRESH using "Window Shake" technique
+    
+    // This method implements a HARD RESET of the layout system by:
+    // 1. Toggling maximized state (false->true) to force OS resize event
+    // 2. Forcing CSS application and layout recalculation
+    // 3. Setting absolute position as fail-safe
+    // @param stage The Stage to refresh
+    // @param root The root Parent node
+    // @param wasMaximized Whether the stage was maximized before
+    
     private void forceLayoutRefresh(Stage stage, Parent root, boolean wasMaximized) {
         final Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
         
@@ -234,9 +223,8 @@ public class NavigationManager {
         });
     }
     
-    /**
-     * Tăng tốc độ cuộn chuột cho tất cả ScrollPane trong scene
-     */
+    // Increase scroll speed for all ScrollPane in scene
+    
     private void enhanceScrollSpeed(Scene scene) {
         final double speedMultiplier = 2.5; // higher = faster scroll
         
@@ -276,10 +264,9 @@ public class NavigationManager {
         });
     }
     
-    /**
-     * Quay lại màn hình trước đó
-     * @return true nếu có thể quay lại, false nếu không có history
-     */
+    // Go back to previous screen
+    // @return true if can go back, false if no history
+    
     public boolean goBack() {
         if (navigationHistory.isEmpty()) {
             return false;
@@ -290,9 +277,8 @@ public class NavigationManager {
         return true;
     }
     
-    /**
-     * Chuyển về màn hình Login và clear toàn bộ history
-     */
+    // Navigate to Login screen and clear all history
+    
     public void navigateToLogin() {
         navigationHistory.clear();
         controllerCache.clear();
@@ -300,10 +286,9 @@ public class NavigationManager {
         navigateTo(AppScreen.LOGIN, null, false);
     }
     
-    /**
-     * Chuyển về màn hình Dashboard phù hợp dựa trên role
-     * @param role Role của user ("TEACHER" hoặc "STUDENT")
-     */
+    // Navigate to Dashboard screen based on role
+    // @param role Role of user ("TEACHER" or "STUDENT")
+    
     public void navigateToDashboard(String role) {
         navigationHistory.clear(); // Clear history khi vào dashboard
         
@@ -317,30 +302,27 @@ public class NavigationManager {
         }
     }
     
-    /**
-     * Thêm dữ liệu vào transfer data
-     * @param key Key của dữ liệu
-     * @param value Giá trị dữ liệu
-     */
+    // Add data to transfer data
+    // @param key Key of data
+    // @param value Value of data
+    
     public void putData(String key, Object value) {
         transferData.put(key, value);
     }
     
-    /**
-     * Lấy dữ liệu từ transfer data
-     * @param key Key của dữ liệu
-     * @return Giá trị hoặc null nếu không tồn tại
-     */
+    // Get data from transfer data
+    // @param key Key of data
+    // @return Value or null if not exists
+    
     public Object getData(String key) {
         return transferData.get(key);
     }
     
-    /**
-     * Lấy dữ liệu với kiểu generic
-     * @param key Key của dữ liệu
-     * @param type Class type để cast
-     * @return Giá trị đã cast hoặc null
-     */
+    // Get data with generic type
+    // @param key Key of data
+    // @param type Class type to cast
+    // @return Value or null if not exists
+    
     @SuppressWarnings("unchecked")
     public <T> T getData(String key, Class<T> type) {
         Object value = transferData.get(key);
@@ -350,23 +332,20 @@ public class NavigationManager {
         return null;
     }
     
-    /**
-     * Clear toàn bộ transfer data
-     */
+    // Clear all transfer data
+    
     public void clearData() {
         transferData.clear();
     }
     
-    /**
-     * Lấy primary stage
-     */
+    // Get primary stage
+    
     public Stage getPrimaryStage() {
         return primaryStage;
     }
     
-    /**
-     * Inject AuthService vào controller (nếu có setAuthService method)
-     */
+    // Inject AuthService into controller (if has setAuthService method)
+    
     private void injectAuthService(Object controller) {
         try {
             // Lấy AuthService từ Spring context
@@ -382,20 +361,18 @@ public class NavigationManager {
             }
             
         } catch (Exception e) {
-            // Controller không có setAuthService method hoặc lỗi inject - OK, bỏ qua
-            // Không log để tránh spam console
+
         }
     }
     
-    /**
-     * Inject QuizService vào controller (nếu có setQuizService method)
-     */
+    // Inject QuizService into controller (if has setQuizService method)
+    
     private void injectQuizService(Object controller) {
         try {
-            // Lấy QuizService từ Spring context
+            // Get QuizService from Spring context
             Object quizService = springContext.getBean("quizService");
             
-            // Tìm setQuizService method trong controller
+            // Find setQuizService method in controller
             for (java.lang.reflect.Method method : controller.getClass().getMethods()) {
                 if (method.getName().equals("setQuizService") && 
                     method.getParameterCount() == 1) {
@@ -410,9 +387,8 @@ public class NavigationManager {
         }
     }
     
-    /**
-     * Inject ResultService vào controller (nếu có setResultService method)
-     */
+    // Inject ResultService into controller (if has setResultService method)
+    
     private void injectResultService(Object controller) {
         try {
             // Lấy ResultService từ Spring context
@@ -428,37 +404,31 @@ public class NavigationManager {
             }
             
         } catch (Exception e) {
-            // Controller không có setResultService method hoặc lỗi inject - OK, bỏ qua
-            // Không log để tránh spam console
         }
     }
     
-    /**
-     * Xác định màn hình hiện tại (helper method)
-     */
+    // Determine current screen (helper method)
+    
     private AppScreen getCurrentScreen() {
-        // Logic để detect current screen từ scene
-        // Có thể implement bằng cách lưu current screen vào biến
+        // Logic to detect current screen from scene
+        // Can implement by saving current screen into variable
         return null; // Simplified version
     }
     
-    /**
-     * Kiểm tra có thể quay lại không
-     */
+    // Check if can go back
+    
     public boolean canGoBack() {
         return !navigationHistory.isEmpty();
     }
     
-    /**
-     * Clear navigation history
-     */
+    // Clear navigation history
+    
     public void clearHistory() {
         navigationHistory.clear();
     }
     
-    /**
-     * Inner class để lưu trạng thái navigation
-     */
+    // Inner class to save navigation state
+    
     private static class NavigationState {
         private final AppScreen screen;
         private final Map<String, Object> data;

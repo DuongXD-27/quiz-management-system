@@ -18,9 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * QuizService - Handles quiz management operations
- */
+    // QuizService - Handles quiz management operations
+    
 @Service
 public class QuizService {
     
@@ -39,15 +38,13 @@ public class QuizService {
     @Autowired
     private StudentQuizRepository studentQuizRepository;
     
-    /**
-     * Create a new quiz with multiple questions in a single transaction
-     * 
-     * @param quizName the name of the quiz
-     * @param timeLimit the time limit per question in minutes
-     * @param questions the list of questions to add to the quiz
-     * @return the created Quiz entity with generated ID
-     * @throws IllegalArgumentException if questions list is empty
-     */
+    // Create a new quiz with multiple questions in a single transaction
+    // @param quizName the name of the quiz
+    // @param timeLimit the time limit per question in minutes
+    // @param questions the list of questions to add to the quiz
+    // @return the created Quiz entity with generated ID
+    // @throws IllegalArgumentException if questions list is empty
+    
     @Transactional
     public Quiz createQuizWithQuestions(String quizName, Integer timeLimit, List<Question> questions) {
         if (questions == null || questions.isEmpty()) {
@@ -82,33 +79,32 @@ public class QuizService {
         }
     }
     
-    /**
-     * Get all quizzes
-     * @return list of all quizzes
-     */
+    // Get all quizzes
+    // @return list of all quizzes
+    
     @Transactional(readOnly = true)
     public List<Quiz> getAllQuizzes() {
         return quizRepository.findAllByOrderByQuizIdDesc();
     }
     
-    /**
-     * Get a quiz by ID
-     * @param quizId the quiz ID
-     * @return the Quiz entity
-     * @throws ResourceNotFoundException if quiz not found
-     */
+    // Get a quiz by ID
+    // Get a quiz by ID
+    // @param quizId the quiz ID
+    // @return the Quiz entity
+    // @throws ResourceNotFoundException if quiz not found
+    
     @Transactional(readOnly = true)
     public Quiz getQuizById(Long quizId) {
         return quizRepository.findById(quizId)
             .orElseThrow(() -> new ResourceNotFoundException("Quiz not found with ID: " + quizId));
     }
     
-    /**
-     * Get all questions for a specific quiz
-     * @param quizId the quiz ID
-     * @return list of questions
-     * @throws ResourceNotFoundException if quiz not found
-     */
+    
+    // Get all questions for a specific quiz
+    // @param quizId the quiz ID
+    // @return list of questions
+    // @throws ResourceNotFoundException if quiz not found
+    
     @Transactional(readOnly = true)
     public List<Question> getQuestionsForQuiz(Long quizId) {
         // Verify quiz exists
@@ -133,11 +129,11 @@ public class QuizService {
         return questions;
     }
     
-    /**
-     * Delete a quiz and all its questions
-     * @param quizId the quiz ID
-     * @throws ResourceNotFoundException if quiz not found
-     */
+    
+    // Delete a quiz and all its questions
+    // @param quizId the quiz ID
+    // @throws ResourceNotFoundException if quiz not found
+    
     @Transactional
     public void deleteQuiz(Long quizId) {
         Quiz quiz = quizRepository.findById(quizId)
@@ -150,26 +146,22 @@ public class QuizService {
         quizRepository.delete(quiz);
     }
     
-    /**
-     * Search quizzes by name
-     * @param quizName the name to search for (partial match)
-     * @return list of matching quizzes
-     */
+    // Search quizzes by name
+    // @param quizName the name to search for (partial match)
+    // @return list of matching quizzes
+    
     @Transactional(readOnly = true)
     public List<Quiz> searchQuizzesByName(String quizName) {
         return quizRepository.findByQuizNameContainingIgnoreCase(quizName);
     }
     
-    /**
-     * Assign a quiz to a student
-     * Creates a record in student_quiz junction table
-     * 
-     * @param quizId the quiz ID to assign
-     * @param studentUsername the username of the student
-     * @return true if assignment successful, false otherwise
-     * @throws ResourceNotFoundException if quiz or student not found
-     * @throws IllegalStateException if student already assigned to quiz
-     */
+    // Assign a quiz to a student
+    // @param quizId the quiz ID to assign
+    // @param studentUsername the username of the student
+    // @return true if assignment successful, false otherwise
+    // @throws ResourceNotFoundException if quiz or student not found
+    // @throws IllegalStateException if student already assigned to quiz
+    
     @Transactional
     public boolean assignQuizToStudent(Long quizId, String studentUsername) {
         // Verify quiz exists
@@ -197,14 +189,13 @@ public class QuizService {
         return true;
     }
     
-    /**
-     * Remove a student's assignment from a quiz
-     * 
-     * @param quizId the quiz ID
-     * @param studentUsername the username of the student
-     * @return true if removal successful
-     * @throws ResourceNotFoundException if quiz or student not found
-     */
+
+    // Remove a student's assignment from a quiz
+    // @param quizId the quiz ID
+    // @param studentUsername the username of the student
+    // @return true if removal successful
+    // @throws ResourceNotFoundException if quiz or student not found
+    
     @Transactional
     public boolean removeStudentFromQuiz(Long quizId, String studentUsername) {
         // Verify quiz exists
@@ -222,13 +213,10 @@ public class QuizService {
         return true;
     }
     
-    /**
-     * Get all quizzes assigned to a specific student
-     * Uses JOIN query to fetch only quizzes the student has access to
-     * 
-     * @param studentId the student ID
-     * @return list of quizzes assigned to the student
-     */
+    // Get all quizzes assigned to a specific student
+    // @param studentId the student ID
+    // @return list of quizzes assigned to the student
+    
     @Transactional(readOnly = true)
     public List<Quiz> getQuizzesForStudent(Long studentId) {
         // Get all student-quiz relationships for this student
@@ -248,12 +236,10 @@ public class QuizService {
         return quizzes;
     }
     
-    /**
-     * Get all students assigned to a specific quiz
-     * 
-     * @param quizId the quiz ID
-     * @return list of students assigned to the quiz
-     */
+    // Get all students assigned to a specific quiz
+    // @param quizId the quiz ID
+    // @return list of students assigned to the quiz
+    
     @Transactional(readOnly = true)
     public List<Student> getStudentsForQuiz(Long quizId) {
         // Verify quiz exists

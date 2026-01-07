@@ -31,10 +31,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-/**
- * Controller for the Student Results screen
- * Displays student scores for a specific quiz with CSV export functionality
- */
+// Controller for the Student Results screen
+// Displays student scores for a specific quiz with CSV export functionality
+
 public class StudentResultsController implements Initializable, NavigationAware {
     
     @FXML
@@ -64,10 +63,9 @@ public class StudentResultsController implements Initializable, NavigationAware 
     private List<StudentResult> studentResults;
     private List<StudentQuizResult> dbResults; // Store database results for CSV export
     
-    /**
-     * Set the AuthService instance
-     * @param authService the authentication service
-     */
+    // Set the AuthService instance
+    // @param authService the authentication service
+    
     public void setAuthService(AuthService authService) {
         this.authService = authService;
         
@@ -82,10 +80,9 @@ public class StudentResultsController implements Initializable, NavigationAware 
         }
     }
     
-    /**
-     * Set the ResultService instance (injected from Spring context)
-     * @param resultService the result service
-     */
+    // Set the ResultService instance (injected from Spring context)
+    // @param resultService the result service
+    
     public void setResultService(ResultService resultService) {
         this.resultService = resultService;
         
@@ -95,27 +92,25 @@ public class StudentResultsController implements Initializable, NavigationAware 
         }
     }
     
-    /**
-     * Set the quiz name and update the UI title
-     * @param quizName the name of the quiz
-     */
+    // Set the quiz name and update the UI title
+    // @param quizName the name of the quiz
+    
     public void setQuizName(String quizName) {
         this.currentQuizName = quizName;
         lblPageTitle.setText(quizName + " - Student Results");
     }
     
-    /**
-     * Set the quiz information and update the UI (alias for setQuizName)
-     * @param quizName the name of the quiz
-     */
+
+    // Set the quiz information and update the UI (alias for setQuizName)
+    // @param quizName the name of the quiz
+    
     public void setQuizInfo(String quizName) {
         setQuizName(quizName);
     }
     
-    /**
-     * Called when navigated to this screen
-     * Receives quiz data from previous screen (QuizResultsListController)
-     */
+    // Called when navigated to this screen
+    // Receives quiz data from previous screen (QuizResultsListController)
+    
     @Override
     public void onNavigatedTo(Map<String, Object> data) {
         if (data != null) {
@@ -157,10 +152,9 @@ public class StudentResultsController implements Initializable, NavigationAware 
         loadStudentResults();
     }
     
-    /**
-     * Load student results and create dynamic cards
-     * ✅ CRITICAL: Loads REAL data from database
-     */
+    // Load student results and create dynamic cards
+    // CRITICAL: Loads REAL data from database
+    
     private void loadStudentResults() {
         // Clear existing children (if any)
         studentResultsContainer.getChildren().clear();
@@ -179,9 +173,7 @@ public class StudentResultsController implements Initializable, NavigationAware 
         }
         
         try {
-            // ═══════════════════════════════════════════════════════════
             // CRITICAL: LOAD REAL RESULTS FROM DATABASE
-            // ═══════════════════════════════════════════════════════════
             this.dbResults = resultService.getResultsByQuizId(currentQuizId);
             
             if (dbResults == null || dbResults.isEmpty()) {
@@ -221,11 +213,10 @@ public class StudentResultsController implements Initializable, NavigationAware 
         }
     }
     
-    /**
-     * Show empty state message when no results available
-     * @param title the title message
-     * @param message the detail message
-     */
+    // Show empty state message when no results available
+    // @param title the title message
+    // @param message the detail message
+    
     private void showEmptyState(String title, String message) {
         VBox emptyState = new VBox(15);
         emptyState.setAlignment(Pos.CENTER);
@@ -248,11 +239,10 @@ public class StudentResultsController implements Initializable, NavigationAware 
         studentResultsContainer.getChildren().add(emptyState);
     }
     
-    /**
-     * Create a student result card (HBox)
-     * @param result the student result data
-     * @return HBox representing the student result card
-     */
+    // Create a student result card (HBox)
+    // @param result the student result data
+    // @return HBox representing the student result card
+    
     private HBox createStudentResultCard(StudentResult result) {
         // Main card container
         HBox card = new HBox();
@@ -279,9 +269,8 @@ public class StudentResultsController implements Initializable, NavigationAware 
         return card;
     }
     
-    /**
-     * Handle Export to CSV button click
-     */
+    // Handle Export to CSV button click
+    
     @FXML
     private void handleExportCSV() {
         try {
@@ -316,12 +305,11 @@ public class StudentResultsController implements Initializable, NavigationAware 
         }
     }
     
-    /**
-     * Write student results to CSV file
-     * CRITICAL: Export raw numeric score only (not "85/100" format) to prevent Excel date conversion
-     * @param file the file to write to
-     * @throws IOException if writing fails
-     */
+    // Write student results to CSV file
+    // CRITICAL: Export raw numeric score only (not "85/100" format) to prevent Excel date conversion
+    // @param file the file to write to
+    // @throws IOException if writing fails
+    
     private void writeCSVFile(File file) throws IOException {
         try (FileWriter writer = new FileWriter(file)) {
             // Write CSV header
@@ -370,18 +358,16 @@ public class StudentResultsController implements Initializable, NavigationAware 
         }
     }
     
-    /**
-     * Handle Back to Dashboard button click
-     * Returns to Quiz Results List (not directly to dashboard)
-     */
+    // Handle Back to Dashboard button click
+    // Returns to Quiz Results List (not directly to dashboard)
+    
     @FXML
     private void handleBackToDashboard() {
         NavigationManager.getInstance().navigateTo(AppScreen.QUIZ_RESULTS_LIST);
     }
     
-    /**
-     * Handle Logout button click
-     */
+    // Handle Logout button click
+    
     @FXML
     private void handleLogout() {
         try {
@@ -415,9 +401,8 @@ public class StudentResultsController implements Initializable, NavigationAware 
         }
     }
     
-    /**
-     * StudentResult - represents a student's quiz result
-     */
+    // StudentResult - represents a student's quiz result
+    
     private static class StudentResult {
         private final String studentName;
         private final String score;

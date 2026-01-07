@@ -12,18 +12,16 @@ import java.util.Optional;
 @Repository
 public interface StudentRepository extends JpaRepository<Student, Long> {
     
-    /**
-     * Find student by username
-     * @param username the username to search for
-     * @return Optional containing the student if found
-     */
+    // Find student by username
+    // @param username the username to search for
+    // @return Optional containing the student if found
+    
     Optional<Student> findByUsername(String username);
     
-    /**
-     * Check if a student with the given username exists
-     * @param username the username to check
-     * @return true if exists, false otherwise
-     */
+    // Check if a student with the given username exists
+    // @param username the username to check
+    // @return true if exists, false otherwise
+    
     boolean existsByUsername(String username);
 }
 

@@ -17,9 +17,8 @@ import javafx.scene.layout.VBox;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-/**
- * Controller for the Teacher Dashboard view
- */
+    // Controller for the Teacher Dashboard view
+    
 public class TeacherDashboardController implements Initializable {
     
     @FXML
@@ -45,10 +44,9 @@ public class TeacherDashboardController implements Initializable {
     
     private AuthService authService;
     
-    /**
-     * Set the AuthService instance (injected from Spring context)
-     * @param authService the AuthService instance
-     */
+    // Set the AuthService instance (injected from Spring context)
+    // @param authService the AuthService instance
+    
     public void setAuthService(AuthService authService) {
         this.authService = authService;
     }
@@ -75,16 +73,14 @@ public class TeacherDashboardController implements Initializable {
         }
     }
     
-    /**
-     * Handle Manage Questions card click - Navigate to Create Question Screen
-     */
+    // Handle Manage Questions card click - Navigate to Create Question Screen
+    
     private void handleManageQuestions(MouseEvent event) {
         NavigationManager.getInstance().navigateTo(AppScreen.CREATE_QUESTION);
     }
     
-    /**
-     * Close the modal dialog and remove blur effect
-     */
+    // Close the modal dialog and remove blur effect
+    
     public void closeModal() {
         // Hide dialog container
         dialogContainer.setVisible(false);
@@ -96,24 +92,21 @@ public class TeacherDashboardController implements Initializable {
         mainContent.setEffect(null);
     }
     
-    /**
-     * Handle Manage Quizzes card click - Navigate to Quiz List Screen
-     */
+    // Handle Manage Quizzes card click - Navigate to Quiz List Screen
+    
     private void handleManageQuizzes(MouseEvent event) {
         NavigationManager.getInstance().navigateTo(AppScreen.QUIZ_LIST);
     }
     
-    /**
-     * Handle View Results card click - Navigate to Quiz Results List Screen
-     * (Shows list of quizzes, then user can select a quiz to view student results)
-     */
+    // Handle View Results card click - Navigate to Quiz Results List Screen
+    // (Shows list of quizzes, then user can select a quiz to view student results)
+    
     private void handleViewResults(MouseEvent event) {
         NavigationManager.getInstance().navigateTo(AppScreen.QUIZ_RESULTS_LIST);
     }
     
-    /**
-     * Handle logout button click
-     */
+    // Handle logout button click
+    
     @FXML
     private void handleLogout() {
         // Clear session

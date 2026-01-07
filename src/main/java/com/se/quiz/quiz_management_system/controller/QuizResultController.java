@@ -12,10 +12,9 @@ import java.net.URL;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-/**
- * Controller for the Quiz Result view
- * Displays the quiz results with score, subject, and completion time
- */
+// Controller for the Quiz Result view
+// Displays the quiz results with score, subject, and completion time
+
 public class QuizResultController implements Initializable, NavigationAware {
     
     @FXML
@@ -44,10 +43,9 @@ public class QuizResultController implements Initializable, NavigationAware {
         // Default values will be overridden by setResultData()
     }
     
-    /**
-     * Called when navigated to this screen
-     * Receives result data from previous screen via NavigationManager
-     */
+    // Called when navigated to this screen
+    // Receives result data from previous screen via NavigationManager
+    
     @Override
     public void onNavigatedTo(Map<String, Object> data) {
         if (data != null) {
@@ -63,18 +61,16 @@ public class QuizResultController implements Initializable, NavigationAware {
         }
     }
     
-    /**
-     * Handle Return to Dashboard button click
-     * Uses NavigationManager to preserve window state
-     */
+    // Handle Return to Dashboard button click
+    // Uses NavigationManager to preserve window state
+    
     @FXML
     private void handleReturnToDashboard() {
         NavigationManager.getInstance().navigateTo(AppScreen.STUDENT_DASHBOARD);
     }
     
-    /**
-     * Handle Exit button click
-     */
+    // Handle Exit button click
+    
     @FXML
     private void handleExit() {
         // Return to dashboard

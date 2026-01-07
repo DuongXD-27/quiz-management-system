@@ -3,9 +3,8 @@ package com.se.quiz.quiz_management_system.entity;
 import jakarta.persistence.*;
 import java.util.List;
 
-/**
- * Question entity - Maps to question table
- */
+    // Question entity - Maps to question table
+    
 @Entity
 @Table(name = "question")
 public class Question {

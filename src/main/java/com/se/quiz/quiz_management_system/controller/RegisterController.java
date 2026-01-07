@@ -16,9 +16,8 @@ import javafx.scene.control.TextField;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-/**
- * Controller for the Register view
- */
+// Controller for the Register view
+
 public class RegisterController implements Initializable {
     
     @FXML
@@ -38,10 +37,9 @@ public class RegisterController implements Initializable {
     
     private AuthService authService;
     
-    /**
-     * Set the AuthService instance (injected from Spring context)
-     * @param authService the AuthService instance
-     */
+    // Set the AuthService instance (injected from Spring context)
+    // @param authService the AuthService instance
+    
     public void setAuthService(AuthService authService) {
         this.authService = authService;
     }
@@ -53,9 +51,8 @@ public class RegisterController implements Initializable {
         comboRole.setValue("TEACHER"); // Set default value
     }
     
-    /**
-     * Handle sign up button click
-     */
+    // Handle sign up button click
+    
     @FXML
     private void handleSignUp() {
         String username = txtUsername.getText().trim();
@@ -65,28 +62,28 @@ public class RegisterController implements Initializable {
         
         // Validate input
         if (username.isEmpty()) {
-            JavaFXHelper.showError("Lỗi đăng ký", "Vui lòng nhập username");
+            JavaFXHelper.showError("Registration error", "Vui lòng nhập username");
             return;
         }
         
         if (fullName.isEmpty()) {
-            JavaFXHelper.showError("Lỗi đăng ký", "Vui lòng nhập họ tên");
+            JavaFXHelper.showError("Registration error", "Please enter your full name");
             return;
         }
         
         if (password.isEmpty()) {
-            JavaFXHelper.showError("Lỗi đăng ký", "Vui lòng nhập mật khẩu");
+            JavaFXHelper.showError("Registration error", "Please enter your password");
             return;
         }
         
         if (selectedRole == null || selectedRole.isEmpty()) {
-            JavaFXHelper.showError("Lỗi đăng ký", "Vui lòng chọn quyền");
+            JavaFXHelper.showError("Registration error", "Please select a role");
             return;
         }
         
         // Check if AuthService is available
         if (authService == null) {
-            JavaFXHelper.showError("Lỗi hệ thống", "AuthService chưa được khởi tạo");
+            JavaFXHelper.showError("System error", "AuthService is not initialized");
             return;
         }
         
@@ -98,32 +95,30 @@ public class RegisterController implements Initializable {
             authService.register(username, password, fullName, role);
             
             // Registration successful
-            JavaFXHelper.showInfo("Đăng ký thành công", "Tài khoản của bạn đã được tạo thành công!");
+            JavaFXHelper.showInfo("Registration successful", "Your account has been created successfully!");
             
             // Navigate back to Login screen
             navigateToLogin();
             
         } catch (DuplicateUsernameException e) {
             // Registration failed - duplicate username
-            JavaFXHelper.showError("Đăng ký thất bại", e.getMessage());
+            JavaFXHelper.showError("Registration failed", e.getMessage());
         } catch (Exception e) {
             // Unexpected error
-            JavaFXHelper.showError("Lỗi hệ thống", "Đã xảy ra lỗi: " + e.getMessage());
+            JavaFXHelper.showError("System error", "An error occurred: " + e.getMessage());
         }
     }
     
-    /**
-     * Handle login link click - Navigate to Login screen
-     */
+    // Handle login link click - Navigate to Login screen
+    
     @FXML
     private void handleLogin() {
         navigateToLogin();
     }
     
-    /**
-     * Navigate to Login screen
-     * Uses NavigationManager to preserve window state
-     */
+    // Navigate to Login screen
+    // Uses NavigationManager to preserve window state
+    
     private void navigateToLogin() {
         NavigationManager.getInstance().navigateTo(AppScreen.LOGIN);
     }

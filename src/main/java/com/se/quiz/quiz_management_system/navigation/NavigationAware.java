@@ -2,16 +2,14 @@ package com.se.quiz.quiz_management_system.navigation;
 
 import java.util.Map;
 
-/**
- * NavigationAware interface - Controller implement interface này để nhận dữ liệu
- * khi được navigate tới
- */
+// NavigationAware interface - Controller implements this interface to receive data
+// when navigated to
+    
 public interface NavigationAware {
     
-    /**
-     * Được gọi khi màn hình được navigate tới
-     * @param data Dữ liệu được truyền từ màn hình trước
-     */
+    // Called when the screen is navigated to
+    // @param data Data passed from the previous screen
+    
     void onNavigatedTo(Map<String, Object> data);
 }
 

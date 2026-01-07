@@ -10,24 +10,21 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * ResultService - Business logic for quiz results
- * Handles checking completion status, saving results, and retrieving results
- */
+    // ResultService - Business logic for quiz results
+    // Handles checking completion status, saving results, and retrieving results
+    
 @Service
 public class ResultService {
     
     @Autowired
     private StudentQuizResultRepository resultRepository;
     
-    /**
-     * Check if a student has already completed a specific quiz
-     * CRITICAL: Used to prevent students from taking quiz multiple times
-     * 
-     * @param studentId the student ID
-     * @param quizId the quiz ID
-     * @return true if student has completed the quiz, false otherwise
-     */
+    // Check if a student has already completed a specific quiz
+    // CRITICAL: Used to prevent students from taking quiz multiple times
+    // @param studentId the student ID
+    // @param quizId the quiz ID
+    // @return true if student has completed the quiz, false otherwise
+    
     @Transactional(readOnly = true)
     public boolean hasStudentCompletedQuiz(Long studentId, Long quizId) {
         if (studentId == null || quizId == null) {
@@ -36,13 +33,11 @@ public class ResultService {
         return resultRepository.existsByStudentIdAndQuizId(studentId, quizId);
     }
     
-    /**
-     * Save quiz result after student completes quiz
-     * CRITICAL: This is called when student submits quiz
-     * 
-     * @param result the quiz result to save
-     * @return the saved result
-     */
+    // Save quiz result after student completes quiz
+    // CRITICAL: This is called when student submits quiz
+    // @param result the quiz result to save
+    // @return the saved result
+    
     @Transactional
     public StudentQuizResult saveResult(StudentQuizResult result) {
         // DEBUG: Log entry to method
@@ -95,13 +90,11 @@ public class ResultService {
         return savedResult;
     }
     
-    /**
-     * Get result for a specific student and quiz
-     * 
-     * @param studentId the student ID
-     * @param quizId the quiz ID
-     * @return Optional containing the result if found
-     */
+    // Get result for a specific student and quiz
+    // @param studentId the student ID
+    // @param quizId the quiz ID
+    // @return Optional containing the result if found
+    
     @Transactional(readOnly = true)
     public Optional<StudentQuizResult> getResult(Long studentId, Long quizId) {
         if (studentId == null || quizId == null) {
@@ -110,14 +103,12 @@ public class ResultService {
         return resultRepository.findByStudentIdAndQuizId(studentId, quizId);
     }
     
-    /**
-     * Get all results for a specific quiz
-     * CRITICAL: Used by teacher to view all student results for a quiz
-     * Returns results with Student and Quiz relationships loaded
-     * 
-     * @param quizId the quiz ID
-     * @return list of results for the quiz (ordered by submission time, newest first)
-     */
+    // Get all results for a specific quiz
+    // CRITICAL: Used by teacher to view all student results for a quiz
+    // Returns results with Student and Quiz relationships loaded
+    // @param quizId the quiz ID
+    // @return list of results for the quiz (ordered by submission time, newest first)
+    
     @Transactional(readOnly = true)
     public List<StudentQuizResult> getResultsByQuizId(Long quizId) {
         if (quizId == null) {
@@ -138,14 +129,12 @@ public class ResultService {
         return results;
     }
     
-    /**
-     * Get all results for a specific student
-     * Used by student to view their quiz history
-     * CRITICAL: Returns results with Student and Quiz relationships loaded
-     * 
-     * @param studentId the student ID
-     * @return list of results for the student (ordered by submission time, newest first)
-     */
+    // Get all results for a specific student
+    // Used by student to view their quiz history
+    // CRITICAL: Returns results with Student and Quiz relationships loaded
+    // @param studentId the student ID
+    // @return list of results for the student (ordered by submission time, newest first)
+    
     @Transactional(readOnly = true)
     public List<StudentQuizResult> getResultsByStudentId(Long studentId) {
         if (studentId == null) {
@@ -166,12 +155,10 @@ public class ResultService {
         return results;
     }
     
-    /**
-     * Get quiz statistics (average, highest, lowest scores)
-     * 
-     * @param quizId the quiz ID
-     * @return QuizStatistics object containing stats
-     */
+    // Get quiz statistics (average, highest, lowest scores)
+    // @param quizId the quiz ID
+    // @return QuizStatistics object containing stats
+    
     @Transactional(readOnly = true)
     public QuizStatistics getQuizStatistics(Long quizId) {
         if (quizId == null) {
@@ -186,12 +173,10 @@ public class ResultService {
         return new QuizStatistics(totalStudents, averageScore, highestScore, lowestScore);
     }
     
-    /**
-     * Delete a result (admin/teacher only)
-     * 
-     * @param resultId the result ID to delete
-     * @return true if deleted, false if not found
-     */
+    // Delete a result (admin/teacher only)
+    // @param resultId the result ID to delete
+    // @return true if deleted, false if not found
+    
     @Transactional
     public boolean deleteResult(Long resultId) {
         if (resultId == null) {
@@ -206,13 +191,12 @@ public class ResultService {
         return false;
     }
     
-    /**
-     * Update result (for corrections/regrading)
-     * 
-     * @param resultId the result ID
-     * @param newScore the new score
-     * @return updated result
-     */
+
+    // Update result (for corrections/regrading)
+    // @param resultId the result ID
+    // @param newScore the new score
+    // @return updated result
+    
     @Transactional
     public Optional<StudentQuizResult> updateScore(Long resultId, Integer newScore) {
         if (resultId == null || newScore == null) {
@@ -229,9 +213,8 @@ public class ResultService {
         return Optional.empty();
     }
     
-    /**
-     * Inner class for quiz statistics
-     */
+    // Inner class for quiz statistics
+    
     public static class QuizStatistics {
         private final long totalStudents;
         private final Double averageScore;

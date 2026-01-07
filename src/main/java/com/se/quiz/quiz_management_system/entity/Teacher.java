@@ -4,9 +4,8 @@ import jakarta.persistence.*;
 
 // temporary
 
-/**
- * Teacher entity - Maps to teacher table
- */
+    // Teacher entity - Maps to teacher table
+    
 @Entity
 @Table(name = "teacher")
 public class Teacher {

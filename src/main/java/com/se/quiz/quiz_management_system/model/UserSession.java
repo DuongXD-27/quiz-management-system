@@ -1,9 +1,8 @@
 package com.se.quiz.quiz_management_system.model;
 
-/**
- * Represents the current user session
- * Used to track the logged-in user throughout the application
- */
+    // Represents the current user session
+    // Used to track the logged-in user throughout the application
+    
 public class UserSession {
     
     private Long userId;

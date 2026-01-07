@@ -99,7 +99,7 @@
                                        style="-fx-font-size: 64px; -fx-fill: #43A047;" />
                                  <Label styleClass="card-title" text="Manage Quizzes" 
                                         style="-fx-font-size: 20px; -fx-font-weight: 700; -fx-text-fill: #2D3447;" />
-                                 <Label styleClass="card-description" text="Create exams &amp; assign to classes" 
+                                 <Label styleClass="card-description" text="Create exams &amp; manage assignments" 
                                         style="-fx-font-size: 14px; -fx-text-fill: #6B7280; -fx-wrap-text: true; -fx-text-alignment: center;" />
                               </children>
                               <HBox.margin>

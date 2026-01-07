@@ -3,9 +3,8 @@ package com.se.quiz.quiz_management_system.model;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * ImportResult - Represents the result of a CSV import operation
- */
+    // ImportResult - Represents the result of a CSV import operation
+    
 public class ImportResult {
     
     private int successCount;

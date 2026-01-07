@@ -29,10 +29,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-/**
- * Controller for the Student My Results screen
- * Displays a grid of quiz results for the logged-in student
- */
+// Controller for the Student My Results screen
+// Displays a grid of quiz results for the logged-in student
+
 public class StudentMyResultsController implements Initializable {
     
     @FXML
@@ -52,10 +51,9 @@ public class StudentMyResultsController implements Initializable {
     
     private List<QuizResult> quizResults;
     
-    /**
-     * Set the AuthService instance
-     * @param authService the authentication service
-     */
+    // Set the AuthService instance
+    // @param authService the authentication service
+    
     public void setAuthService(AuthService authService) {
         this.authService = authService;
         
@@ -70,10 +68,9 @@ public class StudentMyResultsController implements Initializable {
         }
     }
     
-    /**
-     * Set the ResultService instance (injected from Spring context)
-     * @param resultService the result service
-     */
+    // Set the ResultService instance (injected from Spring context)
+    // @param resultService the result service
+    
     public void setResultService(ResultService resultService) {
         this.resultService = resultService;
         
@@ -97,10 +94,9 @@ public class StudentMyResultsController implements Initializable {
         loadQuizResults();
     }
     
-    /**
-     * Load quiz results and create dynamic cards
-     * CRITICAL: Loads REAL data from database
-     */
+    // Load quiz results and create dynamic cards
+    // CRITICAL: Loads REAL data from database
+    
     private void loadQuizResults() {
         // Clear existing children (if any)
         resultsContainer.getChildren().clear();
@@ -170,10 +166,9 @@ public class StudentMyResultsController implements Initializable {
         }
     }
     
-    /**
-     * Get current student ID from AuthService or SessionManager
-     * @return student ID or null if not found
-     */
+    // Get current student ID from AuthService or SessionManager
+    // @return student ID or null if not found
+    
     private Long getCurrentStudentId() {
         // Try to get from AuthService
         if (authService != null && authService.getCurrentUser() != null) {
@@ -198,11 +193,10 @@ public class StudentMyResultsController implements Initializable {
         return null;
     }
     
-    /**
-     * Show empty state message when no results available
-     * @param title the title message
-     * @param message the detail message
-     */
+    // Show empty state message when no results available
+    // @param title the title message
+    // @param message the detail message
+    
     private void showEmptyState(String title, String message) {
         VBox emptyState = new VBox(15);
         emptyState.setAlignment(Pos.CENTER);
@@ -227,11 +221,10 @@ public class StudentMyResultsController implements Initializable {
         resultsContainer.getChildren().add(emptyState);
     }
     
-    /**
-     * Create a result card (AnchorPane)
-     * @param result the quiz result data
-     * @return AnchorPane representing the result card
-     */
+    // Create a result card (AnchorPane)
+    // @param result the quiz result data
+    // @return AnchorPane representing the result card
+    
     private AnchorPane createResultCard(QuizResult result) {
         // Main card container
         AnchorPane card = new AnchorPane();
@@ -287,18 +280,16 @@ public class StudentMyResultsController implements Initializable {
         return card;
     }
     
-    /**
-     * Handle Back to Dashboard button click
-     * Uses NavigationManager to preserve window state
-     */
+    // Handle Back to Dashboard button click
+    // Uses NavigationManager to preserve window state
+    
     @FXML
     private void handleBackToDashboard() {
         NavigationManager.getInstance().navigateTo(AppScreen.STUDENT_DASHBOARD);
     }
     
-    /**
-     * Handle Logout button click
-     */
+    // Handle Logout button click
+    
     @FXML
     private void handleLogout() {
         try {
@@ -332,9 +323,8 @@ public class StudentMyResultsController implements Initializable {
         }
     }
     
-    /**
-     * QuizResult - represents a student's quiz result
-     */
+    // QuizResult - represents a student's quiz result
+    
     private static class QuizResult {
         private final String quizName;
         private final int score;

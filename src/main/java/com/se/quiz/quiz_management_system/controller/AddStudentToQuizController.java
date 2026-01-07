@@ -23,10 +23,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-/**
- * Controller for the Add Student to Quiz view
- * Allows teachers to assign students to a specific quiz
- */
+// Controller for the Add Student to Quiz view
+// Allows teachers to assign students to a specific quiz
+
 public class AddStudentToQuizController implements Initializable, NavigationAware {
     
     @FXML
@@ -64,10 +63,9 @@ public class AddStudentToQuizController implements Initializable, NavigationAwar
     // Current quiz ID (passed from navigation)
     private Long currentQuizId;
     
-    /**
-     * Set the AuthService instance
-     * @param authService the authentication service
-     */
+    // Set the AuthService instance
+    // @param authService the authentication service
+    
     public void setAuthService(AuthService authService) {
         this.authService = authService;
         
@@ -82,10 +80,9 @@ public class AddStudentToQuizController implements Initializable, NavigationAwar
         }
     }
     
-    /**
-     * Set the QuizService instance (injected from Spring context)
-     * @param quizService the quiz service
-     */
+    // Set the QuizService instance (injected from Spring context)
+    // @param quizService the quiz service
+    
     public void setQuizService(QuizService quizService) {
         this.quizService = quizService;
         
@@ -95,10 +92,9 @@ public class AddStudentToQuizController implements Initializable, NavigationAwar
         }
     }
     
-    /**
-     * Called when navigating to this screen
-     * Receives data from previous screen (e.g., quiz ID)
-     */
+    // Called when navigating to this screen
+    // Receives data from previous screen (e.g., quiz ID)
+    
     @Override
     public void onNavigatedTo(Map<String, Object> data) {
         if (data != null && data.containsKey("quizId")) {
@@ -137,9 +133,8 @@ public class AddStudentToQuizController implements Initializable, NavigationAwar
         tblAssignedStudents.setItems(assignedStudents);
     }
     
-    /**
-     * Set up table columns with cell value factories and custom cell factories
-     */
+    // Set up table columns with cell value factories and custom cell factories
+    
     private void setupTableColumns() {
         // Username column - bind to username property
         colUsername.setCellValueFactory(new PropertyValueFactory<>("username"));
@@ -173,9 +168,8 @@ public class AddStudentToQuizController implements Initializable, NavigationAwar
         });
     }
     
-    /**
-     * Load assigned students from database
-     */
+    // Load assigned students from database
+    
     private void loadAssignedStudents() {
         try {
             // Check if QuizService and quizId are available
@@ -215,10 +209,9 @@ public class AddStudentToQuizController implements Initializable, NavigationAwar
         }
     }
     
-    /**
-     * Handle Add Student button click
-     * CRITICAL: This now saves to database via QuizService
-     */
+    // Handle Add Student button click
+    // This now saves to database via QuizService
+    
     @FXML
     private void handleAddStudent() {
         // Get username from text field
@@ -278,11 +271,10 @@ public class AddStudentToQuizController implements Initializable, NavigationAwar
         }
     }
     
-    /**
-     * Handle Remove Student button click
-     * CRITICAL: This now deletes from database
-     * @param student the student to remove
-     */
+    // Handle Remove Student button click
+    // CRITICAL: This now deletes from database
+    // @param student the student to remove
+    
     private void handleRemoveStudent(StudentModel student) {
         // Confirm removal
         boolean confirmed = JavaFXHelper.showConfirmation("Remove Student", 
@@ -312,18 +304,16 @@ public class AddStudentToQuizController implements Initializable, NavigationAwar
         }
     }
     
-    /**
-     * Handle Back to Dashboard button click
-     * Uses NavigationManager to preserve window state
-     */
+    // Handle Back to Dashboard button click
+    // Uses NavigationManager to preserve window state
+    
     @FXML
     private void handleBackToDashboard() {
         NavigationManager.getInstance().navigateTo(AppScreen.TEACHER_DASHBOARD);
     }
     
-    /**
-     * Handle Logout button click
-     */
+    // Handle Logout button click
+    
     @FXML
     private void handleLogout() {
         // Clear session
@@ -337,10 +327,8 @@ public class AddStudentToQuizController implements Initializable, NavigationAwar
         NavigationManager.getInstance().navigateToLogin();
     }
     
-    /**
-     * StudentModel class - represents a student assigned to the quiz
-     * Wrapper class for Student entity with JavaFX properties
-     */
+    // StudentModel class - represents a student assigned to the quiz
+    // Wrapper class for Student entity with JavaFX properties
     public static class StudentModel {
         private final SimpleLongProperty studentId;
         private final SimpleStringProperty username;

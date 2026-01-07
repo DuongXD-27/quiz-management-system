@@ -7,23 +7,20 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-/**
- * QuizQuestionRepository - JPA repository for QuizQuestion junction table
- */
+    // QuizQuestionRepository - JPA repository for QuizQuestion junction table
+    
 @Repository
 public interface QuizQuestionRepository extends JpaRepository<QuizQuestion, QuizQuestionId> {
     
-    /**
-     * Find all quiz-question relationships for a specific quiz
-     * @param quizId the quiz ID
-     * @return list of QuizQuestion records
-     */
+    // Find all quiz-question relationships for a specific quiz
+    // @param quizId the quiz ID
+    // @return list of QuizQuestion records
+    
     List<QuizQuestion> findByQuizId(Long quizId);
     
-    /**
-     * Delete all quiz-question relationships for a specific quiz
-     * @param quizId the quiz ID
-     */
+    // Delete all quiz-question relationships for a specific quiz
+    // @param quizId the quiz ID
+    
     void deleteByQuizId(Long quizId);
 }
 

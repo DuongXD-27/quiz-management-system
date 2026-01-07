@@ -3,15 +3,13 @@ package com.se.quiz.quiz_management_system.entity;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
-/**
- * StudentQuizResult entity - Stores quiz completion results
- * Maps to student_quiz_result table
- * 
- * This entity stores the actual quiz results including:
- * - Score achieved
- * - Completion time
- * - Submission timestamp
- */
+    // StudentQuizResult entity - Stores quiz completion results
+    // Maps to student_quiz_result table
+    // This entity stores the actual quiz results including:
+    // - Score achieved
+    // - Completion time
+    // - Submission timestamp
+    
 @Entity
 @Table(name = "student_quiz_result",
        uniqueConstraints = @UniqueConstraint(columnNames = {"student_id", "quiz_id"}))
@@ -28,39 +26,33 @@ public class StudentQuizResult {
     @Column(name = "quiz_id", nullable = false)
     private Long quizId;
     
-    /**
-     * Score achieved (e.g., 80 out of 100)
-     */
+    // Score achieved (e.g., 80 out of 100)
+    
     @Column(name = "score", nullable = false)
     private Integer score;
     
-    /**
-     * Total possible points (e.g., 100)
-     */
+    // Total possible points (e.g., 100)
+    
     @Column(name = "total_points", nullable = false)
     private Integer totalPoints;
     
-    /**
-     * Time taken to complete quiz in seconds
-     */
+    // Time taken to complete quiz in seconds
+    
     @Column(name = "completion_time_seconds")
     private Integer completionTimeSeconds;
     
-    /**
-     * Timestamp when the quiz was submitted
-     */
+    // Timestamp when the quiz was submitted
+    
     @Column(name = "submitted_at", nullable = false)
     private LocalDateTime submittedAt;
     
-    /**
-     * Number of correct answers
-     */
+    // Number of correct answers
+    
     @Column(name = "correct_answers")
     private Integer correctAnswers;
     
-    /**
-     * Total number of questions
-     */
+    // Total number of questions
+    
     @Column(name = "total_questions")
     private Integer totalQuestions;
     
@@ -178,10 +170,9 @@ public class StudentQuizResult {
         this.quizId = quiz != null ? quiz.getQuizId() : null;
     }
     
-    /**
-     * Calculate score percentage
-     * @return score as percentage (0-100)
-     */
+    // Calculate score percentage
+    // @return score as percentage (0-100)
+    
     public double getScorePercentage() {
         if (totalPoints == null || totalPoints == 0) {
             return 0.0;
@@ -189,10 +180,9 @@ public class StudentQuizResult {
         return (score * 100.0) / totalPoints;
     }
     
-    /**
-     * Get formatted completion time (e.g., "5m 30s")
-     * @return formatted time string
-     */
+    // Get formatted completion time (e.g., "5m 30s")
+    // @return formatted time string
+    
     public String getFormattedCompletionTime() {
         if (completionTimeSeconds == null) {
             return "N/A";

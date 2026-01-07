@@ -14,9 +14,8 @@ import javafx.scene.layout.VBox;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-/**
- * Controller for the Student Dashboard view
- */
+// Controller for the Student Dashboard view
+
 public class StudentDashboardController implements Initializable {
     
     @FXML
@@ -33,10 +32,9 @@ public class StudentDashboardController implements Initializable {
     
     private AuthService authService;
     
-    /**
-     * Set the AuthService instance (injected from Spring context)
-     * @param authService the AuthService instance
-     */
+    // Set the AuthService instance (injected from Spring context)
+    // @param authService the AuthService instance
+    
     public void setAuthService(AuthService authService) {
         this.authService = authService;
     }
@@ -46,9 +44,9 @@ public class StudentDashboardController implements Initializable {
         // Set welcome text with username
         String username = SessionManager.getCurrentUsername();
         if (username != null) {
-            lblWelcome.setText("Xin chào, " + username);
+            lblWelcome.setText("Hello, " + username);
         } else {
-            lblWelcome.setText("Xin chào, Student");
+            lblWelcome.setText("Hello, Student");
         }
         
         // Set mouse click handlers for cards
@@ -60,23 +58,20 @@ public class StudentDashboardController implements Initializable {
         }
     }
     
-    /**
-     * Handle Take Quiz card click
-     */
+    // Handle Take Quiz card click
+    
     private void handleTakeQuiz(MouseEvent event) {
         NavigationManager.getInstance().navigateTo(AppScreen.AVAILABLE_QUIZZES);
     }
     
-    /**
-     * Handle My Results card click - Navigate to Student My Results Screen
-     */
+    // Handle My Results card click - Navigate to Student My Results Screen
+    
     private void handleMyResults(MouseEvent event) {
         NavigationManager.getInstance().navigateTo(AppScreen.STUDENT_MY_RESULTS);
     }
     
-    /**
-     * Handle logout button click
-     */
+    // Handle logout button click
+    
     @FXML
     private void handleLogout() {
         // Clear session

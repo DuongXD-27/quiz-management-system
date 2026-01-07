@@ -1,9 +1,8 @@
 package com.se.quiz.quiz_management_system.navigation;
 
-/**
- * AppScreen Enum - Định nghĩa tất cả các màn hình trong ứng dụng
- * Mapping từ FSM State sang FXML file
- */
+    // AppScreen Enum - Định nghĩa tất cả các màn hình trong ứng dụng
+    // Mapping từ FSM State sang FXML file
+    
 public enum AppScreen {
     // Authentication Screens
     LOGIN("/view/Login.fxml", "Quiz Management System - Đăng nhập"),
